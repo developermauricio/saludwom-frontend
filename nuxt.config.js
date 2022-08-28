@@ -62,9 +62,13 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
+    eta: {
+      title: 'SaludWom',
+      author: 'SaludWom',
+    },
     manifest: {
       name: 'SaludWom',
-      lang: 'es',
+      lang: 'en',
       display: 'standalone',
     }
   },
