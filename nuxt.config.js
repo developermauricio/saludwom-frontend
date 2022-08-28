@@ -70,9 +70,9 @@ export default {
       name: 'SaludWom',
       lang: 'en',
       display: 'standalone',
-    },
-    workboxOptions: {
-      exclude: ['_redirects'],
+      workboxOptions: {
+        exclude: ['_redirects'],
+      }
     }
   },
 
