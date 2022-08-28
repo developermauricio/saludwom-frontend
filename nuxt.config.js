@@ -62,7 +62,7 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    eta: {
+    meta: {
       title: 'SaludWom',
       author: 'SaludWom',
     },
@@ -70,6 +70,9 @@ export default {
       name: 'SaludWom',
       lang: 'en',
       display: 'standalone',
+    },
+    workboxOptions: {
+      exclude: ['_redirects'],
     }
   },
 
