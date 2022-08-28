@@ -7,7 +7,7 @@
           <!-- Logo Wrapper -->
           <div class="logo-wrapper offline-url" v-if="showLogo">
             <router-link to="/webapp/inicio">
-              <img :src="logoPrimary" alt="">
+              <img :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt="">
             </router-link>
           </div>
           <!-- Back Button -->
@@ -45,9 +45,6 @@ export default {
     }
   },
   props:['title', 'showLogo', 'backButton', 'urlBack'],
-  mounted() {
-    this.logoPrimary = process.env.logoPrimary
-  }
 }
 </script>
 

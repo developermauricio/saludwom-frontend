@@ -12,6 +12,9 @@ export default {
       {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
     ],
   },
+  publicRuntimeConfig: {
+    logo: process.env.LOGO_PRIMARY
+  },
   env: {
     logoPrimary: process.env.LOGO_PRIMARY
   },
@@ -37,7 +40,8 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    '@nuxtjs/router'
+    '@nuxtjs/router',
+    '@nuxtjs/dotenv'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

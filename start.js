@@ -4,7 +4,7 @@ console.log(
   `Starting app for production`
 )
 
-const build = exec('yarn run start', { stdio: 'inherit', windowsHide:true})
+const build = exec('npm run start', { stdio: 'inherit', windowsHide:true})
 build.stdout && build.stdout.on('data', console.log)
 build.stderr && build.stderr.on('data', console.log)
 

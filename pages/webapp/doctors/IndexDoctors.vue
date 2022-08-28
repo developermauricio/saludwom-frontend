@@ -9,7 +9,7 @@
                 <h5 class="text-primary">Doctores</h5>
                 <p class="mb-0 text-secondary">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
               </div>
-              <div class="service-img"><img :src="logoPrimary" alt=""></div>
+              <div class="service-img"><img :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt=""></div>
             </div>
           </div>
         </div>
