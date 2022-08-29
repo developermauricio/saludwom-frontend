@@ -70,6 +70,14 @@ export default {
       name: 'SaludWom',
       lang: 'en',
       display: 'standalone',
+      start_url: '',
+      /*workbox: {
+        exclude: ['_redirects'],
+        enabled: false,
+        cacheAssets: false, // for /*
+        offline: false, // for /_nuxt/*
+        cleanupOutdatedCaches: true
+      }*/
     }
   },
 
