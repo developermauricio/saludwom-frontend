@@ -9,7 +9,7 @@
           <div class="d-flex align-items-center">
             <h5 class="mb-1">Silvio Mauricio Gutierrez Quiñones</h5>
           </div>
-          <p class="mb-0">Paciente</p>
+          <p class="mb-0 text-primary">Paciente</p>
         </div>
         <div class="ml-auto" v-if="nextInfoProfile">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right"
@@ -20,6 +20,7 @@
         </div>
       </div>
     </nuxt-link>
+      <span class="badge bg-warning text-white">Tú próxima cita es el 24 de diciembre 2022</span>
   </div>
 </template>
 
@@ -33,11 +34,11 @@ export default {
     }
   },
   created() {
-    /* Cuando cargamos el componente, le decimos si que muestre la fecha solo si el componente actual es diferente profile.info*/
+    /* Cuando cargamos el componente, le decimos que muestre la flecha solo si el componente actual es diferente profile.info*/
     this.nextInfoProfile = this.$route.name !== 'profile.info';
   },
   mounted() {
-    /* Recibimos el evento que ejecutamos en el IndexProfile para mostrar o ocultar la flecha de mas información*/
+    /* Recibimos el evento que ejecutamos en el IndexProfile para mostrar o ocultar la flecha de más información*/
     bus.$on('nextInfoProfile', (routeData) => {
       this.nextInfoProfile = routeData.name !== 'profile.info';
     })

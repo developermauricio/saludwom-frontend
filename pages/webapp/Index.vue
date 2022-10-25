@@ -33,7 +33,7 @@ export default {
     }
   },
   methods: {
-    /* Pasamos párametros al header*/
+    /* Pasamos parámetros al header*/
     dataHeader(title, showLogo, backButton, urlBack) {
       this.title = title
       this.urlBack = urlBack
@@ -48,6 +48,8 @@ export default {
       this.urlBack = urlBack
       this.showLogo = showLogo
       this.backButton = backButton
+      localStorage.clear()
+      localStorage.setItem('currentRoute', this.$route.path)
     })
     /* Recibimos el evento que ejecutamos en el index.quotes que viene de NavigationButton */
     bus.$on('index.quotes', (title, showLogo, backButton, urlBack) => {
@@ -63,8 +65,30 @@ export default {
       this.showLogo = showLogo
       this.backButton = backButton
     })
+    bus.$on('index.profile', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+      localStorage.clear()
+      localStorage.setItem('currentRoute', this.$route.path)
+    })
     /* Recibimos el evento que ejecutamos en el index.doctors que viene de NavigationButton */
     bus.$on('index.doctors', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+    })
+    /* Recibimos el evento que ejecutamos en el index.doctors que viene de NavigationButton */
+    bus.$on('index.plans', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+    })
+    /* Recibimos el evento que ejecutamos en el index.doctors que viene de NavigationButton */
+    bus.$on('valuation.create', (title, showLogo, backButton, urlBack) => {
       this.title = title
       this.urlBack = urlBack
       this.showLogo = showLogo

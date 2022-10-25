@@ -1,0 +1,19 @@
+.content-plans{
+  margin-top: 2rem;
+  .single-price-content{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
+  }
+  .title-plan{
+    font-size: 1.5rem;
+  }
+  .banner-7-minute{
+    background: rgb(216,92,114);
+    background: linear-gradient(90deg, rgba(216,92,114,1) 0%, rgba(216,92,114,1) 35%, rgba(121,33,65,1) 100%); height: 5rem
+  }
+  .btn-select-plan.active{
+    background-color: #ffffff !important;
+  }
+
+}

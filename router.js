@@ -20,6 +20,10 @@ const routes = [
       /* Rutas del perfil del usuario*/
       { path: '/webapp/perfil', name: 'index.profile', component: page('webapp/profile/IndexProfile.vue')},
       { path: '/webapp/perfil/info', name: 'profile.info', component: page('webapp/profile/InfoProfile.vue') },
+      /* Rutas para las valoraciones*/
+      { path: '/webapp/valoracion/crear', name: 'valuation.create', component: page('webapp/valuations/create/CreateValuation.vue')},
+      /* Rutas para los planes*/
+      { path: '/webapp/plans', name: 'index.plans', component: page('webapp/plans/IndexPlans.vue')},
     ]
   },
 
@@ -27,8 +31,9 @@ const routes = [
       RUTAS AUTH
     =============================================*/
   { path: '/login', name: 'login', component: page('auth/login/Login.vue')},
-  // { path: '/logout', name: 'logout', component: page('auth/Logout.vue')},
 
+  { path: '/register', name: 'register', component: page('register/Register.vue') },
+  // { path: '/logout', name: 'logout', component: page('auth/Logout.vue')},
 ];
 
 export function createRouter(){

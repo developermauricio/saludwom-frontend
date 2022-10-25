@@ -8,6 +8,7 @@
     <!-- # This code for showing internet connection status -->
     <div class="internet-connection-status" id="internetStatus"></div>
     <Nuxt/>
+
   </div>
 </template>
 

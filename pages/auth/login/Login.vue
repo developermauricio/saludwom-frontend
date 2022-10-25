@@ -24,7 +24,7 @@
         </div>
         <!-- Login Meta -->
         <div class="login-meta-data text-center"><a class="stretched-link forgot-password d-block mt-3 mb-1" href="page-forget-password.html">Has olvidado tu contraseña?</a>
-          <p class="mb-0">Aún no te has registrado? <a class="stretched-link" href="page-register.html">Registrate ahora</a></p>
+          <p class="mb-0">Aún no te has registrado? <nuxt-link class="stretched-link" to="/register">Registrate ahora</nuxt-link></p>
         </div>
       </div>
     </div>

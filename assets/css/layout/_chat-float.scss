@@ -1,0 +1,25 @@
+.vsc-popup{
+  z-index: 999999 !important;
+  bottom: 75px;
+  a:hover{
+    color: #792141 !important;
+  }
+}
+
+.vsc-popup-header{
+  background-color: #792141 !important;
+}
+.vsc-popup-header p{
+  color: #ffffff !important;
+}
+
+.vsc-popup-button--default{
+  background-color: #792141 !important;
+}
+.vsc-popup-button:focus, .vsc-popup-button:hover {
+  box-shadow: 0 0 0 3px #fff,0 0 0 6px #D85C72 !important;
+}
+.vsc-popup-body__link:focus{
+  box-shadow: 0 0 0 3px #D85C72 !important;
+}
+

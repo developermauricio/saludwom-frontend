@@ -8,14 +8,17 @@
 
 <script>
 import HeaderLogo from "../partials/HeaderLogo";
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+import Detail from "./detail/Detail";
 export default {
   name: "IndexCities",
   components: {
-    HeaderLogo
+    Detail,
+    HeaderLogo,
   },
   data(){
     return{
-      title: 'Citas'
+      title: 'Citas',
     }
   }
 }
