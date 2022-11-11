@@ -5,6 +5,14 @@
 		    COMPONENTE CARD PROFILE
     ======================================-->
       <CardProfile/>
+
+      <nuxt-link class="affan-element-item" to="/webapp/perfil/info">Datos Personales<i class="bx bx-chevron-right me-2"></i></nuxt-link>
+      <nuxt-link class="affan-element-item" to="/webapp/perfil/suscripciones">Suscripciones<i class="bx bx-chevron-right me-2"></i></nuxt-link>
+      <nuxt-link class="affan-element-item" to="/subscription">Mi tratamiento en 7 minute<i class="bx bx-chevron-right me-2"></i></nuxt-link>
+      <nuxt-link class="affan-element-item" to="/subscription">Recursos en PDF<i class="bx bx-chevron-right me-2"></i></nuxt-link>
+      <nuxt-link class="affan-element-item" to="/subscription">Historial de Pagos<i class="bx bx-chevron-right me-2"></i></nuxt-link>
+      <nuxt-link class="affan-element-item" to="/subscription">Consentimientos<i class="bx bx-chevron-right me-2"></i></nuxt-link>
+      <nuxt-link class="affan-element-item" to="/subscription">Acerda de la app<i class="bx bx-chevron-right me-2"></i></nuxt-link>
     </div>
   </div>
 </template>

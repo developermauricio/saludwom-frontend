@@ -42,7 +42,7 @@ export default {
         padding: '0.5rem',
         gap: '0.2rem',
         focus: 0,
-        autoplay: false,
+        autoplay: true,
         height: '5rem',
         perPage: 3,
         arrows: false,
@@ -51,6 +51,7 @@ export default {
         trimSpace: true,
         breakpoints: {
           480: {
+            autoplay: true,
             autoWidth: false,
             drag: true,
             // type   : 'loop',
@@ -62,7 +63,7 @@ export default {
       items: [
         {id: 1, title: 'Descargar la app', link: '#',  typeLink:'', color: 'secondary'},
         {id: 2, title: 'Servicios', link: 'https://vuejsexamples.com/tag/drag/', typeLink:'_blank'},
-        {id: 3, title: 'Saludwom', link: '#',  typeLink:'', color: 'info'},
+        {id: 3, title: 'Salud WoM', link: '#',  typeLink:'', color: 'info'},
         {id: 4, title: 'Equipo Médico', link: '/webapp/doctors',  typeLink:'', color: 'warning'},
       ]
     }

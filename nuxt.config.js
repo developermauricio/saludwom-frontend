@@ -1,6 +1,10 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
+    script: [
+      { src: 'https://js.stripe.com/v3' },
+      { dev: "export NODE_TLS_REJECT_UNAUTHORIZED=0 && nuxt --env.NODE_TLS_REJECT_UNAUTHORIZED=0",}
+    ],
     title: 'saludwom',
     meta: [
       {charset: 'utf-8'},
@@ -15,6 +19,9 @@ export default {
   publicRuntimeConfig: {
     logo: process.env.LOGO_PRIMARY,
     url: process.env.BASE_URL_API_MONITOR_FRONT,
+    urlBack: process.env.BASE_URL_API_MONITOR_BACK,
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+    STRIPE_ACCOUNT: process.env.STRIPE_ACCOUNT,
     recaptcha: {
       hideBadge: true,
       siteKey: process.env.RECAPTCHA_SITE_KEY,    // Site key for requests
@@ -23,7 +30,7 @@ export default {
     },
     axios: {
       baseURL: process.env.BASE_URL_API_MONITOR_BACK
-    },
+    }
   },
   env: {
     logoPrimary: process.env.LOGO_PRIMARY
@@ -32,15 +39,46 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     '@/assets/css/application.scss',
-    'boxicons/css/boxicons.min.css',
+    'boxicons/css/boxicons.min.css'
   ],
 
+  auth: {
+    redirect: {
+      home: '/webapp/inicio'
+      // login: '/login'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: 'user'
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: '/login', method: 'post' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/api/v1/user', method: 'get' }
+        }
+      }
+    }
+  },
+
+  // router: {
+  //   middleware: ['auth']
+  // },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/bus',
+    '~/plugins/axios',
     '~/plugins/vue-sax',
     '~/plugins/vuelidate',
     '~/plugins/vue-multiselect',
+    { src: '~/plugins/vuex-persist', ssr: false,  mode: 'client' },
     { src: '~/assets/js/active.js', mode: 'client'},
     { src: '~/plugins/vue-datepicker', ssr: false },
     { src: '~/plugins/vue-timepicker', ssr: false },
@@ -57,7 +95,12 @@ export default {
     { src: '~/assets/js/slideToggle.min.js', mode: 'client'},
     { src: '~/assets/js/internet-status.js', mode: 'client'},
     { src: '~/assets/js/rangeslider.min.js', mode: 'client'},
-    { src: '~/plugins/vue-phone-number-input.js', ssr: false}
+    { src: '~/plugins/vue-phone-number-input.js', ssr: false},
+    { src: '~/plugins/stripe-elements.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vue-fullpage-modal.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vue-confirm-dialog.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vue-credit-card-validation.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vuejs-loadmore.js', mode: 'client', ssr: false}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -70,7 +113,10 @@ export default {
     global: true,
     dirs: [
       '~/components',
-      '~/components/plans/'
+      '~/components/plans/',
+      '~/components/alert/',
+      '~/components/checkout/',
+      '~/components/checkout/payments'
     ]
   },
 
@@ -84,24 +130,27 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
+    ['@nuxtjs/date-fns', { defaultLocale: 'es' }],
+    '@nuxtjs/auth-next',
     '@nuxtjs/recaptcha',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+
   ],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     meta: {
-      title: 'SaludWom',
-      author: 'SaludWom'
+      title: 'SaludWoM',
+      author: 'SaludWoM'
     },
     manifest: {
-      name: 'SaludWom',
+      name: 'SaludWoM',
       lang: 'en',
       display: 'standalone',
-      start_url: '',
+      start_url: ''
       /*workbox: {
         exclude: ['_redirects'],
         enabled: false,

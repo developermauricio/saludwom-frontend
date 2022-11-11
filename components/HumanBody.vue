@@ -2,8 +2,8 @@
   <div>
     <div class="d-flex mb-4 justify-content-center">
       <div class="m-auto">
-        <h4 class="d-sm-block d-none">Parte Frontal</h4>
-        <h6 class="d-sm-none d-block">Parte Frontal</h6>
+        <h4 class="d-sm-block d-none">Parte Anterior</h4>
+        <h6 class="d-sm-none d-block">Parte Anterior</h6>
       </div>
       <div class="m-auto">
         <h4 class="d-sm-block d-none">Parte Posterior</h4>

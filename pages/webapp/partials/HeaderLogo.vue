@@ -7,7 +7,7 @@
           <!-- Logo Wrapper -->
           <div class="logo-wrapper offline-url" v-if="showLogo">
             <router-link to="/webapp/inicio">
-              <img :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt="">
+              <img class="w-70" :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt="">
             </router-link>
           </div>
           <!-- Back Button -->

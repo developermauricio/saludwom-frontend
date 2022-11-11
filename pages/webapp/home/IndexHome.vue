@@ -11,6 +11,7 @@
 import HeaderLogo from "../partials/HeaderLogo";
 import Content from "./components/Content";
 export default {
+  // middleware: 'auth',
   name: "IndexHome",
   components: {
     HeaderLogo,

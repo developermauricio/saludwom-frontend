@@ -29,6 +29,7 @@
         :searchable="true"
         :close-on-select="true"
         :custom-label="nameSelect"
+        @input="selectedCity"
         track-by="id"
         selectedLabel="Seleccionado"
         deselectLabel=""
@@ -76,9 +77,13 @@ export default {
         this.$vs.loading.close()
       })
     },
+    selectedCity(city){
+      this.$emit('selectedCity', city)
+    },
     /*Obtener todos los pais*/
     async getCitiesFromCountry(country) {
       this.loading()
+      this.$emit('selectCountry', this.country)
       await this.$axios.get(`/api/v1/get-cities-from-country/${country.alpha2Code}`).then(resp => {
         this.cities = resp.data.data
         this.$vs.loading.close()
@@ -86,7 +91,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al obtener las ciudades. Consulte con el administrador.',
+          message: 'Error al obtener las ciudades. Consulte con el administrador.<',
           showDuration: 1000,
           hideDuration: 8000,
         })
@@ -105,6 +110,13 @@ export default {
         return
       }
     },
+  },
+  watch:{
+    'city': function (val) {
+      if (val){
+        bus.$emit('selectedCity', val);
+      }
+    }
   },
   mounted() {
     this.loading()

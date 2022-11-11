@@ -1,8 +1,10 @@
 <template>
   <div>
     <div class="card service-card bg-gradient mb-3">
-      <div class="card-body pt-0">
-        <div class="text-center"><img width="200" :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt=""></div>
+      <div class="card-body mt-1">
+        <div class="text-center mb-3">
+          <img width="150" :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt="">
+        </div>
         <p>Gracias por adquirir nuestro plan <span class="text-primary font-italic font-weight-bold">Esmeralda.</span>
           Vamos hacer un gran equipo para cumplir tus objetivos.</p>
         <vs-collapse>

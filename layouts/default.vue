@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-3">
     <!-- Preloader -->
     <div id="preloader">
       <div class="spinner-grow text-primary" role="status"></div>
@@ -8,7 +8,6 @@
     <!-- # This code for showing internet connection status -->
     <div class="internet-connection-status" id="internetStatus"></div>
     <Nuxt/>
-
   </div>
 </template>
 
@@ -25,6 +24,9 @@ export default {
     }
   },
   mounted() {
+    // if (!this.$auth.loggedIn){
+    //   this.$router.push({name: 'login'});
+    // }
     bus.$emit('logoPrimary', process.env.LOGO_PRIMARY);
   }
 }

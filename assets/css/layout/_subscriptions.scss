@@ -1,0 +1,19 @@
+.icon-filter{
+  font-size: 1.7rem !important;
+
+}
+.text-filer{
+  font-size: 1.1rem !important;
+}
+.content-filter{
+  cursor: pointer;
+}
+.content-filter:hover{
+  .icon-filter{
+    color: #D85C72 !important;
+
+  }
+  .text-filer{
+    color: #D85C72 !important;
+  }
+}

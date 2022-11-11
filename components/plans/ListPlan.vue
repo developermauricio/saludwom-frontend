@@ -11,10 +11,13 @@
       <splide-slide v-for="plan in plans" :key="plan.id">
         <div class="single-price-content shadow-sm"
              :class="plan.id === (planSelected ? planSelected.id : '') ? 'active' : '' "
-             :style="{backgroundImage: `url(` + require(`~/assets/img/plans/${plan.img}`) + `)`}">
+             v-bind:style="{
+      backgroundImage: `url(${$config.urlBack+plan.image_background})` ,
+    }" >
+<!--             :style="{backgroundImage: `url(` + require(`${$config.urlBack}${plan.image_background}`) + `)`}">-->
           <div class="price">
-            <span class="text-white mb-2 title-plan">{{ plan.title }}</span>
-            <h2 class="display-4">{{ plan.price }}</h2><span
+            <span class="text-white mb-2 title-plan">{{ plan.name }}</span>
+            <h2 class="display-4">{{ plan.price }}€</h2><span
             class="badge bg-light text-dark rounded-pill">Oferta -29%</span>
           </div>
           <!-- Pricing Desc -->
@@ -30,7 +33,9 @@
           </div>
           <!-- Purchase -->
           <div class="purchase">
-            <a :class="plan.id === (planSelected ? planSelected.id : '') ? 'active' : '' " class="btn btn-warning btn-select-plan btn-lg btn-creative w-100" @click="selectPlan(plan)">¡Lo quiero!</a>
+            <a :class="plan.id === (planSelected ? planSelected.id : '') ? 'active' : '' "
+               class="btn btn-warning btn-select-plan btn-lg btn-creative w-100" @click="selectPlan(plan)">¡Lo
+              quiero!</a>
             <!--          <small class="d-block text-white mt-2 ms-1">No credit card required*</small>-->
           </div>
         </div>
@@ -64,7 +69,7 @@ export default {
         breakpoints: {
           480: {
             arrows: true,
-            autoWidth: false,
+            autoWidth: true,
             drag: true,
             // type   : 'loop',
             perPage: 1,
@@ -72,39 +77,16 @@ export default {
           },
         },
       },
-      plans: [
-        {
-          id: 1,
-          title: 'Plan Rubí',
-          img: 'plan-rubi.png',
-          price: '30€',
-          description: 'Seguimiento semanal Online 10€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€'
-        },
-        {
-          id: 2,
-          title: 'Plan Esmeralda',
-          img: 'plan-esmeralda.png',
-          price: '80€',
-          description: '2 citas online de 30 minutos 60€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€'
-        },
-        {
-          id: 3,
-          title: 'Plan Diamante',
-          img: 'plan-diamante.png',
-          price: '140€',
-          description: '4 citas online de 30 minutos 120€ Acceso a Nuestra Plataforma Online: Podrás ver tus ejercicios y valoración cuantas veces quieras 20€'
-        },
-      ]
     }
   },
+  props:['plans'],
   methods: {
     selectPlan(plan) {
-      console.log(plan)
       this.planSelected = plan
-      console.log(this.planSelected)
       this.$emit('selectedPlan', this.planSelected)
-    }
-  }
+    },
+
+  },
 }
 </script>
 

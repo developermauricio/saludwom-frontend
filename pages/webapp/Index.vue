@@ -65,6 +65,13 @@ export default {
       this.showLogo = showLogo
       this.backButton = backButton
     })
+    bus.$on('index.subscriptions', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+      localStorage.setItem('currentRoute', this.$route.path)
+    })
     bus.$on('index.profile', (title, showLogo, backButton, urlBack) => {
       this.title = title
       this.urlBack = urlBack
@@ -86,6 +93,8 @@ export default {
       this.urlBack = urlBack
       this.showLogo = showLogo
       this.backButton = backButton
+      localStorage.clear()
+      localStorage.setItem('currentRoute', this.$route.path)
     })
     /* Recibimos el evento que ejecutamos en el index.doctors que viene de NavigationButton */
     bus.$on('valuation.create', (title, showLogo, backButton, urlBack) => {
