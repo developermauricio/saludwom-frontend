@@ -1,5 +1,8 @@
 <template>
   <div>
+    <client-only>
+      <vue-confirm-dialog></vue-confirm-dialog>
+    </client-only>
     <div class="container">
       <div class="add-new-contact-wrap">
         <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addnewcontact">
@@ -36,13 +39,13 @@
         <!--=====================================
            CREA TU VALORACIÓN
        ======================================-->
-        <div class="col-6 col-sm-6 col-lg-6 mb-3">
+        <div class="col-6 col-sm-6 col-lg-6 mb-3" @click="openValuation()">
           <div class="card single-product-card">
             <div class="card-body p-3">
-              <nuxt-link class="product-thumbnail d-block text-center" to="/webapp/valoracion/crear">
+              <div class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/valoracion.png" class="text-center" alt="" width="80">
-                <a class="product-title d-block text-truncate text-title-card-home" href="page-shop-details.html">Personaliza tu cambio</a>
-              </nuxt-link>
+                <a class="product-title d-block  text-title-card-home">Personaliza tu cambio</a>
+              </div>
             </div>
           </div>
         </div>
@@ -54,7 +57,8 @@
             <div class="card-body p-3">
               <a class="product-thumbnail d-block text-center" href="page-shop-details.html">
                 <img src="@/assets/img/saludwom/valoraciones.png" alt="" width="80">
-                <a class="product-title d-block text-truncate text-title-card-home" href="page-shop-details.html">Guía de Recuperación</a>
+                <a class="product-title d-block text-title-card-home" href="page-shop-details.html">Guía de
+                  Recuperación</a>
               </a>
             </div>
           </div>
@@ -83,7 +87,8 @@
               <nuxt-link to="/webapp/doctors" class="product-thumbnail d-block text-center"
                          href="page-shop-details.html">
                 <img src="@/assets/img/saludwom/certificate.png" alt="" width="80">
-                <a class="product-title d-block text-truncate text-title-card-home" href="page-shop-details.html">Exítos</a>
+                <a class="product-title d-block text-truncate text-title-card-home"
+                   href="page-shop-details.html">Exítos</a>
               </nuxt-link>
             </div>
           </div>
@@ -95,11 +100,67 @@
 
 <script>
 import SectionProfile from "./SectionProfile";
+import {bus} from "../../../../plugins/bus";
 
 export default {
   name: "Content",
   components: {
     SectionProfile
+  },
+  data() {
+    return {
+      subscription: null,
+    }
+  },
+
+  methods: {
+    verifySubscription(){
+      bus.$emit('verifySubscription');
+    },
+   async openValuation() {
+     // this.$vs.loading({
+     //   color: process.env.COLOR_BASE,
+     //   text: 'Verificando. Espere por favor...'
+     // })
+     // setTimeout(() =>{
+     //   this.subscription = JSON.parse(localStorage.getItem('subscription'))
+     // }, 500)
+     this.verifySubscription()
+
+     setTimeout(() =>{
+       if (!this.subscription){
+         this.$confirm(
+           {
+             message: 'No tienes una suscripción vigente, ¿quieres comprar?',
+             button: {
+               no: 'No',
+               yes: 'Si'
+             },
+             /**
+              * Callback Function
+              * @param {Boolean} confirm
+              */
+             callback: async confirm => {
+               if (confirm) {
+                 this.$router.push({name: 'index.plans'});
+               }
+             }
+           })
+         this.$vs.loading.close()
+       }else{
+         this.$vs.loading.close()
+         this.$router.push({name: 'valuation.create'});
+       }
+     }, 500)
+    },
+  },
+
+  mounted() {
+    setTimeout(() =>{
+      bus.$on('sendSubscription', (data) =>{
+        this.subscription = data
+      })
+    }, 1000)
   }
 }
 </script>

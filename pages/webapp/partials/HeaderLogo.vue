@@ -6,9 +6,9 @@
         <div class="header-content position-relative d-flex align-items-center justify-content-between">
           <!-- Logo Wrapper -->
           <div class="logo-wrapper offline-url" v-if="showLogo">
-            <router-link to="/webapp/inicio">
+            <nuxt-link to="/webapp/inicio">
               <img class="w-70" :src="require(`~/assets/img/saludwom/${$config.logo}`)" alt="">
-            </router-link>
+            </nuxt-link>
           </div>
           <!-- Back Button -->
           <div class="back-button" v-if="backButton">

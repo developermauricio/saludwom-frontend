@@ -54,6 +54,7 @@
 import {email, required, sameAs} from "vuelidate/lib/validators";
 
 export default {
+  middleware: ['guest'],
   name: "Resend",
   data() {
     return {

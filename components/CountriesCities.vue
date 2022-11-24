@@ -14,7 +14,7 @@
         track-by="id"
         selectedLabel="Seleccionado"
         deselectLabel=""
-        selectLabel="Seleccionar país"
+        selectLabel="Selecciona"
         :show-labels="true"
         placeholder="Buscar país..."></multiselect>
       <p class="text-danger mt-1 font-weight-bold" v-if="$v.country.$error">El país es requerido</p>
@@ -33,7 +33,7 @@
         track-by="id"
         selectedLabel="Seleccionado"
         deselectLabel=""
-        selectLabel="Seleccionar ciudad"
+        selectLabel="Selecciona"
         :show-labels="true"
         placeholder="Buscar ciudad..."></multiselect>
     </div>

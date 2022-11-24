@@ -1,8 +1,8 @@
 <template>
   <div class="price-table-one content-plans">
     <div class="mb-4 d-flex justify-content-center align-items-center banner-7-minute">
-      <h3 class="text-white d-sm-block d-none">Programa 7 minute WORKOUT</h3>
-      <h5 class="text-white d-sm-none d-block">Programa 7 minute WORKOUT</h5>
+      <h3 class="text-white d-sm-block d-none text-center mt-2">Programa 7 minute WORKOUT</h3>
+      <h5 class="text-white d-sm-none d-block text-center mt-2">Programa 7 minute WORKOUT</h5>
     </div>
     <h6 class="mb-4 text-center">Antes de empezar con nuestro tratamiento, tengo que conocer tu estado de salud, tus
       expectativas, experiencias y los objetivos a los que quieres llegar con nuestro programa Online, a continuación te
@@ -57,7 +57,7 @@ export default {
         // height: '5rem',
         // padding: '0.5rem',
         drag: true,
-        gap: '1rem',
+        // gap: '2rem',
         focus: 0,
         autoplay: false,
         perPage: 2,
@@ -69,11 +69,12 @@ export default {
         breakpoints: {
           480: {
             arrows: true,
+            // width: '30rem',
             autoWidth: true,
             drag: true,
             // type   : 'loop',
             perPage: 1,
-            gap: '1rem',
+            // gap: '1rem',
           },
         },
       },

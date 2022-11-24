@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="order-success-wrapper">
-      <div class="custom-container">
+      <div class="custom-container" v-if="dom">
         <div class="order-done-content" v-if="success.status">
           <svg class="bi bi-check-circle-fill text-success mb-4" width="60" height="60" viewBox="0 0 16 16"
                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -41,9 +41,11 @@
 
 <script>
 export default {
+  middleware: ['guest'],
   name: "Verify",
   data(){
     return{
+      dom: false,
       success:{
         status: null,
         message: null
@@ -52,17 +54,26 @@ export default {
   },
   methods: {
     async verify() {
+      this.$vs.loading({
+        color: process.env.COLOR_BASE,
+        text: 'Validando. Espere por favor...'
+      })
       const params = this.$route.params
       const query = Object.keys(this.$route.query)
         .map(k => `${k}=${this.$route.query[k]}`)
         .join('&');
+      this.success.status = true
       await this.$axios.post(
         `/api/v1/verification/verify/${params.id}?${query}`
       ).then(resp =>{
+        this.$vs.loading.close()
         this.success.status = true
+        this.dom = true
       }).catch(e =>{
+        this.$vs.loading.close()
         this.success.status = false
         this.success.message = e.response.data.errors.message
+        this.dom = true
       })
     }
   },

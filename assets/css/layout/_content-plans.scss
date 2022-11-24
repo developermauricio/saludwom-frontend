@@ -15,5 +15,8 @@
   .btn-select-plan.active{
     background-color: #ffffff !important;
   }
+  .price-table-one .single-price-content{
+    @include media(xs) { max-width: 5rem !important; }
+  }
 
 }

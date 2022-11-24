@@ -1,6 +1,17 @@
-#modal-schedule .close{
+#modal-schedule .close {
   display: none !important;
 }
-#modal-schedule .modal-header{
+
+#modal-schedule .modal-header {
   border: none !important;
+}
+
+.select-doctor-schedule{
+  cursor: pointer;
+  transition: transform 300ms;
+}
+
+.select-doctor-schedule:hover {
+  box-shadow: 0 0 30px rgba(216, 92, 114, 0.16) !important;;
+  transform: translateY(-2px);
 }

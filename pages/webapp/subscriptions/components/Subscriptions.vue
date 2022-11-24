@@ -4,33 +4,34 @@
       <vue-confirm-dialog></vue-confirm-dialog>
     </client-only>
 
-<!--    <div class=" mb-4 d-flex justify-content-center align-self-center" v-show="!subscriptions.length > 0 && showMessage">-->
-<!--      <h5 class="">No hay suscripciones disponibles</h5>-->
-<!--    </div>-->
-    <div class="container">
+    <div class=" mb-4 d-flex justify-content-center align-self-center" v-if="!subscriptions.length > 0 && showMessage">
+      <h5 class="">No hay suscripciones disponibles</h5>
+    </div>
+    <div class="container" v-else>
       <div class="d-flex justify-content-between mb-2">
         <div>
           <h6>Total de suscripciones: {{ totalSubs }} </h6>
         </div>
         <vs-dropdown vs-custom-content vs-trigger-click class="d-flex content-filter">
-          <i class="bx bx-filter icon-filter"></i>
-          <div class="d-flex justify-content-center align-items-center">
-            <p class="m-0 text-filer">Filtrar</p>
-          </div>
+          <!--          <i class="bx bx-filter icon-filter"></i>-->
+          <!--          <div class="d-flex justify-content-center align-items-center">-->
+          <!--            <p class="m-0 text-filer">Filtrar</p>-->
+          <!--          </div>-->
 
           <vs-dropdown-menu>
             <div class="p-2">
               <h6>Filtra por estado</h6>
-              <!--                <div v-for="state in filterState" :key="state.state">-->
-              <!--                  <vs-checkbox-->
-              <!--                    color="#792151"-->
-              <!--                    class="mb-2"-->
-              <!--                    :id="state.state"-->
-              <!--                    :vs-value="state.state"-->
-              <!--                    v-model="filters">{{ state.title }}-->
+              <div v-for="state in filterStateS" :key="state.state">
+                <vs-checkbox
+                  @input="filterGetSub"
+                  color="#792151"
+                  class="mb-2"
+                  :id="state.state"
+                  :vs-value="state.state"
+                  v-model="filters">{{ state.title }}
 
-              <!--                  </vs-checkbox>-->
-              <!--                </div>-->
+                </vs-checkbox>
+              </div>
             </div>
           </vs-dropdown-menu>
         </vs-dropdown>
@@ -49,7 +50,7 @@
           :load-offset="100"
           :finished="loadingRefreshData">
 
-          <div class="card mb-3" v-for="(subscription, index) in filterListSubscription" :key="subscription.id">
+          <div class="card mb-3" v-for="(subscription, index) in subscriptions" :key="subscription.id">
             <div class="card-body">
               <!-- Content-->
               <div class="d-flex justify-content-between">
@@ -112,8 +113,15 @@ export default {
       totalSubs: null,
       filters: [],
       filterState: [],
+      filterStateS: [
+        {state: '1', title: 'Pendiente'},
+        {state: '2', title: 'Cancelado'},
+        {state: '3', title: 'Rechazado'},
+        {state: '4', title: 'Activo'},
+        {state: '5', title: 'Completado'}
+      ],
 
-      showMessage:false,
+      showMessage: false,
       error: false,
       page: 1,
       loadingRefreshData: false,
@@ -131,49 +139,27 @@ export default {
       return this.subscriptions
     }
   },
+
   methods: {
-    moreGetSubscriptions(done) {
-      if (this.page <= this.lastPage) {
-        this.page++
-        // this.loadingRefreshData = true
-        this.$axios.get(`/api/v1/get-subscriptions/?page=${this.page}`).then(({data}) => {
-          data.data.data.map(item => {
-            this.subscriptions.push(item)
+    filterGetSub() {
+      if (this.filters.length > 0) {
+        this.initData()
+        this.$axios.get(`/api/v1/get-subscriptions-state/${JSON.stringify(this.filters)}`).then(resp => {
+          this.subscriptions = resp.data.data
+        }).catch((e) => {
+          console.log('ERROR', e);
+          this.$toast.error({
+            title: 'Error',
+            message: 'Error al obtener las suscripciones. Consulte con el administrador.',
+            showDuration: 1000,
+            hideDuration: 8000,
           })
-          // this.loadingRefreshData = false
-        }).catch(e => {
-          console.log('Error ', e);
+          this.$vs.loading.close()
         })
-        // window.onscroll = function () {
-        //   alert('hola')
-        //   if (this.page > this.lastPage) {
-        //     return
-        //   }
-        //   if ((window.innerHeight + Math.ceil(window.pageYOffset)) >= document.body.offsetHeight) {
-        //     this.loadingRefreshData = true
-        //     setTimeout(() => {
-        //       this.page = this.page + 1
-        //
-        //       this.$axios.get(`/api/v1/get-subscriptions/?page=${this.page}`).then(({data}) =>{
-        //         data.data.map(item =>{
-        //           this.subscriptions.push(item)
-        //         })
-        //         this.loadingRefreshData = false
-        //       }).catch(e =>{
-        //         console.log('Error ', e.response);
-        //       })
-        //
-        //     }, 500)
-        //   }
-        // }
-        done();
       } else {
-        this.page = 1
-        this.loadingRefreshData = true
+        this.initData()
+        this.getSubscriptions()
       }
-      // setTimeout(() => {
-      //   this.$refs.loadmoreRef.checkSroll();
-      // }, 1500);
     },
     initData() {
       this.showMessage = false
@@ -182,9 +168,12 @@ export default {
       this.loadingRefreshData = false
     },
     onRefresh(done) {
-      this.initData()
-      this.getSubscriptions()
-      done();
+      setTimeout(() => {
+        this.initData()
+        this.getSubscriptions()
+        done();
+      }, 500)
+
     },
     onLoad(done) {
       if (this.page <= this.lastPage) {
@@ -198,8 +187,8 @@ export default {
     async getSubscriptions() {
 
       await this.$axios.get(`/api/v1/get-subscriptions/?page=${this.page}`).then(({data}) => {
-        if (data.data.data.length < 0){
-         return this.showMessage = true
+        if (data.data.data.length < 0) {
+          return this.showMessage = true
         }
         data.data.data.forEach((item) => {
           this.subscriptions.push(item)
@@ -207,22 +196,16 @@ export default {
         this.page++;
         this.lastPage = data.lastPage
         this.totalSubs = data.total
-        // this.subscriptions = []
-        // this.subscriptions = data.data.data
         this.$vs.loading.close()
-
-
-        // this.fetch();
-        // this.loadingRefreshData = false
-        /* Agrear filtros*/
-        // resp.data.data.map((data) => {
+        /* Agregar filtros*/
+        // data.data.data.map((data) => {
         //   if (this.filterState.length <= 0) {
         //     this.addFilters(data)
         //   }
         // })
-        // resp.data.data.map((data) => {
+        // data.data.data.map((data) => {
         //   let exit = this.filterState.some(item => item.state === data.state)
-        //   if (!exit){
+        //   if (!exit) {
         //     this.addFilters(data)
         //   }
         // })
@@ -278,7 +261,16 @@ export default {
                   showDuration: 1000,
                   hideDuration: 5000,
                 })
-                this.getSubscriptions()
+                this.subscriptions.forEach((subs, index) => {
+                  if (subs.id === resp.data.data.id) {
+                    localStorage.removeItem('subscription')
+                    this.subscriptions[index].state = '2'
+                  }
+                })
+                this.subscriptions.sort((a, b) => {
+                  return b.state - a.state
+                })
+
               }).catch(e => {
                 this.$vs.loading.close()
                 console.log('ERROR CANCELAR SUSCRIPCIÓN', e.response)
@@ -373,7 +365,6 @@ export default {
   mounted() {
     this.loading()
     this.getSubscriptions()
-    // this.fetch();
     bus.$on('cancelledSubscription', (data) => {
       setTimeout(() => {
         this.cancelSubscription(data)

@@ -2,7 +2,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     script: [
-      { src: 'https://js.stripe.com/v3' },
+      // { src: 'https://js.stripe.com/v3' },
       { dev: "export NODE_TLS_REJECT_UNAUTHORIZED=0 && nuxt --env.NODE_TLS_REJECT_UNAUTHORIZED=0",}
     ],
     title: 'saludwom',
@@ -44,8 +44,8 @@ export default {
 
   auth: {
     redirect: {
-      home: '/webapp/inicio'
-      // login: '/login'
+      home: '/webapp/inicio',
+      logout: '/login'
     },
     strategies: {
       local: {
@@ -77,6 +77,7 @@ export default {
     '~/plugins/axios',
     '~/plugins/vue-sax',
     '~/plugins/vuelidate',
+    '~/plugins/is-subscription',
     '~/plugins/vue-multiselect',
     { src: '~/plugins/vuex-persist', ssr: false,  mode: 'client' },
     { src: '~/assets/js/active.js', mode: 'client'},
@@ -90,13 +91,17 @@ export default {
     { src: '~/plugins/splideplugin' , mode: 'client' },
     { src: '~/plugins/cxlt-vue2-toastr' , mode: 'client' },
     { src: '~/assets/js/tiny-slider.js', mode: 'client'},
-    { src: '~/plugins/vue-file-agent.js', mode: 'client'},
+    { src: '~/plugins/vue-file-agent.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-signature-pad' , mode: 'client' },
     { src: '~/assets/js/slideToggle.min.js', mode: 'client'},
     { src: '~/assets/js/internet-status.js', mode: 'client'},
     { src: '~/assets/js/rangeslider.min.js', mode: 'client'},
     { src: '~/plugins/vue-phone-number-input.js', ssr: false},
-    { src: '~/plugins/stripe-elements.js', mode: 'client', ssr: false},
+    // { src: '~/plugins/stripe-elements.js', mode: 'client', ssr: false},
+    { src: '~/plugins/v-money.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vuejs-smart-table.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vue-functional-calendar.js', mode: 'client', ssr: false},
+    { src: '~/plugins/vue-currency-filter.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-fullpage-modal.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-confirm-dialog.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-credit-card-validation.js', mode: 'client', ssr: false},
@@ -137,6 +142,7 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    'vue-scrollto/nuxt'
 
   ],
 

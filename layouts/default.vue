@@ -24,9 +24,6 @@ export default {
     }
   },
   mounted() {
-    // if (!this.$auth.loggedIn){
-    //   this.$router.push({name: 'login'});
-    // }
     bus.$emit('logoPrimary', process.env.LOGO_PRIMARY);
   }
 }

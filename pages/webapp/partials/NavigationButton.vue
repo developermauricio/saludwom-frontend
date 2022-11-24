@@ -96,8 +96,15 @@ export default {
         this.$emit('header', this.title, false, true, localStorage.getItem('currentRoute'))
         this.iconActiveProfileInfo(true)
         break;
-      case 'index.subscriptions': //Submenu o hijo del perfil
+      case 'index.subscriptions':
         this.title = 'Suscripciones'
+        this.$emit('header', this.title, false, true, localStorage.getItem('currentRoute'))
+        this.iconActiveProfileInfo(true)
+        localStorage.removeItem('currentRoute')
+        // localStorage.setItem('currentRoute', route.path)
+        break;
+      case 'index.payment.history':
+        this.title = 'Historial de Pagos'
         this.$emit('header', this.title, false, true, localStorage.getItem('currentRoute'))
         this.iconActiveProfileInfo(true)
         localStorage.removeItem('currentRoute')
@@ -116,7 +123,7 @@ export default {
         break;
       /* Rutas o componentes para las valoraciones*/
       case 'valuation.create': //Submenu o hijo del perfil
-        this.title = 'Crear Valoración'
+        this.title = 'Crear Objetivo'
         this.$emit('header', this.title, false, true, localStorage.getItem('currentRoute'))
         break;
     }
@@ -128,11 +135,15 @@ export default {
       /* Nos permite saber si estamos en el componente InfoProfile para activar el icono del perfil*/
       if (to.name === 'profile.info'){
         this.iconActiveProfileInfo(true)
-        bus.$emit('profile.info', 'Datos del usuario', false, true, localStorage.getItem('currentRoute'));
+        bus.$emit('profile.info', 'Datos del Usuario', false, true, localStorage.getItem('currentRoute'));
       }
       if (to.name === 'index.subscriptions'){
         this.iconActiveProfileInfo(true)
         bus.$emit('index.subscriptions', 'Suscripciones', false, true, localStorage.getItem('currentRoute'));
+      }
+      if (to.name === 'index.payment.history'){
+        this.iconActiveProfileInfo(true)
+        bus.$emit('index.payment.history', 'Historial de Pagos', false, true, localStorage.getItem('currentRoute'));
       }
       if (to.name === 'index.profile'){
         bus.$emit('index.profile', 'Perfil', true, false, '');
@@ -158,7 +169,7 @@ export default {
 
       /* Nos permite saber si estamos en el componente CreateValuation */
       if (to.name === 'valuation.create'){
-        bus.$emit('valuation.create', 'Crear valoración', false, true, localStorage.getItem('currentRoute'));
+        bus.$emit('valuation.create', 'Crear Objetivo', false, true, localStorage.getItem('currentRoute'));
       }
     }
   },

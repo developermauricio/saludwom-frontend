@@ -2,7 +2,7 @@
     <div class="container">
       <div class="row g-3">
         <!--=====================================
-           SERVICIOS
+           SUSCRIPCIONES
        ======================================-->
         <div class="col-12 col-sm-12 col-lg-12 mb-3">
           <div class="card bg-secondary bg-img bg-cards" style="cursor: pointer">
@@ -12,6 +12,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-12 col-lg-12 mb-3">
+
           <Subscriptions/>
         </div>
       </div>

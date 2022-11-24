@@ -81,9 +81,13 @@ export default {
   name: "Stripe",
   data() {
     return {
+      // checkDocumentUser: false,
       errors:[
-
       ],
+      document:{
+        number: null,
+        documentType: null,
+      },
       card: {
         amount: parseFloat(this.planData.price),
         cardExpiry: "",
@@ -98,7 +102,7 @@ export default {
       user: this.$auth.user,
     };
   },
-  props: ['planData'],
+  props: ['planData', 'checkDocument'],
 
   validations: {
     card: {
@@ -108,19 +112,37 @@ export default {
       name: {required},
     }
   },
-
+  created() {
+    bus.$on('dataDocument', (data) => {
+      this.document.number = data.number
+      this.document.documentType = data.documentType
+    })
+  },
   methods: {
     async paymentStripe() {
       this.$v.card.$touch();
+      bus.$emit('validateDocument');
       if (this.$v.$invalid) {
         this.$toast.error({
           title: 'Error',
-          message: 'Verifique que todos los campos requeridos esten llenos o bien diligenciados.',
+          message: 'Verifique que todos los campos requeridos estén llenos o bien diligenciados.',
           showDuration: 1000,
           hideDuration: 8000,
         })
         return
       }
+  if (!this.checkDocumentUser){
+    if (this.document.number === '' || this.document.number === null || !this.document.documentType){
+      this.$toast.error({
+        title: 'Error',
+        message: 'Verifique que todos los campos requeridos estén llenos o bien diligenciados.',
+        showDuration: 1000,
+        hideDuration: 8000,
+      })
+      return
+    }
+  }
+
       // let expirationDate = this.periodPlan(this.planData.period)
       // console.log(expirationDate)
       const data = new FormData()
@@ -134,6 +156,9 @@ export default {
       data.append('plan_name', this.planData.name);
       data.append('plan_period', this.planData.period);
       data.append('expiration_date_plan', this.planData.period);
+
+      data.append('documentNumber', this.document.number)
+      data.append('documentDocumentType', JSON.stringify(this.document.documentType))
 
       await this.$axios.get('/api/v1/checkout/intent').then(async resp => {
         this.$vs.loading({
@@ -159,9 +184,10 @@ export default {
           this.$vs.loading.close()
           // console.log('RESPUESTA PAGO', resp)
         }).catch(e => {
+          console.log(e.response.data)
           this.$toast.error({
             title: 'Error',
-            message: e.response.data.error,
+            message: 'Error al realizar el proceso de pago. Por favor contacte al administrador',
             showDuration: 1000,
             hideDuration: 10000,
           })
@@ -188,6 +214,14 @@ export default {
         this.card.expireYear = val.substr(4, 6)
       }
     }
+  },
+  mounted() {
+    // setTimeout(() =>{
+    //   bus.$on('checkDocumentUser', (data) =>{
+    //     this.checkDocumentUser = data
+    //   })
+    // }, 500)
+
   }
 }
 </script>

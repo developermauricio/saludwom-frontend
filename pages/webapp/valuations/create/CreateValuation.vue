@@ -1,85 +1,105 @@
 <template>
-  <div class="container">
+  <div v-if="!subscription" class="container">
+    <h2 class="text-center">No tienes suscripción</h2>
+  </div>
+  <div v-else class="container">
     <CardWelcome/>
+    <vue-confirm-dialog></vue-confirm-dialog>
     <div class="card">
       <div class="card-body">
+
+        <!--  NOMBRE DEL TRATAMIENTO -->
+        <div class="mt-4">
+          <div class="form-group">
+            <label class="form-label" :class="{ 'text-danger': $v.valuation.name.$error }" for="">Agrega un nombre a tu
+              objetivo<span class="text-danger">*</span></label>
+            <p class="m-0 text-light">Ejemplo: Mejoré mi postura, quiero mi abdomen plano, etc.</p>
+            <input
+              class="form-control mt-2"
+              type="text"
+              v-model.trim="valuation.name"
+              :class="{ 'is-invalid': $v.valuation.name.$error }"
+              placeholder="">
+          </div>
+        </div>
         <!--  SELECCIONAR EL TIPO DE TRATAMIENTO -->
         <div>
-          <label class="form-label">Seleccione el tipo de tratamiento:</label>
+          <label class="form-label" :class="{ 'text-danger': $v.valuation.selectedTreatment.$error }">Seleccione el tipo
+            de tratamiento<span class="text-danger">*</span></label>
           <multiselect
-            v-model="selectedTreatment"
-            :options="treatments" :searchable="true" :close-on-select="true" selectedLabel="Seleccionado"
-            deselectLabel="" selectLabel="Seleccionar tratamiento" :show-labels="true"
+            :class="{ 'is-invalid': $v.valuation.selectedTreatment.$error }"
+            v-model="valuation.selectedTreatment"
+            :options="treatments" :custom-label="nameSelect" :searchable="true" :close-on-select="true"
+            selectedLabel="Seleccionado"
+            deselectLabel="" selectLabel="Seleccionar" :show-labels="true"
             placeholder="Buscar tratamiento..."></multiselect>
         </div>
         <!--  DESCRIPCIÓN DE LOS OBJETIVOS -->
         <div class="mt-4">
           <div class="form-group">
-            <label class="form-label" for="">Dinos los objetivos a los que quiere llegar con el tratamiento:</label>
-            <textarea class="form-control" name="textarea" cols="5" rows="6"></textarea>
+            <label class="form-label"
+                   :class="{ 'text-danger': $v.valuation.objectives.$error }"
+                   for="">Dinos los objetivos a los que quiere llegar con el tratamiento<span
+              class="text-danger">*</span></label>
+            <textarea class="form-control"
+                      v-model="valuation.objectives"
+                      :class="{ 'is-invalid': $v.valuation.objectives.$error }"
+                      name="textarea" cols="7" rows="7"></textarea>
           </div>
         </div>
         <!--  CARGAR ARCHIVOS -->
         <div class="mt-4">
-          <label class="form-label" for="">Subir fotos o documentos necesarios:</label>
-          <vue-dropzone
-            ref="filesDropzone"
-            id="dropzone"
-            :useCustomSlot="true"
-            :options="fileOptions">
-            <div class="dropzone-custom-content">
-              <h6> Clic o arrastra aquí imágenes, o documentos</h6>
-            </div>
-          </vue-dropzone>
+          <label class="form-label" for="">Subir fotos o documentos necesarios (Opcional)</label>
+          <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o fotos que creas necesarias para comprender más tu
+            objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. </p>
+          <UploadFilesValuation/>
         </div>
         <!--  CALENDARIO CON LA AGENDA -->
-        <div class="mt-4">
-          <label class="form-label" for="">Agenda tu cita:</label>
-          <div>
-            <a class="btn btn-primary mt-2" @click="openModalSchedule = true">Seleccionar Fechas</a>
+        <div v-if="subscription.plan.number_appointments > 0">
+          <div class="mt-4" v-if="valuation.selectedTreatment.doctors">
+            <label class="form-label" for="">Selecciona el especialista para <strong>agendar tu cita:</strong></label>
           </div>
-
-          <!--=====================================
-            MODAL AGENDAR FECHAS
-          ======================================-->
-          <b-modal
-            ref="drag"
-            v-model="openModalSchedule"
-            class="modal-schedule"
-            id="modal-schedule"
-            @closeModal="closeModal"
-            @hide="onHideModal"
-            modal-backdrop
-            centered
-            title=""
-          >
-            <h4
-              class="text-center mb-4 title-edit-icon pt-4"
-              style="
-          font-weight: 500 !important;
-          margin-top: -3.5rem;
-        "
-            >
-              Agendar Citas
-            </h4>
-            <PatientSchedule/>
-            <template #modal-footer="{ ok, cancel, hide }">
-             <button class="btn btn-secondary" @click="closeModal">Cancelar</button>
-             <button class="btn btn-primary">Guardar Fechas</button>
-            </template>
-          </b-modal>
-
-
+          <div class="mt-2" v-for="doctor in valuation.selectedTreatment.doctors" :key="doctor.id">
+            <div class="card border select-doctor-schedule">
+              <div class="card-body">
+                <div class="d-flex" @click="openDoctorSchedule(doctor)">
+                  <div class="d-flex justify-content-end align-items-end">
+                    <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
+                  </div>
+                  <div class="ml-2 mt-2">
+                    <div class="d-flex">
+                      <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                    </div>
+                    <p class="mb-0 text-primary">Profesional Especialista</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <hr>
+
+        <div class="mt-4" v-if="valuation.appointments.length > 0">
+          <label class="form-label" for="">Tu cita{{ this.valuation.appointments.length >= 1 ? 's' : '' }} son:</label>
+          <ul>
+            <li v-for="appointment in this.valuation.appointments" :key="'appoint-'+appointment.date"
+                class="font-weight-bold">
+              <i
+                class="bx bx-check-circle check-appointment ml-1 text-success mr-1"></i>{{
+                $dateFns.format(appointment.date, 'PPPP')
+              }}
+              {{ appointment.hour }}
+              <p>Esp. {{ appointment.doctor.name }} {{ appointment.doctor.last_name }}</p>
+            </li>
+          </ul>
+        </div>
         <!--  ACEPTAR CONSENTIMIENTOS -->
-        <div class="mt-4">
-          <ConsentForms/>
+        <div class="mt-4" v-if="!checkVerifySignature">
+          <hr>
+          <ConsentForms @consent="consent"/>
         </div>
-        <hr>
         <!--  GUARDAR Y AGENDAR -->
         <div class="mt-4">
-          <a class="btn btn-primary btn-block mt-2">Agendar Cita</a>
+          <a class="btn btn-primary btn-block mt-2" @click="saveValuation">Crear y enviar al especialista</a>
         </div>
       </div>
     </div>
@@ -94,6 +114,9 @@ import VueDropzone from 'nuxt-dropzone'
 import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 import 'nuxt-dropzone/dropzone.css'
 import PatientSchedule from "../../../../components/calendar/PatientSchedule";
+import DoctorSchedule from "./components/DoctorSchedule";
+import {bus} from "../../../../plugins/bus";
+import {required} from "vuelidate/lib/validators";
 
 export default {
   name: "CreateValuation",
@@ -105,6 +128,21 @@ export default {
   },
   data() {
     return {
+      checkVerifySignature: false,
+      signature: null,
+      valuation: {
+        name: '',
+        consent: '',
+        signature: null,
+        objectives: '',
+        subscriptionId: null,
+        patientId: null,
+        doctorId: null,
+        selectedTreatment: '',
+        appointments: [],
+      },
+      treatments: [],
+      subscription: null,
       openModalSchedule: false,
       fileOptions: {
         addRemoveLinks: true,
@@ -118,19 +156,158 @@ export default {
         acceptedFiles: "image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.tsv,.ppt,.pptx,.pages,.odt,.rtf",
         autoProcessQueue: false,
       },
-      selectedTreatment: '',
-      treatments: ['Mejora Postura', 'Embarazo/Preparto/Postparto', 'Cáncer: Rehabilitación Funcional', 'Stop Dolor Abdominoperineal', 'Fortalecimiento Abdominal y del Suelo Pélvico']
+      // treatments: ['Mejora Postura', 'Embarazo/Preparto/Postparto', 'Cáncer: Rehabilitación Funcional', 'Stop Dolor Abdominoperineal', 'Fortalecimiento Abdominal y del Suelo Pélvico']
+    }
+  },
+  validations: {
+    valuation: {
+      name: {required},
+      objectives: {required},
+      selectedTreatment: {required},
     }
   },
   methods: {
-    deleteFile(fileRecord) {
-      alert(fileRecord)
-      let i = this.fileRecords.indexOf(fileRecord);
-      if (i !== -1) {
-        this.fileRecords.splice(i, 1);
+    consent(data) {
+      if (data === true) {
+        this.valuation.consent = 'accept'
       } else {
-        // this.deleteUploadedFile(fileRecord);
+        this.valuation.consent = 'not_accept'
       }
+    },
+    async saveValuation() {
+      this.$v.valuation.$touch();
+      if (this.$v.$invalid) {
+        this.$toast.error({
+          title: 'Error',
+          message: 'Verifique que todos los campos requeridos esten llenos.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        return
+      }
+
+      if (this.signature === null) {
+        this.$toast.error({
+          title: 'Error',
+          message: 'Firma y guarda',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        return
+      }
+      console.log(this.valuation.appointments.length)
+      if (this.subscription.plan.number_appointments > 0 && this.valuation.appointments.length === 0) {
+        this.$toast.error({
+          title: 'Error',
+          message: 'Selecciona un doctor y agenda tu cita.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        return
+      }
+      this.valuation.subscriptionId = this.subscription.id
+      this.valuation.patientId
+      this.valuation.appointments.forEach((item) => {
+        this.valuation.doctorId = item.doctor.id
+      })
+
+      this.$confirm(
+        {
+          message: '¿Esta seguro de crear tu objetivo?',
+          button: {
+            no: 'No',
+            yes: 'Si'
+          },
+          /**
+           * Callback Function
+           * @param {Boolean} confirm
+           */
+          callback: async confirm => {
+            if (confirm) {
+              this.$vs.loading({
+                color: process.env.COLOR_BASE,
+                text: 'Espere por favor...'
+              })
+              try {
+                const resp = await this.$axios.post(
+                  'api/v1/create-valoration',
+                  this.valuation
+                );
+                if (resp.status === 200) {
+                  this.$vs.loading.close()
+                  bus.$emit('saveFiles');
+                  this.$toast.success({
+                    title: 'Confirmación',
+                    message: 'Tu objetivo se creo exitosamente. Exitoso!',
+                    showDuration: 1000,
+                    hideDuration: 5000,
+                  })
+                }
+              } catch (e) {
+                this.$vs.loading.close()
+                this.$toast.error({
+                  title: 'Error',
+                  message: 'Error al crear tu objetivo. Consulte con el administrador.',
+                  showDuration: 1000,
+                  hideDuration: 8000,
+                })
+              }
+            }
+          }
+        })
+      // this.validations.subscriptionId = this.subscription.id
+    },
+    nameSelect({treatment}) {
+      return `${treatment}`
+    },
+    openDoctorSchedule(doctor) {
+      this.$FModal.show(
+        {
+          component: DoctorSchedule,
+          clickToClose: false,
+          escToClose: false
+          // placement: 'center top',
+        },
+        {
+          data: doctor,
+        }
+      )
+    },
+    async checkSignature() {
+      await this.$axios.get('/api/v1/check-signature').then(resp => {
+        if (resp.data !== 'no check signature') {
+          this.checkVerifySignature = true
+          this.signature = resp.data
+        }
+      }).catch(e => {
+        console.log('ERROR', e);
+        this.$toast.error({
+          title: 'Error',
+          message: 'Error al verificar firma del paciente. Consulte con el administrador.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+      })
+    },
+    /*Obtener todos los tratamientos*/
+    async getTreatments() {
+      this.$vs.loading({
+        color: process.env.COLOR_BASE,
+        text: 'Espere por favor...'
+      })
+      await this.$axios.get('/api/v1/get-treatments').then(resp => {
+        this.treatments = resp.data.data
+        this.$vs.loading.close()
+      }).catch((e) => {
+        console.log('ERROR', e);
+        this.$toast.error({
+          title: 'Error',
+          message: 'Error al obtener los tratamientos. Consulte con el administrador.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        this.$vs.loading.close()
+      })
     },
     closeModal() {
       this.openModalSchedule = false
@@ -148,6 +325,28 @@ export default {
     handleBackdrop() {
       console.log("Backdrop clicked");
     },
+  },
+  mounted() {
+    this.getTreatments()
+    this.checkSignature()
+    this.subscription = JSON.parse(localStorage.getItem('subscription'))
+    setTimeout(() => {
+      bus.$on('appointments', (appointment) => {
+        this.valuation.appointments = appointment
+      })
+    }, 200)
+    setTimeout(() => {
+      bus.$on('addSignature', (signature) => {
+        this.valuation.signature = signature
+        this.signature = signature
+      })
+    }, 200)
+    setTimeout(() => {
+      bus.$on('clearSignature', () => {
+        this.valuation.signature = null
+        this.signature = null
+      })
+    }, 200)
   }
 }
 </script>

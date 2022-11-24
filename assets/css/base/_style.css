@@ -6281,7 +6281,7 @@ input[type=color].form-control.is-valid, input[type=color].form-control:valid {
   background-color: #D85C72;
   border-radius: 1rem;
   overflow: hidden;
-  max-width: 22rem;
+  max-width: 18.5rem;
   padding: 2.5rem;
 }
 
@@ -9993,4 +9993,26 @@ a.affan-element-item{
 }
 .item-dropdown{
   border-top: 0.5px solid #e5e5e5 !important;
+}
+.splide__slide{
+  margin-right: 1rem !important;
+}
+.smart-pagination{
+  margin-top: 2rem !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+.flatpickr-day.selected{
+  background: #49a65a!important;
+  border-color: #49a65a !important;
+}
+.text-light{
+  font-size: 12px !important;
+  color: #a4a4a4 !important;
+}
+.theme-list .vue-file-agent .file-preview-wrapper .file-preview .file-delete{
+  color: #373737 !important;
+}
+.theme-list .vue-file-agent .file-delete svg{
+  font-weight: bold !important;
 }

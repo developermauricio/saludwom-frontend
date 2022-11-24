@@ -3,7 +3,7 @@
     <nuxt-link to="/webapp/perfil/info">
       <div class="card-body d-flex align-items-center">
         <div class="user-avatar align-content-start mr-3">
-          <img class="avatar-profile" :src="`${$config.urlBack}/${user.picture}`" alt="">
+          <img class="avatar-profile" :src="`${$config.urlBack}/${user.picture}`" alt="Salud WoM">
         </div>
         <div class="user-info">
           <div class="d-flex align-items-center">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </nuxt-link>
-      <span class="badge bg-warning text-white">Tú próxima cita es el 24 de diciembre 2022</span>
+      <span class="badge bg-success text-white">Tú próxima cita es el 24 de diciembre 2022</span>
   </div>
 </template>
 

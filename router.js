@@ -26,6 +26,8 @@ const routes = [
       { path: '/webapp/planes', name: 'index.plans', component: page('webapp/plans/IndexPlans.vue')},
       /* Rutas para las suscripciones*/
       { path: '/webapp/perfil/suscripciones', name: 'index.subscriptions', component: page('webapp/subscriptions/IndexSubscriptions.vue')},
+      /* Rutas para el historial de pagos*/
+      { path: '/webapp/perfil/historial-pagos', name: 'index.payment.history', component: page('webapp/paymentHistory/IndexPaymentHistory.vue')},
     ]
   },
 
