@@ -36,66 +36,57 @@
           </vs-dropdown-menu>
         </vs-dropdown>
       </div>
-      <div class="wrap">
-        <vue-loadmore
-          ref="loadmoreRef"
-          :pulling-text="'Actualizar'"
-          :finished-text="'Actualizado'"
-          :loosing-text="'Suelta para actualizar'"
-          :refresh-text="'Actualizando'"
-          :loading-text="'Obteniendo suscripciones'"
-          :success-text="'Actualizado correctamente'"
-          :on-refresh="onRefresh"
-          :on-loadmore="onLoad"
-          :load-offset="100"
-          :finished="loadingRefreshData">
-
-          <div class="card mb-3" v-for="(subscription, index) in subscriptions" :key="subscription.id">
-            <div class="card-body">
-              <!-- Content-->
-              <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                  <!-- Icon-->
-                  <div
-                    :class="`card w-25 d-flex justify-content-end align-items-end p-2 bg-icon-${iconColor(subscription.plan.name)}`">
-                    <img :src="require(`~/assets/img/icons/${iconPlan(subscription.plan.name)}`)" width="60"
-                         alt="Salud WoM">
-                  </div>
-                  <!-- Info-->
-                  <div class="ml-2">
-                    <h5 class="sb-title m-0">{{ subscription.plan.name }}</h5>
-                    <p class="m-0"><strong class="sb-price">€{{ subscription.plan.price }}</strong> / Vence
-                      {{ $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') }}</p>
-                    <span :class="`badge bg-${ stateColor(subscription.state)} ms-2 text-white`">{{
-                        stateTitle(subscription.state)
-                      }}</span>
-                  </div>
-                </div>
-                <!-- Opciones-->
-                <vs-dropdown vs-custom-content vs-trigger-click>
-                  <i class="bx bx-dots-vertical"></i>
-                  <vs-dropdown-menu>
-                    <vs-dropdown-item @click="openInfoSubs(subscription.plan, subscription)">
-                      <p class="m-0">Más Info</p>
-                    </vs-dropdown-item>
-                    <vs-dropdown-item
-                      v-if="subscription.state !== '2' && subscription.state !== '5' && subscription.state !== '1'"
-                      :class="`${subscription.state !== '2' ? 'item-dropdown' || subscription.state !== '5' : ''}`"
-                      @click="cancelSubscription(subscription.id)">
-                      <p class="m-0">Cancelar Suscripción</p>
-                    </vs-dropdown-item>
-                    <vs-dropdown-item v-if=" subscription.state !== '4' && subscription.state !== '1'"
-                                      :class="`${subscription.state !== '4' ? 'item-dropdown' :'' }`">
-                      <nuxt-link to="/webapp/planes"><p class="m-0">Renovar o comprar</p></nuxt-link>
-                    </vs-dropdown-item>
-                  </vs-dropdown-menu>
-                </vs-dropdown>
+      <load-more
+        :pageIndex="page"
+        :pageSize="lastPage"
+        :totalCount="totalCount"
+        :openRefresh="openRefresh"
+        @refresh="onRefresh"
+        @loadmore="onLoad">
+      <div class="card mb-3" v-for="(subscription, index) in subscriptions" :key="subscription.id">
+        <div class="card-body">
+          <!-- Content-->
+          <div class="d-flex justify-content-between">
+            <div class="d-flex">
+              <!-- Icon-->
+              <div
+                :class="`card w-25 d-flex justify-content-end align-items-end p-2 bg-icon-${iconColor(subscription.plan.name)}`">
+                <img :src="require(`~/assets/img/icons/${iconPlan(subscription.plan.name)}`)" width="60"
+                     alt="Salud WoM">
+              </div>
+              <!-- Info-->
+              <div class="ml-2">
+                <h5 class="sb-title m-0">{{ subscription.plan.name }}</h5>
+                <p class="m-0"><strong class="sb-price">€{{ subscription.plan.price }}</strong> / Vence
+                  {{ $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') }}</p>
+                <span :class="`badge bg-${ stateColor(subscription.state)} ms-2 text-white`">{{
+                    stateTitle(subscription.state)
+                  }}</span>
               </div>
             </div>
+            <!-- Opciones-->
+            <vs-dropdown vs-custom-content vs-trigger-click>
+              <i class="bx bx-dots-vertical"></i>
+              <vs-dropdown-menu>
+                <vs-dropdown-item @click="openInfoSubs(subscription.plan, subscription)">
+                  <p class="m-0">Más Info</p>
+                </vs-dropdown-item>
+                <vs-dropdown-item
+                  v-if="subscription.state !== '2' && subscription.state !== '5' && subscription.state !== '1'"
+                  :class="`${subscription.state !== '2' ? 'item-dropdown' || subscription.state !== '5' : ''}`"
+                  @click="cancelSubscription(subscription.id)">
+                  <p class="m-0">Cancelar Suscripción</p>
+                </vs-dropdown-item>
+                <vs-dropdown-item v-if=" subscription.state !== '4' && subscription.state !== '1'"
+                                  :class="`${subscription.state !== '4' ? 'item-dropdown' :'' }`">
+                  <nuxt-link to="/webapp/planes"><p class="m-0">Renovar o comprar</p></nuxt-link>
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
           </div>
-        </vue-loadmore>
+        </div>
       </div>
-
+      </load-more>
     </div>
   </div>
   <!--  </div>-->
@@ -109,6 +100,10 @@ export default {
   name: "Subscriptions",
   data() {
     return {
+      pageIndex: 1,
+      openRefresh: true,
+      totalCount: 0,
+
       subscriptions: [],
       totalSubs: null,
       filters: [],
@@ -163,35 +158,38 @@ export default {
     },
     initData() {
       this.showMessage = false
+      this.openRefresh = false
       this.subscriptions = []
       this.page = 1
       this.loadingRefreshData = false
     },
-    onRefresh(done) {
+    onRefresh() {
       setTimeout(() => {
         this.initData()
         this.getSubscriptions()
-        done();
+        // done();
       }, 500)
 
     },
-    onLoad(done) {
+    onLoad() {
       if (this.page <= this.lastPage) {
         this.getSubscriptions()
       } else {
         this.loadingRefreshData = true
       }
-      done();
+      // done();
     },
     /*Obtener todas las suscripciones*/
     async getSubscriptions() {
 
       await this.$axios.get(`/api/v1/get-subscriptions/?page=${this.page}`).then(({data}) => {
+        this.openRefresh = true
         if (data.data.data.length < 0) {
-          return this.showMessage = true
+          return this.showMessage = false
         }
         data.data.data.forEach((item) => {
           this.subscriptions.push(item)
+          // this.openRefresh = true
         })
         this.page++;
         this.lastPage = data.lastPage
@@ -220,7 +218,6 @@ export default {
         })
         this.$vs.loading.close()
       })
-
     },
 
     openInfoSubs(plan, subscription) {

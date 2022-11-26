@@ -104,8 +104,9 @@ export default {
     { src: '~/plugins/vue-currency-filter.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-fullpage-modal.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-confirm-dialog.js', mode: 'client', ssr: false},
+    // { src: '~/plugins/vue-loadmore-simple.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-credit-card-validation.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vuejs-loadmore.js', mode: 'client', ssr: false}
+    { src: '~/plugins/vuejs-loadmore.js'}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

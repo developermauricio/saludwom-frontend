@@ -8,7 +8,7 @@
       :meta="true"
       :accept="'image/*,video/*,.pdf,.doc,.docx,.ods'"
       :maxSize="'10MB'"
-      :maxFiles="2"
+      :maxFiles="10"
       :helpText="'Clic o arrastra aquí imágenes, o documentos.'"
       :errorText="{
       type: 'Tipo de archivo incorrecto, agrega fotos, videos, word, pdf',

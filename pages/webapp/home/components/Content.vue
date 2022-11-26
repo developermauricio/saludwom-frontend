@@ -39,7 +39,7 @@
         <!--=====================================
            CREA TU VALORACIÓN
        ======================================-->
-        <div class="col-6 col-sm-6 col-lg-6 mb-3" @click="openValuation()">
+        <div class="col-6 col-sm-6 col-lg-6 mb-3" @click="verifySubscription()">
           <div class="card single-product-card">
             <div class="card-body p-3">
               <div class="product-thumbnail d-block text-center">
@@ -114,53 +114,58 @@ export default {
   },
 
   methods: {
-    verifySubscription(){
-      bus.$emit('verifySubscription');
-    },
-   async openValuation() {
-     // this.$vs.loading({
-     //   color: process.env.COLOR_BASE,
-     //   text: 'Verificando. Espere por favor...'
-     // })
-     // setTimeout(() =>{
-     //   this.subscription = JSON.parse(localStorage.getItem('subscription'))
-     // }, 500)
-     this.verifySubscription()
+    verifySubscription() {
+      setTimeout(() =>{
+        bus.$emit('verifySubscription');
+      }, 500)
 
-     setTimeout(() =>{
-       if (!this.subscription){
-         this.$confirm(
-           {
-             message: 'No tienes una suscripción vigente, ¿quieres comprar?',
-             button: {
-               no: 'No',
-               yes: 'Si'
-             },
-             /**
-              * Callback Function
-              * @param {Boolean} confirm
-              */
-             callback: async confirm => {
-               if (confirm) {
-                 this.$router.push({name: 'index.plans'});
-               }
-             }
-           })
-         this.$vs.loading.close()
-       }else{
-         this.$vs.loading.close()
-         this.$router.push({name: 'valuation.create'});
-       }
-     }, 500)
+    },
+    async openValuation() {
+      // this.$vs.loading({
+      //   color: process.env.COLOR_BASE,
+      //   text: 'Verificando. Espere por favor...'
+      // })
+      // setTimeout(() =>{
+      //   this.subscription = JSON.parse(localStorage.getItem('subscription'))
+      // }, 500)
+
+      // this.verifySubscription()
+
+      if (!this.subscription) {
+        this.$confirm(
+          {
+            message: 'No tienes una suscripción vigente, ¿quieres comprar?',
+            button: {
+              no: 'No',
+              yes: 'Si'
+            },
+            /**
+             * Callback Function
+             * @param {Boolean} confirm
+             */
+            callback: async confirm => {
+              if (confirm) {
+                this.$router.push({name: 'index.plans'});
+              }
+            }
+          })
+        this.$vs.loading.close()
+      } else {
+        this.$vs.loading.close()
+        this.$router.push({name: 'valuation.create'});
+      }
     },
   },
 
   mounted() {
-    setTimeout(() =>{
-      bus.$on('sendSubscription', (data) =>{
+    setTimeout(() => {
+      bus.$on('sendSubscription', (data) => {
         this.subscription = data
+        if (this.subscription){
+          this.openValuation()
+        }
       })
-    }, 1000)
+    }, 500)
   }
 }
 </script>

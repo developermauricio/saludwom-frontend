@@ -131,7 +131,7 @@ export default {
         })
         return
       }
-  if (!this.checkDocumentUser){
+  if (this.checkDocumentUser === false){
     if (this.document.number === '' || this.document.number === null || !this.document.documentType){
       this.$toast.error({
         title: 'Error',
