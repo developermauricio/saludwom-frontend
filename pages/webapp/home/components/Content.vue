@@ -44,7 +44,7 @@
             <div class="card-body p-3">
               <div class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/valoracion.png" class="text-center" alt="" width="80">
-                <a class="product-title d-block  text-title-card-home">Personaliza tu cambio</a>
+                <a class="product-title d-block  text-title-card-home">Crea ahora tu nuevo objetivo</a>
               </div>
             </div>
           </div>
@@ -161,9 +161,7 @@ export default {
     setTimeout(() => {
       bus.$on('sendSubscription', (data) => {
         this.subscription = data
-        if (this.subscription){
           this.openValuation()
-        }
       })
     }, 500)
   }
