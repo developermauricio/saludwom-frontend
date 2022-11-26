@@ -142,22 +142,26 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
+    'vue-scrollto/nuxt',
     '@nuxtjs/pwa',
-    'vue-scrollto/nuxt'
 
   ],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     meta: {
-      title: 'SaludWoM',
-      author: 'SaludWoM'
+      title: 'Salud WoM',
+      author: 'Salud WoM'
     },
     manifest: {
-      name: 'SaludWoM',
-      lang: 'en',
+      name: 'Salud WoM',
+      short_name: 'Salud WoM',
+      lang: 'es',
       display: 'standalone',
-      start_url: ''
+      start_url: '/login',
+      workbox: {
+        dev: true // or use a global variable to track the current NODE_ENV, etc to determine dev mode
+      }
       /*workbox: {
         exclude: ['_redirects'],
         enabled: false,
@@ -169,5 +173,9 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {
+    babel: {
+      compact: true
+    }
+  }
 }
