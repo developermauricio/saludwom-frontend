@@ -11,26 +11,50 @@
             <h6 class="mb-0">¿Tienes un cupón?</h6>
             <p class="mb-2">Introduce tu código de cupón aquí y obtén increíbles descuentos!</p>
             <div class="coupon-form">
-              <form action="#">
-                <div class="form-group">
-                  <div class="input-group">
-                    <input class="form-control input-group-text text-start" type="text"
-                           placeholder="INGRESA AQUÍ TU CUPÓN">
-                    <button class="btn btn-primary">Aplicar</button>
-                  </div>
+              <div class="form-group mb-3">
+                <div class="input-group">
+                  <input class="form-control"
+                         v-model.trim="coupon"
+                         type="text"
+                         placeholder="INGRESA AQUÍ TU CUPÓN">
+
+                  <button @click="applyCoupon" class="btn btn-primary">Aplicar</button>
                 </div>
-              </form>
+                <p class="text-success mt-1 font-weight-bold" v-if="messageDiscount.state">Cupón aplicado
+                  exitosamente!!</p>
+              </div>
+            </div>
+            <div class="content-information-pay mb-4" v-if="plan">
+              <div class="total d-flex align-items-center">
+                <h6 class="m-0">Plan Seleccionado:</h6>
+                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{
+                    plan ? plan.name : 'Ningún plan seleccionado'
+                  }}</p>
+              </div>
+              <div class="total d-flex align-items-center">
+                <h6 class="m-0">Valor Plan:</h6>
+                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{ plan ? plan.price + '€' : '0' + '€' }}</p>
+              </div>
+              <div class="discount d-flex align-items-center">
+                <h6 class="m-0">Descuento: </h6>
+                <p class="text-success m-0 ml-2" style="font-size: 1rem">
+                  {{ messageDiscount.discount ? messageDiscount.discount + '%' : '0%' }}</p>
+              </div>
+              <div class="total d-flex align-items-center">
+                <h6 class="m-0">Total a Pagar:</h6>
+                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{ plan ? totalPay + '€' : '0' + '€' }}</p>
+              </div>
             </div>
             <div class="mb-3 d-flex">
               <vs-checkbox color="#792151" v-model="accept"></vs-checkbox>
               <label class="form-check-label text-muted fw-normal" for="checkedCheckbox">Aceptar términos y
                 condiciones</label>
             </div>
-            <button :disabled="!accept" class="btn btn-primary w-100" @click="openCheckout">Pagar {{
+            <button :disabled="!accept" id="payment-button" class="btn btn-primary w-100" @click="openCheckout">Pagar {{
                 plan ? plan.title : ''
               }}
               <!--          <strong style="font-size: 1.2rem">{{ plan ? plan.price+'€' : '' }}</strong> & Registrar-->
-              <strong style="font-size: 1.2rem">{{ plan ? plan.price + '€' : '' }}</strong>
+              <strong style="font-size: 1.2rem">{{ plan ? totalPay + '€' : '' }}</strong>
             </button>
           </div>
 
@@ -61,13 +85,13 @@
               <!--          Agendar Citas-->
             </h4>
             <div>
-              <Checkout @closeModal="closeModal" :plan="plan"/>
+              <Checkout @closeModal="closeModal" :plan="plan" :totalPay="totalPay" :couponApply="messageDiscount"/>
             </div>
           </b-modal>
         </div>
       </div>
     </div>
-    <ConfirmPay v-else/>
+    <ConfirmPay  v-else/>
   </div>
 </template>
 
@@ -84,11 +108,93 @@ export default {
       showPlans: false,
       plans: [],
       plan: null,
+      coupon: '',
       accept: false,
       openModalCheckout: false,
+      messageDiscount: {state: false, discount: null, plan: null, coupon: null, discountTotal: null},
+      totalPay: null,
     }
   },
   methods: {
+    eventSelectScroll(option) {
+      const options = {
+        container: "body",
+        easing: "linear"
+      };
+      setTimeout(() => {
+        this.$scrollTo(option, 1000, options);
+      }, 100);
+    },
+    async applyCoupon() {
+      if (!this.plan) {
+        this.$toast.error({
+          title: 'Por favor',
+          message: 'Para aplicar el cupón, selecciona un plan.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        return
+      }
+      if (!this.coupon) {
+        this.$toast.error({
+          title: 'Por favor',
+          message: 'Para aplicar, ingresa tu cupón.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        return
+      }
+      let applyCoupon = {
+        plan: this.plan,
+        coupon: this.coupon
+      }
+      this.$vs.loading({
+        color: process.env.COLOR_BASE,
+        text: 'Validando cupón. Espere por favor...'
+      })
+      setTimeout( async ()  =>{
+        await this.$axios.post('/api/v1/apply-coupon', applyCoupon).then(res => {
+          this.$vs.loading.close()
+          if (res.status === 202) {
+            this.$toast.error({
+              title: 'Por favor',
+              message: res.data.message,
+              showDuration: 1000,
+              hideDuration: 8000,
+            })
+          } else {
+
+            if (this.messageDiscount.discount === null && this.messageDiscount.plan !== this.plan.id) {
+              this.totalPay = this.totalPay - ((this.totalPay * res.data.data.discount) / 100)
+              this.messageDiscount = {state: true, discount: res.data.data.discount, discountTotal:this.totalPay, plan: this.plan.id, coupon: res.data.data.id}
+              this.$toast.success({
+                title: 'Confirmación',
+                message: 'Cupón aplicado exitosamente!',
+                showDuration: 1000,
+                hideDuration: 5000,
+              })
+            }else{
+              this.$toast.success({
+                title: 'Confirmación',
+                message: 'Cupón ya aplicado!',
+                showDuration: 1000,
+                hideDuration: 5000,
+              })
+            }
+
+          }
+        }).catch(e => {
+          console.log(e, 'ERROR AL APLICAR EL CUPÓN')
+          this.$toast.error({
+            title: 'Atención',
+            message: 'Error al aplicar cupón.',
+            showDuration: 1000,
+            hideDuration: 8000,
+          })
+        })
+      }, 500)
+
+    },
     openCheckout() {
       if (!this.plan) {
         this.$toast.error({
@@ -105,6 +211,15 @@ export default {
     },
     selectedPlan(data) {
       this.plan = data;
+      this.totalPay = data.price
+      setTimeout(() =>{
+        this.eventSelectScroll('#payment-button')
+      }, 200)
+
+      if (this.coupon) {
+        this.messageDiscount.discount = null
+        this.applyCoupon()
+      }
 
     },
     closeModal() {
@@ -154,18 +269,25 @@ export default {
       if (val) {
         bus.$emit('planSendStripe', val)
       }
+    },
+    'coupon': function (val) {
+      if (val) {
+        this.messageDiscount = {state: false, discount: null, plan: null, discountTotal: null, coupon: null}
+        this.totalPay = this.plan.price
+      }
     }
   },
   mounted() {
     this.loading()
     this.getPlans()
     bus.$on('showConfirmation', (data) => {
-      setTimeout(() =>{
+      setTimeout(() => {
         this.confirmPay = true
       }, 500)
 
     })
-  }
+  },
+
 }
 </script>
 

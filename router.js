@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/',
     redirect: to => {
-    return {path: '/webapp/inicio', name: 'index.home', component: page('webapp/home/IndexHome.vue')} 
+    return {path: '/webapp/inicio', name: 'index.home', component: page('webapp/home/IndexHome.vue')}
     }
   },
   /*=============================================
@@ -35,6 +35,9 @@ const routes = [
       },
       /* Rutas para los planes*/
       {path: '/webapp/planes', name: 'index.plans', component: page('webapp/plans/IndexPlans.vue')},
+      /* Rutas para los objetivos*/
+      {path: '/webapp/objetivos', name: 'index.objectives', component: page('webapp/objectives/IndexObjectives.vue')},
+      {path: '/webapp/objetivo/:slug', name: 'show.objective', component: page('webapp/objectives/ShowObjective.vue')},
       /* Rutas para las suscripciones*/
       {
         path: '/webapp/perfil/suscripciones',

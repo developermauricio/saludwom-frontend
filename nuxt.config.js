@@ -17,6 +17,7 @@ export default {
     ]
   },
   publicRuntimeConfig: {
+    timezone: process.env.TIME_ZONE,
     logo: process.env.LOGO_PRIMARY,
     url: process.env.BASE_URL_API_MONITOR_FRONT,
     urlBack: process.env.BASE_URL_API_MONITOR_BACK,
@@ -92,6 +93,7 @@ export default {
     { src: '~/plugins/cxlt-vue2-toastr' , mode: 'client' },
     { src: '~/assets/js/tiny-slider.js', mode: 'client'},
     { src: '~/plugins/vue-file-agent.js', mode: 'client', ssr: false},
+    // { src: '~/plugins/vue-number-format.js', mode: 'client', ssr: false},
     { src: '~/plugins/vue-signature-pad' , mode: 'client' },
     { src: '~/assets/js/slideToggle.min.js', mode: 'client'},
     { src: '~/assets/js/internet-status.js', mode: 'client'},
@@ -128,9 +130,16 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/moment',
     '@nuxtjs/router',
     '@nuxtjs/dotenv'
   ],
+  moment: {
+    defaultLocale: 'es',
+    locales: ['es'],
+    timezone: true,
+    defaultTimezone: 'Europe/Madrid'
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [

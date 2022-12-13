@@ -3,7 +3,7 @@
     <client-only>
       <vue-confirm-dialog></vue-confirm-dialog>
     </client-only>
-    <div class="container">
+    <div class="container content-home">
       <div class="add-new-contact-wrap">
         <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addnewcontact">
           <div>
@@ -39,8 +39,8 @@
         <!--=====================================
            CREA TU VALORACIÓN
        ======================================-->
-        <div class="col-6 col-sm-6 col-lg-6 mb-3" @click="verifySubscription()">
-          <div class="card single-product-card">
+        <div class="col-6 col-sm-6 col-lg-6 mb-3 items-service" @click="verifySubscription()">
+          <div class="card single-card">
             <div class="card-body p-3">
               <div class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/valoracion.png" class="text-center" alt="" width="80">
@@ -53,7 +53,7 @@
             MIS VALORACIONES
         ======================================-->
         <div class="col-6 col-sm-6 col-lg-6">
-          <div class="card single-product-card">
+          <div class="card single-card">
             <div class="card-body p-3">
               <a class="product-thumbnail d-block text-center" href="page-shop-details.html">
                 <img src="@/assets/img/saludwom/valoraciones.png" alt="" width="80">
@@ -67,7 +67,7 @@
             COMPRAR PLANES
         ======================================-->
         <div class="col-6 col-sm-6 col-lg-6">
-          <div class="card single-product-card">
+          <div class="card single-card">
             <div class="card-body p-3">
               <nuxt-link to="/webapp/plans" class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/comprar.png" alt="" width="80">
@@ -82,7 +82,7 @@
             LOGROS Y RECOMPENSAS
         ======================================-->
         <div class="col-6 col-sm-6 col-lg-6">
-          <div class="card single-product-card">
+          <div class="card single-card">
             <div class="card-body p-3">
               <nuxt-link to="/webapp/doctors" class="product-thumbnail d-block text-center"
                          href="page-shop-details.html">

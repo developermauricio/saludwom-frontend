@@ -14,8 +14,11 @@
     <div class="mt-4">
       <p>Recuerda que actualmente tienes activo el <strong class="text-primary">{{ subscription.plan.name }}</strong>
         que permite agendar <strong class="text-primary">{{ subscription.plan.number_appointments }} citas.</strong>
-        Después de agendar tu primera cita, la siguiente tendrá que ser en los próximos <strong class="text-primary">{{ subscription.plan.time_interval_appointments}}
+        Después de agendar tu primera cita, la siguiente tendrá que ser en los próximos <strong
+          class="text-primary">{{ subscription.plan.time_interval_appointments }}
           días.</strong></p>
+      <p class="text-danger font-italic fw-500">Tenga en cuenta que el calendario mostrará los horarios disponibles en
+        zona horaria Europa Madrid, agenda tu cita y verás la fecha en tu zona horaria.</p>
     </div>
     <hr>
     <!-- Calendario de disponibilidad    -->
@@ -37,14 +40,20 @@
               <li v-if="appointment.date.$error" class="text-danger font-weight-bold">* Selecciona una fecha</li>
               <li v-if="appointment.hour.$error" class="text-danger font-weight-bold">* Selecciona una hora</li>
             </ul>
-            <p class="font-weight-bold" v-if="appointments[indexAppoint].date">
-              {{ $dateFns.format(appointments[indexAppoint].date, 'MMM dd yyyy') }} {{
-                appointments[indexAppoint].hour
-              }}</p>
+
+            <div v-if="appointments[indexAppoint].hour">
+              <span class="badge bg-success ms-2 text-white">{{
+                  transformTimezone(appointments[indexAppoint].date + ' ' + appointments[indexAppoint].hour) + ':00 ' + timezoneUser
+                }}</span><br>
+
+              <span
+                class="badge bg-light ms-2 text-light">{{ $moment(appointments[indexAppoint].date + ' ' + appointments[indexAppoint].hour).format('LLL') + ':00 ' + $config.timezone }}</span>
+            </div>
             <!--            <p v-if="appointment.date.$error" class="text-danger font-weight-bold">Selecciona una fecha</p>-->
             <!--            <p v-if="appointment.hour.$error" class="text-danger font-weight-bold">Selecciona una hora</p>-->
             <div v-if="indexAppoint > 0">
-              <a class="btn m-1 btn-sm btn-danger" @click="removedAppointment(indexAppoint)" style="z-index: 999999">Quitar
+              <a class="btn m-1 mt-3 btn-sm btn-danger" @click="removedAppointment(indexAppoint)"
+                 style="z-index: 999999">Quitar
                 Cita</a>
             </div>
           </div>
@@ -97,11 +106,15 @@
 <script>
 import {required} from "vuelidate/lib/validators";
 import {bus} from "../../../../../plugins/bus";
+// require("moment/min/locales.min");
+// require("moment-timezone")
+// import moment from 'moment-timezone';
 
 export default {
   name: "DoctorSchedule",
   data() {
     return {
+      timezoneUser: null,
       lastHour: {
         hour: null,
         minute: null,
@@ -117,6 +130,7 @@ export default {
           times: [],
           date: null,
           hour: null,
+          timezone: null,
           onlyHour: null,
           onlyMinute: null,
         }
@@ -163,6 +177,17 @@ export default {
   },
   props: ['data'],
   methods: {
+    transformTimezone(date) {
+      // const defaultTimezone = new Date(date)
+      // const dateStr = defaultTimezone.toLocaleString('es-Es', {
+      //   timeZone: 'Europe/Madrid',
+      //   day:'numeric', month:'long', year:"numeric", hour: "numeric", minute: "numeric", second:"numeric", hour12: false
+      // })
+      // return dateStr
+      console.log(this.$moment)
+      return this.$moment(date).tz(this.timezoneUser).format('LLL')
+    },
+
     saveAppointment() {
       this.$v.appointments.$touch()
       if (this.$v.$invalid) {
@@ -196,9 +221,8 @@ export default {
     =============================================*/
     addAppointment(index) {
       if (this.appointments.length < this.subscription.plan.number_appointments) {
-
         this.appointments.push({
-          date: null, hour: null, times: null, onlyHour: null, onlyMinute: null, doctor: {
+          date: null, hour: null, timezone: null, times: null, onlyHour: null, onlyMinute: null, doctor: {
             id: this.data.id,
             name: this.data.user.name + ' ' + this.data.user.last_name
           }
@@ -238,45 +262,44 @@ export default {
       }
     },
     selectHour(hour, index, date) {
-      if (hour.state === 'SELECTED') {
-        this.$toast.error({
-          title: 'Sr@ paciente',
-          message: 'La hora no esta disponible',
-          showDuration: 1000,
-          hideDuration: 8000,
-        })
-        return
-      }
+      setTimeout(() => {
+        if (hour.state === 'SELECTED') {
+          this.$toast.error({
+            title: 'Sr@ paciente',
+            message: 'La hora no esta disponible',
+            showDuration: 1000,
+            hideDuration: 8000,
+          })
+          return
+        }
 
-      if (hour.state === 'PATIENT') {
-        this.$toast.error({
-          title: 'Sr@ paciente',
-          message: 'Ya has agendado este horario',
-          showDuration: 1000,
-          hideDuration: 8000,
-        })
-        return
-      }
-      if (this.appointments[index].hour) {
+        if (hour.state === 'PATIENT') {
+          this.$toast.error({
+            title: 'Sr@ paciente',
+            message: 'Ya has agendado este horario',
+            showDuration: 1000,
+            hideDuration: 8000,
+          })
+          return
+        }
+        if (this.appointments[index].hour) {
 
+          let currentDate = this.appointments.find(item => item.date === date)
+          let currentTime = currentDate.times.find(item => item.hour === this.lastHour.hour && item.minute === this.lastHour.minute)
+          currentTime.state = 'AVAILABLE'
+        }
+
+        /*CAMBIAR ESTADO A LA HORA TOMADA*/
+        this.appointments[index].hour = hour.hour + ':' + hour.minute + ':00'
+        this.appointments[index].onlyHour = hour.hour
+        this.appointments[index].onlyMinute = hour.minute
+        this.appointments[index].timezone = this.timezoneUser
         let currentDate = this.appointments.find(item => item.date === date)
-        let currentTime = currentDate.times.find(item => item.hour === this.lastHour.hour && item.minute === this.lastHour.minute)
-        currentTime.state = 'AVAILABLE'
-      }
+        let currentTime = currentDate.times.find(item => item.hour === hour.hour && item.minute === item.minute)
 
-      /*CAMBIAR ESTADO A LA HORA TOMADA*/
-      this.appointments[index].hour = hour.hour + ':' + hour.minute + ':00'
-      this.appointments[index].onlyHour = hour.hour
-      this.appointments[index].onlyMinute = hour.minute
-      let currentDate = this.appointments.find(item => item.date === date)
-      let currentTime = currentDate.times.find(item => item.hour === hour.hour && item.minute === item.minute)
-      // console.log(currentDate)
-      // console.log(currentTime)
-      // currentTime.state = 'PATIENT'
-
-      this.lastHour.hour = hour.hour
-      this.lastHour.minute = hour.minute
-
+        this.lastHour.hour = hour.hour
+        this.lastHour.minute = hour.minute
+      }, 500)
     },
     timeAvailable(time, index) {
       let currentTime = this.appointments.find(item => item.hour === time)
@@ -307,7 +330,8 @@ export default {
                 if (index === this.index) {
                   item.date = null
                   item.hour = null
-                  item.onlyHour = null
+                  item.timezone = null,
+                    item.onlyHour = null
                   item.onlyMinute = null
                   item.times = null
                 }
@@ -324,7 +348,8 @@ export default {
         this.appointments.forEach((item, index) => {
           if (index === this.index) {
             item.hour = null
-            item.onlyHour = null
+            item.timezone = null,
+              item.onlyHour = null
             item.onlyMinute = null
           }
         })
@@ -372,6 +397,8 @@ export default {
     this.subscription = JSON.parse(localStorage.getItem('subscription'))
   },
   mounted() {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this.timezoneUser = timeZone
     this.checkScheduleAvailable()
   }
 }

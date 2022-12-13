@@ -29,6 +29,7 @@
           <multiselect
             :class="{ 'is-invalid': $v.valuation.selectedTreatment.$error }"
             v-model="valuation.selectedTreatment"
+            @input="changeSelectedTreatment"
             :options="treatments" :custom-label="nameSelect" :searchable="true" :close-on-select="true"
             selectedLabel="Seleccionado"
             deselectLabel="" selectLabel="Seleccionar" :show-labels="true"
@@ -56,10 +57,10 @@
         </div>
         <!--  CALENDARIO CON LA AGENDA -->
         <div v-if="subscription.plan.number_appointments > 0">
-          <div class="mt-4" v-if="valuation.selectedTreatment.doctors">
+          <div class="mt-4" v-if="doctors.length > 0">
             <label class="form-label" for="">Selecciona el especialista para <strong>agendar tu cita:</strong></label>
           </div>
-          <div class="mt-2" v-for="doctor in valuation.selectedTreatment.doctors" :key="doctor.id">
+          <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
             <div class="card border select-doctor-schedule">
               <div class="card-body">
                 <div class="d-flex" @click="openDoctorSchedule(doctor)">
@@ -81,14 +82,16 @@
         <div class="mt-4" v-if="valuation.appointments.length > 0">
           <label class="form-label" for="">Tu cita{{ this.valuation.appointments.length >= 1 ? 's' : '' }} son:</label>
           <ul>
-            <li v-for="appointment in this.valuation.appointments" :key="'appoint-'+appointment.date"
+            <li v-for="(appointment, index) in this.valuation.appointments" :key="'appoint-'+appointment.date"
                 class="font-weight-bold">
-              <i
-                class="bx bx-check-circle check-appointment ml-1 text-success mr-1"></i>{{
-                $dateFns.format(appointment.date, 'PPPP')
-              }}
-              {{ appointment.hour }}
-              <p>Esp. {{ appointment.doctor.name }} {{ appointment.doctor.last_name }}</p>
+              <i class="bx bx-check-circle check-appointment ml-1 text-success mr-1"></i>
+              Cita {{ index + 1  }}
+              <br>
+<!--              {{ $dateFns.format(appointment.date, 'PPPP') }}-->
+<!--              {{ appointment.hour }}-->
+              <span class="badge bg-success ms-2 text-white">{{ transformTimezone(appointment.date+' '+ appointment.hour)+' '+timezoneUser }}</span><br>
+              <span class="badge bg-light ms-2 text-light">{{ $moment(appointment.date+' '+appointment.hour).format('LLL') + ' '+$config.timezone}}</span>
+              <p style="margin-top: 5px">Esp. {{ appointment.doctor.name }} {{ appointment.doctor.last_name }}</p>
             </li>
           </ul>
         </div>
@@ -99,7 +102,7 @@
         </div>
         <!--  GUARDAR Y AGENDAR -->
         <div class="mt-4">
-          <a class="btn btn-primary btn-block mt-2" @click="saveValuation">Crear y enviar al especialista</a>
+          <button class="btn btn-primary btn-block mt-2" @click="saveValuation">Crear y enviar al especialista</button>
         </div>
       </div>
     </div>
@@ -128,8 +131,10 @@ export default {
   },
   data() {
     return {
+      timezoneUser: null,
       checkVerifySignature: false,
       signature: null,
+      doctors: [],
       valuation: {
         name: '',
         consent: '',
@@ -138,7 +143,7 @@ export default {
         subscriptionId: null,
         patientId: null,
         doctorId: null,
-        selectedTreatment: '',
+        selectedTreatment: null,
         appointments: [],
       },
       treatments: [],
@@ -167,6 +172,22 @@ export default {
     }
   },
   methods: {
+    changeSelectedTreatment(treatment){
+      if (treatment){
+        this.doctors = treatment.doctors
+      }else{
+        this.doctors = []
+      }
+    },
+    transformTimezone(date){
+      // const defaultTimezone = new Date(date)
+      // const dateStr = defaultTimezone.toLocaleString('es-Es', {
+      //   timeZone: 'Europe/Madrid',
+      //   day:'numeric', month:'long', year:"numeric", hour: "numeric", minute: "numeric", second:"numeric", hour12: false
+      // })
+      // return dateStr
+      return this.$moment(date).tz(this.timezoneUser).format('LLL')
+    },
     consent(data) {
       if (data === true) {
         this.valuation.consent = 'accept'
@@ -327,6 +348,8 @@ export default {
     },
   },
   mounted() {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this.timezoneUser = timeZone
     this.getTreatments()
     this.checkSignature()
     this.subscription = JSON.parse(localStorage.getItem('subscription'))

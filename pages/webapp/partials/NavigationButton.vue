@@ -23,6 +23,15 @@
               <span>Citas</span>
             </router-link>
           </li>
+          <!--  Menu Mis Objetivos  -->
+          <li @click="menuSelected('Mis Objetivos', true, false)">
+            <router-link to="/webapp/objetivos">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              </svg>
+              <span>Mis Objetivos</span>
+            </router-link>
+          </li>
           <!--  Menu Comprar Planes  -->
           <li @click="menuSelected('Comprar', true, false)">
             <router-link to="/webapp/planes">
@@ -118,8 +127,23 @@ export default {
       /* Rutas o componentes de los planes*/
       case 'index.plans': //Submenu o hijo del perfil
         this.title = 'Comprar'
-        this.$emit('header', this.title, false, true, '/webapp/inicio')
+        this.$emit('header', this.title, true, false)
+        localStorage.removeItem('currentRoute')
         localStorage.setItem('currentRoute', route.path)
+        break;
+      /* Rutas o componentes de los objetivos*/
+      case 'index.objectives':
+        this.title = 'Mis Objetivos'
+        this.$emit('header', this.title, true, false)
+        localStorage.removeItem('currentRoute')
+        localStorage.setItem('currentRoute', route.path)
+        // localStorage.setItem('currentRoute', route.path)
+        break;
+      case 'show.objective':
+        this.title = 'Mi Objetivo'
+        this.$emit('header', this.title, false, true, localStorage.getItem('currentRoute'))
+        localStorage.setItem('currentRoute', route.path)
+        // localStorage.setItem('currentRoute', route.path)
         break;
       /* Rutas o componentes para las valoraciones*/
       case 'valuation.create': //Submenu o hijo del perfil
@@ -154,8 +178,17 @@ export default {
       }
       /* Nos permite saber si estamos en el componente IndexPlans */
       if (to.name === 'index.plans'){
-        bus.$emit('index.plans', 'Comprar', false, true, localStorage.getItem('currentRoute'));
+        bus.$emit('index.plans', 'Comprar', true, false, '');
+      }
+      /* Nos permite saber si estamos en el componente IndexObjectives */
+      if (to.name === 'index.objectives'){
+        bus.$emit('index.objectives', 'Mis Objetivos', true, false, '');
+        // bus.$emit('index.objectives', 'Mis Objetivos', false, true, localStorage.getItem('currentRoute'));
         this.iconActiveProfileInfo(false)
+      }
+      if (to.name === 'show.objective'){
+        this.iconActiveProfileInfo(true)
+        bus.$emit('show.objective', 'Mi Objetivo', false, true, localStorage.getItem('currentRoute'));
       }
       /* Nos permite saber si estamos en el componente IndexHome */
       if (to.name === 'index.home'){

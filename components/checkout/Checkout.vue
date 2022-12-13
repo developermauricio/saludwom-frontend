@@ -23,7 +23,7 @@
                 <tr>
 <!--                  <th scope="row"><img src="img/bg-img/p1.jpg" alt=""></th>-->
                   <td>
-                    <h6 class="mb-1">{{ plan.name }}</h6><span>{{ plan.price }}€</span>
+                    <h6 class="mb-1">{{ plan.name }}</h6><span>{{ plan.price }}€ <p class="text-success">{{couponApply.discount ? '-'+couponApply.discount+'%' : ''}}</p></span>
                   </td>
                   <td>
                     <p>{{ plan.description }}</p>
@@ -74,7 +74,7 @@
     </div>
 
 
-    <Stripe :planData="plan" :checkDocument="checkDocumentUser"/>
+    <Stripe :planData="plan" :checkDocument="checkDocumentUser" :totalPay="totalPay" :couponApply="couponApply"/>
     <div class="pr-3 pl-3 m-0">
       <button class="btn btn-secondary btn-block" @click="closeModal">Cancelar</button>
     </div>
@@ -107,7 +107,7 @@ export default {
       documentType: {required},
     },
   },
-  props: ['plan'],
+  props: ['plan', 'totalPay', 'couponApply'],
   methods: {
     nameSelect({name}) {
       return `${name}`

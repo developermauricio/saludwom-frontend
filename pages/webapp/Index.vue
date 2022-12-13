@@ -124,6 +124,21 @@ export default {
       this.backButton = backButton
       localStorage.setItem('currentRoute', this.$route.path)
     })
+    bus.$on('index.objectives', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+      localStorage.removeItem('currentRoute')
+      localStorage.setItem('currentRoute', this.$route.path)
+    })
+    bus.$on('show.objective', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+      localStorage.setItem('currentRoute', this.$route.path)
+    })
     bus.$on('index.profile', (title, showLogo, backButton, urlBack) => {
       this.title = title
       this.urlBack = urlBack

@@ -5,9 +5,9 @@
       <div v-show="openRefresh">
         <transition name="fade">
           <div>
-            <i v-if="state==3&&refreshTips" key="1" class="loadmore-icon"></i>
+            <i v-if="state===3&&refreshTips" key="1" class="loadmore-icon"></i>
             <i v-else-if="refreshTips" key="2"
-               :class="state==1 ? 'pull-arrow pull-toggle': state==2?'pull-arrow':''"></i>
+               :class="state===1 ? 'pull-arrow pull-toggle': state===2?'pull-arrow':''"></i>
             <span v-if="refreshTips" key="3" class="pull-text">{{ refreshTips }}</span>
           </div>
         </transition>
@@ -15,13 +15,13 @@
     </div>
     <slot></slot>
     <div class="loadmore-tip" id="loadTips" v-if="totalCount > 0 && totalCount >= pageSize">
-      <i v-show="loadTips=='Actualizando'" class="loadmore-icon"></i>
+      <i v-show="loadTips==='Actualizando'" class="loadmore-icon"></i>
       {{ loadTips }}
     </div>
   </div>
 </template>
 <script>
-var clr, clr2, clr3;
+let clr, clr2, clr3;
 export default {
   props: {
     pageIndex: {
@@ -69,7 +69,7 @@ export default {
   methods: {
     //上滑动加载更多
     loadMore() {
-      var scope = this;
+      const scope = this;
       scope.loadTips = "Actualizando";
       let flag = true;
       let pageSize = this.pageSize;
@@ -79,6 +79,7 @@ export default {
       return new Promise(function (resolve, reject) {
         window.onscroll = function () {
           clr = setTimeout(() => {
+
             let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             let clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -86,11 +87,12 @@ export default {
               return;
             }
             let rectBottom = document.getElementById("loadTips").getBoundingClientRect().bottom | 0;
+            console.log(rectBottom)
             //if (scrollTop + clientHeight >= scrollHeight - 25) {
             if (rectBottom < clientHeight + 25) {
               if (flag) {
                 flag = false;
-                var size = totalCount - pageIndex * pageSize;
+                let size = totalCount - pageIndex * pageSize;
                 if (size > 0) {
                   scope.$emit("loadmore", pageIndex + 1);
                   resolve(true);
@@ -119,8 +121,9 @@ export default {
       this.obj.style.transition = "transform 0s linear"
     },
     touchmove(event) {
+
       if (!this.openRefresh) return
-      var h = Math.ceil(this.obj.getBoundingClientRect().top)
+      const h = Math.ceil(this.obj.getBoundingClientRect().top)
       this._transitionHeight = ((event.targetTouches[0].screenY - this._startPos) * 0.4) | 0
 
       if (h >= this.objTop) {
@@ -128,7 +131,7 @@ export default {
           event.preventDefault();
         }
         this.obj.style.transform = "translateY(" + this._transitionHeight + "px)"
-        if (this._transitionHeight > 0 && this._transitionHeight < 100) {
+        if (this._transitionHeight > 40 && this._transitionHeight < 100) {
           this.state = 1
           this.isPull = false
           this.refreshTips = "Actualizar"
@@ -144,7 +147,7 @@ export default {
       if (!this.openRefresh) return
       this.obj.style.cssText = `transition:transform 0.2s cubic-bezier(0,.2,.5,.7);transform:translateY(0);`
       if (this.isPull) {
-        var h = Math.ceil(this.obj.getBoundingClientRect().top + 40)
+        const h = Math.ceil(this.obj.getBoundingClientRect().top + 1)
         this._transitionHeight = event.changedTouches[0].screenY - this._startPos;
         if (h >= this.objTop) {
           this.state = 3;

@@ -11,10 +11,10 @@
     </div>
     <div class="d-flex justify-content-center">
       <div class="text-center">
-        <a class="btn btn-secondary btn-sm mt-2" @click="clear()">Limpiar</a>
+        <button class="btn btn-secondary btn-sm mt-2" @click="clear()">Limpiar</button>
       </div>
       <div class="text-center ml-2">
-        <a class="btn btn-success btn-sm mt-2" @click="save()">Guardar Firma</a>
+        <button class="btn btn-success btn-sm mt-2" @click="save()">Guardar Firma</button>
       </div>
     </div>
   </div>
@@ -48,6 +48,12 @@ export default {
         return
       } else {
         this.signature = image
+        this.$toast.success({
+          title: 'Confirmación',
+          message: 'Firma guardada.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
         bus.$emit('addSignature', image)
       }
     },

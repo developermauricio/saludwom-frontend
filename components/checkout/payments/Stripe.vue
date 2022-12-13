@@ -65,7 +65,7 @@ CHECKOUT
           </div>
         </div>
       </div>
-      <button class="btn btn-primary btn-block" @click="paymentStripe">Pagar <strong>{{ planData.price }}€</strong>
+      <button class="btn btn-primary btn-block" @click="paymentStripe">Pagar <strong>{{ totalPay }}€</strong>
       </button>
 
     </div>
@@ -81,15 +81,14 @@ export default {
   name: "Stripe",
   data() {
     return {
-      // checkDocumentUser: false,
-      errors:[
-      ],
-      document:{
+      checkDocumentUser: false,
+      errors: [],
+      document: {
         number: null,
         documentType: null,
       },
       card: {
-        amount: parseFloat(this.planData.price),
+        amount: parseFloat(this.totalPay),
         cardExpiry: "",
         cardNumber: "",
         expireMonth: "",
@@ -102,7 +101,7 @@ export default {
       user: this.$auth.user,
     };
   },
-  props: ['planData', 'checkDocument'],
+  props: ['planData', 'checkDocument', 'totalPay', 'couponApply'],
 
   validations: {
     card: {
@@ -131,17 +130,18 @@ export default {
         })
         return
       }
-  if (this.checkDocumentUser === false){
-    if (this.document.number === '' || this.document.number === null || !this.document.documentType){
-      this.$toast.error({
-        title: 'Error',
-        message: 'Verifique que todos los campos requeridos estén llenos o bien diligenciados.',
-        showDuration: 1000,
-        hideDuration: 8000,
-      })
-      return
-    }
-  }
+      console.log(this.checkDocument)
+      if (!this.checkDocument) {
+        if (this.document.number === '' || this.document.number === null || !this.document.documentType) {
+          this.$toast.error({
+            title: 'Error',
+            message: 'Verifique que todos los campos requeridos estén llenos o bien diligenciados.',
+            showDuration: 1000,
+            hideDuration: 8000,
+          })
+          return
+        }
+      }
 
       // let expirationDate = this.periodPlan(this.planData.period)
       // console.log(expirationDate)
@@ -151,6 +151,9 @@ export default {
       data.append('card_exp_year', this.card.expireYear);
       data.append('cvc', this.card.cvc);
       data.append('amount', this.card.amount);
+      data.append('total', this.planData.price);
+      data.append('discount', this.couponApply.discountTotal);
+      data.append('coupon', this.couponApply.coupon);
       data.append('email', this.user.email);
       data.append('plan', this.planData.id);
       data.append('plan_name', this.planData.name);
@@ -202,7 +205,7 @@ export default {
           hideDuration: 8000,
         })
         this.$vs.loading.close()
-          console.log('ERROR INTENT ', e.response)
+        console.log('ERROR INTENT ', e.response)
       })
     },
   },
