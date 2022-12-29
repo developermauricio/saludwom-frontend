@@ -193,7 +193,7 @@ export default {
       if (this.$v.$invalid) {
         this.$toast.error({
           title: 'Sr@ paciente',
-          message: 'Verifique que a ingresado todos la fecha y hora',
+          message: 'Verifique que a ingresado la fecha y hora',
           showDuration: 1000,
           hideDuration: 8000,
         })

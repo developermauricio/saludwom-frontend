@@ -48,6 +48,7 @@
     "vue-credit-card-field": "^0.3.14",
     "vue-credit-card-validation": "^0.1.11",
     "vue-currency-filter": "^5.2.0",
+    "vue-doc-preview": "^0.3.2",
     "vue-file-agent": "^1.7.3",
     "vue-flatpickr-component": "^8.1.7",
     "vue-full-calendar": "^2.8.0",

@@ -2688,7 +2688,7 @@ form .btn.btn-sm {
   transition-duration: 500ms;
   background-color: #ffffff;
   width: 100%;
-  height: 62px;
+  height: 85px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -2699,7 +2699,7 @@ form .btn.btn-sm {
 .footer-nav {
   background-color: #ffffff;
   width: 100%;
-  height: 62px;
+  height: 70px;
 }
 
 .footer-nav ul {
@@ -10043,4 +10043,13 @@ a:hover{
 .single-card:hover{
   box-shadow: 0 0 10px rgba(216, 92, 114, 0.52) !important;
   transform: translateY(-5px) !important;
+}
+.order-success-wrapper{
+  height: 70vh !important;
+}
+.btn-zoom{
+  background-color: #2D8CFF !important;
+}
+.btn-zoom:hover{
+  color: #ffffff !important;
 }

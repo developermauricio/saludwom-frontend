@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <load-more
+    <NotObjectives v-if="notObjectives"/>
+    <load-more v-if="!notObjectives"
       class="items-service"
       :pageIndex="pageIndex"
       :pageSize="pageSize"
@@ -9,16 +10,16 @@
       @refresh="onRefresh"
       @loadmore="onLoad">
       <div class="card mb-3 single-card" v-for="(valuation, index) in valuations" :key="valuation.id">
-        <nuxt-link :to="`/webapp/objetivo/${'oasmo'}`" class="card-body" >
+        <nuxt-link :to="`/webapp/objetivo/${valuation.slug}`" class="card-body" >
           <!-- Content-->
           <div class="d-flex align-items-center">
             <div class="d-flex">
 
               <!-- Info-->
               <div class="ml-2">
-                <h3 class="sb-title">{{ valuation.name }}</h3>
+                <h4 class="sb-title">{{ valuation.name }}</h4>
                 <p style="font-size: 0.9rem;" class="m-0"><span class="font-weight-bold">Tratamiento: </span>{{valuation.treatment.treatment}}</p>
-                <p style="font-size: 0.9rem;" class="m-0"><span class="font-weight-bold">Creado: </span>{{$moment(valuation.created_at).format('LL')}}</p>
+                <p style="font-size: 0.9rem;" class="m-0"><span class="font-weight-bold">Creado: </span>{{$moment(valuation.created_at).tz(timezoneUser).format('LL')}}</p>
                 <p style="font-size: 0.9rem;"><span class="font-weight-bold">Estado: </span><span :class="`badge bg-${ stateColor(valuation.state)} ms-2 text-white`">{{
                     stateTitle(valuation.state)
                   }}</span></p>
@@ -44,6 +45,9 @@ export default {
   name: "ListValuations",
   data(){
     return{
+      timezoneUser: null,
+
+      notObjectives: false,
       pageIndex: 1,
       pageSize: 10,
       openRefresh: true,
@@ -108,6 +112,10 @@ export default {
       // done();
     },
     async getValuations(){
+      this.$vs.loading({
+        color: process.env.COLOR_BASE,
+        text: 'Espere por favor...'
+      })
       await this.$axios.get(`/api/v1/get-valuations/?page=${this.page}`).then(({data}) => {
         this.openRefresh = true
         if (data.data.data.length < 0) {
@@ -116,6 +124,9 @@ export default {
         data.data.data.forEach((item) => {
           this.valuations.push(item)
         })
+        if (this.valuations.length === 0) {
+          this.notObjectives = true
+        }
 
         this.pageSize = data.lastPage
         this.totalSubs = data.total
@@ -125,7 +136,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al obtener las suscripciones. Consulte con el administrador.',
+          message: 'Error al obtener lista de objetivos. Consulte con el administrador.',
           showDuration: 1000,
           hideDuration: 8000,
         })
@@ -135,6 +146,8 @@ export default {
   },
   mounted() {
     this.getValuations()
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this.timezoneUser = timeZone
   }
 }
 </script>

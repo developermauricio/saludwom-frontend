@@ -259,7 +259,7 @@ export default {
                   bus.$emit('saveFiles');
                   this.$toast.success({
                     title: 'Confirmación',
-                    message: 'Tu objetivo se creo exitosamente. Exitoso!',
+                    message: 'Tu objetivo se creo exitosamente!',
                     showDuration: 1000,
                     hideDuration: 5000,
                   })

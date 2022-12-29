@@ -7,7 +7,7 @@
       :deletable="true"
       :meta="true"
       :accept="'image/*,video/*,.pdf,.doc,.docx,.ods'"
-      :maxSize="'10MB'"
+      :maxSize="'20MB'"
       :maxFiles="10"
       :helpText="'Clic o arrastra aquí imágenes, o documentos.'"
       :errorText="{
@@ -49,7 +49,7 @@ export default {
           this.$vs.loading.close()
           this.$toast.success({
             title: 'Confirmación',
-            message: 'La carga de uno o mas archivos fue exitoso. Exitoso!',
+            message: 'La carga de uno o mas archivos fue exitoso!',
             showDuration: 1000,
             hideDuration: 5000,
           })
