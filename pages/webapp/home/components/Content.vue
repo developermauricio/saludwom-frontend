@@ -3,7 +3,7 @@
     <client-only>
       <vue-confirm-dialog></vue-confirm-dialog>
     </client-only>
-    <div class="container content-home">
+    <div class="container content-home" >
       <div class="add-new-contact-wrap">
         <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addnewcontact">
           <div>
@@ -23,19 +23,23 @@
        ======================================-->
       <div class="row">
         <div class="col-12">
-          <SectionProfile/>
+          <SectionProfile />
         </div>
       </div>
       <!--=====================================
-           SECTION MENSAJE
+           SECTION MENSAJE SOLO PARA EL PACIENTE
        ======================================-->
-      <div class="row">
+      <div class="row" v-role="'Paciente'">
         <div class="col-12 pr-5 pl-5">
           <p class="text-center text-primary font-italic">Junt@s seremos un equipo, tú y yo construiremos tu cambio, tú
             ganas y yo te acompaño para que lo consigas.</p>
         </div>
       </div>
-      <div class="row g-3">
+
+      <!--=====================================
+           TARJETAS SOLO PARA LOS PACIENTES
+       ======================================-->
+      <div class="row g-3" v-role="'Paciente'">
         <!--=====================================
            CREA TU VALORACIÓN
        ======================================-->

@@ -17,7 +17,7 @@
         selectLabel="Selecciona"
         :show-labels="true"
         placeholder="Buscar país..."></multiselect>
-      <p class="text-danger mt-1 font-weight-bold" v-if="$v.country.$error">El país es requerido</p>
+      <p class="text-danger mt-1 font-weight-bold" v-if="$v.country.$error">El país es requerido.</p>
     </div>
 
     <!--  SELECCIONAR CIUDAD -->

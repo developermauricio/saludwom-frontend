@@ -1,11 +1,13 @@
 <template>
   <div>
+<!--    <vue-confirm-dialog></vue-confirm-dialog>-->
     <HeaderLogo :title="title" :show-logo="showLogo" :back-button="backButton" :url-back="urlBack"/>
     <div id="webappStatus">  <!-- Con este identificador mostramos todos los componentes si hay o no internet-->
       <div class="page-content-wrapper py-3">
         <router-view/> <!-- Componentes del sistema-->
       </div>
-      <NavigationButton @header="dataHeader"/> <!-- Navegación menu inferior-->
+      <NavigationButton @header="dataHeader" v-role="'Paciente'"/> <!-- Navegación menu inferior-->
+      <NavigationButtonDoctor @header="dataHeader" v-role="'Doctor'"/>
     </div>
     <!--    <NoInternetConnection id="noInternetConnection"/> &lt;!&ndash; Se muestra un mensaje cuando no hay internet&ndash;&gt;-->
   </div>
@@ -17,11 +19,13 @@ import HeaderLogo from "./partials/HeaderLogo";
 import NavigationButton from "./partials/NavigationButton";
 import NoInternetConnection from "./partials/NoInternetConnection";
 import Welcome from "../../components/Welcome";
+import NavigationButtonDoctor from "./partials/NavigationButtonDoctor";
 
 export default {
   middleware: ['auth'],
   name: "Index",
   components: {
+    NavigationButtonDoctor,
     HeaderLogo,
     NavigationButton,
     NoInternetConnection
@@ -170,6 +174,35 @@ export default {
       this.showLogo = showLogo
       this.backButton = backButton
     })
+
+    /* Recibimos el evento que ejecutamos en el index.doctor.patients que viene de NavigationButtonDoctor */
+    bus.$on('index.doctor.patients', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+    })
+    bus.$on('index.doctor.objectives', (title, showLogo, backButton, urlBack) => {
+      this.title = title
+      this.urlBack = urlBack
+      this.showLogo = showLogo
+      this.backButton = backButton
+      localStorage.removeItem('currentRoute')
+      localStorage.setItem('currentRoute', this.$route.path)
+    })
+
+    console.log(this.$route.query)
+    setTimeout(() =>{
+      /*Para mostrar un mensaje luego que no tiene permisos para acceder a cierta parte del sitio*/
+      bus.$on('accessNotAllowed', () =>{
+        this.$toast.error({
+          title: 'Error',
+          message: 'Acceso no permitido. Consulte al administrador.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+      })
+    }, 2000)
     setTimeout(() =>{
       bus.$on('verifySubscription', () =>{
         this.currentSubscription()

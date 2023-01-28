@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <VueFileAgent
       ref="vueFileAgent"
       :theme="'list'"
@@ -8,11 +9,11 @@
       :meta="true"
       :accept="'image/*,video/*,.pdf,.doc,.docx,.ods'"
       :maxSize="'20MB'"
-      :maxFiles="10"
+      :maxFiles="numberArchives"
       :helpText="'Clic o arrastra aquí imágenes, o documentos.'"
       :errorText="{
       type: 'Tipo de archivo incorrecto, agrega fotos, videos, word, pdf',
-      size: 'Este archivo no se enviará. Los archivos no deben superar los 15 MB de tamaño',
+      size: 'Este archivo no se enviará. Los archivos no deben superar los 20 MB de tamaño',
     }"
       v-model="fileRecords"
       @select="filesSelected($event)"
@@ -32,21 +33,26 @@ export default {
   name: "UploadFilesValuation",
   data() {
     return {
+      numberArchives: 10,
       fileRecords: [],
       uploadHeaders: '',
-      uploadUrl: `${process.env.BASE_URL_API_MONITOR_BACK}/api/v1/upload-files-valuation/${this.$auth.user.id}`,
+      uploadUrl: `${process.env.BASE_URL_API_MONITOR_BACK}/api/v1/upload-files-valuation/${this.$auth.user.id}/${this.valuationId ? this.valuationId : 0}`,
       fileRecordsForUpload: []
     }
   },
+  props: ['valuationId'],
   methods: {
     uploadFiles: function () {
       if (this.fileRecordsForUpload.length > 0) {
         this.$vs.loading({
           color: process.env.COLOR_BASE,
-          text: 'Subiendo archivos.Espere por favor...'
+          text: `Subiendo ${this.fileRecordsForUpload.length > 1 ? 'archivos' : 'el archivo'}. Espere por favor...`
         })
         this.$refs.vueFileAgent.upload(this.uploadUrl, this.uploadHeaders, this.fileRecordsForUpload).then(resp => {
           this.$vs.loading.close()
+          bus.$emit('updateDataValuation')
+          bus.$emit('closeAlert')
+          this.$FModal.hide()
           this.$toast.success({
             title: 'Confirmación',
             message: 'La carga de uno o mas archivos fue exitoso!',
@@ -116,6 +122,49 @@ export default {
         this.deleteUploadedFile(fileRecord);
       }
     },
+    validateUpload(countArchives){
+      let totalArchives = this.numberArchives - countArchives
+      console.log(this.fileRecordsForUpload.length)
+      console.log(totalArchives)
+      if (this.fileRecordsForUpload.length > totalArchives) {
+        this.$toast.error({
+          title: 'Error',
+          message: `No puedes subir mas de ${totalArchives === 0 ? 10 : totalArchives} archivos.`,
+          showDuration: 800,
+          hideDuration: 3000,
+        })
+      }
+      if (this.fileRecordsForUpload.length <= totalArchives) {
+        if (this.fileRecordsForUpload.length < 1) {
+          this.$toast.error({
+            title: 'Error',
+            message: 'Agrega al menos un archivo.',
+            showDuration: 800,
+            hideDuration: 3000,
+          })
+        } else {
+          this.$confirm(
+            {
+              message: `¿Esta segur@ de agregar ${this.fileRecordsForUpload.length > 1 ? 'los archivos.?' : 'el archivo.?'}`,
+              button: {
+                no: 'No',
+                yes: 'Si'
+              },
+              /**
+               * Callback Function
+               * @param {Boolean} confirm
+               */
+              callback: async confirm => {
+                if (confirm) {
+                  setTimeout(() => {
+                    this.uploadFiles()
+                  }, 500)
+                }
+              }
+            })
+        }
+      }
+    }
   },
   mounted() {
     setTimeout(() => {

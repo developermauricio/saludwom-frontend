@@ -9,7 +9,8 @@
           <div class="d-flex align-items-center">
             <h5 class="mb-1">{{ user.name }} {{ user.last_name }}</h5>
           </div>
-          <p class="mb-0 text-primary">Paciente</p>
+<!--          <p class="mb-0 text-primary">{{ $auth.user.roles.map((rol) => { return rol.name}).join(', ') }}</p>-->
+          <p class="mb-0 text-primary">{{ $auth.user.roles[0].name }}</p>
         </div>
         <div class="ml-auto" v-if="nextInfoProfile">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right"
@@ -20,7 +21,7 @@
         </div>
       </div>
     </nuxt-link>
-      <span class="badge bg-success text-white">Tú próxima cita es el 24 de diciembre 2022</span>
+      <span v-role="'Paciente'" class="badge bg-success text-white">Tú próxima cita es el 24 de diciembre 2022</span>
   </div>
 </template>
 

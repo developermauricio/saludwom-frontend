@@ -1,9 +1,16 @@
 export default {
+  image: {
+    // baseURL: 'https://that-test.site'
+    provider: 'twicpics',
+    twicpics: {
+      baseURL: 'https://aicode.sfo3.digitaloceanspaces.com'
+    }
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     script: [
       // { src: 'https://js.stripe.com/v3' },
-      { dev: "export NODE_TLS_REJECT_UNAUTHORIZED=0 && nuxt --env.NODE_TLS_REJECT_UNAUTHORIZED=0",}
+      {dev: "export NODE_TLS_REJECT_UNAUTHORIZED=0 && nuxt --env.NODE_TLS_REJECT_UNAUTHORIZED=0",}
     ],
     title: 'saludwom',
     meta: [
@@ -19,8 +26,9 @@ export default {
   publicRuntimeConfig: {
     timezone: process.env.TIME_ZONE,
     logo: process.env.LOGO_PRIMARY,
-    url: process.env.BASE_URL_API_MONITOR_FRONT,
+    // url: process.env.BASE_URL_API_MONITOR_FRONT,
     urlBack: process.env.BASE_URL_API_MONITOR_BACK,
+    urlDigitalOcean: process.env.DIGITALOCEAN_SPACES_ENDPOINT,
     STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
     STRIPE_ACCOUNT: process.env.STRIPE_ACCOUNT,
     recaptcha: {
@@ -61,13 +69,14 @@ export default {
           // autoFetch: true
         },
         endpoints: {
-          login: { url: '/login', method: 'post' },
-          logout: { url: '/logout', method: 'post' },
-          user: { url: '/api/v1/user', method: 'get' }
+          login: {url: '/login', method: 'post'},
+          logout: {url: '/logout', method: 'post'},
+          user: {url: '/api/v1/user', method: 'get'}
         }
       }
     }
   },
+
 
   // router: {
   //   middleware: ['auth']
@@ -80,35 +89,39 @@ export default {
     '~/plugins/vuelidate',
     '~/plugins/is-subscription',
     '~/plugins/vue-multiselect',
-    { src: '~/plugins/vuex-persist', ssr: false,  mode: 'client' },
-    { src: '~/assets/js/active.js', mode: 'client'},
-    { src: '~/plugins/vue-datepicker', ssr: false },
-    { src: '~/plugins/vue-timepicker', ssr: false },
-    { src: '~/plugins/vue2-dropzone' , ssr: false },
-    { src: '~/plugins/vue-social-chat' , ssr: false },
+    '~/plugins/laravel-permissions',
+    {src: '~/plugins/vue-easytable', ssr: false},
+    {src: '~/plugins/vuex-persist', ssr: false, mode: 'client'},
+    {src: '~/assets/js/active.js', mode: 'client'},
+    {src: '~/plugins/vue-datepicker', ssr: false},
+    {src: '~/plugins/vue-timepicker', ssr: false},
+    {src: '~/plugins/vue2-dropzone', ssr: false},
+    {src: '~/plugins/vue-social-chat', ssr: false},
     // { src: '~/plugins/vue-body-part-selector' , ssr: false },
-    { src: '~/assets/js/dark-rtl.js', mode: 'client'},
-    { src: '~plugins/vue-full-calendar', ssr: false },
-    { src: '~/plugins/splideplugin' , mode: 'client' },
-    { src: '~/plugins/cxlt-vue2-toastr' , mode: 'client' },
-    { src: '~/assets/js/tiny-slider.js', mode: 'client'},
-    { src: '~/plugins/vue-file-agent.js', mode: 'client', ssr: false},
+    {src: '~/assets/js/dark-rtl.js', mode: 'client'},
+    {src: '~plugins/vue-full-calendar', ssr: false},
+    {src: '~/plugins/splideplugin', mode: 'client'},
+    {src: '~/plugins/cxlt-vue2-toastr', mode: 'client'},
+    {src: '~/assets/js/tiny-slider.js', mode: 'client'},
+    {src: '~/plugins/vue-file-agent.js', mode: 'client', ssr: false},
     // { src: '~/plugins/vue-number-format.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vue-signature-pad' , mode: 'client' },
-    { src: '~/assets/js/slideToggle.min.js', mode: 'client'},
-    { src: '~/assets/js/internet-status.js', mode: 'client'},
-    { src: '~/assets/js/rangeslider.min.js', mode: 'client'},
-    { src: '~/plugins/vue-phone-number-input.js', ssr: false},
+    {src: '~/plugins/vue-signature-pad', mode: 'client'},
+    {src: '~/assets/js/slideToggle.min.js', mode: 'client'},
+    {src: '~/assets/js/internet-status.js', mode: 'client'},
+    {src: '~/assets/js/rangeslider.min.js', mode: 'client'},
+    {src: '~/plugins/vue-phone-number-input.js', ssr: false},
     // { src: '~/plugins/stripe-elements.js', mode: 'client', ssr: false},
-    { src: '~/plugins/v-money.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vuejs-smart-table.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vue-functional-calendar.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vue-currency-filter.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vue-fullpage-modal.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vue-confirm-dialog.js', mode: 'client', ssr: false},
+    {src: '~/plugins/v-money.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vuejs-smart-table.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vue-functional-calendar.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vue-currency-filter.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vue-fullpage-modal.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vue-confirm-dialog.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vuejs-datepicker.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vue-load-image.js', mode: 'client', ssr: false},
     // { src: '~/plugins/vue-loadmore-simple.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vue-credit-card-validation.js', mode: 'client', ssr: false},
-    { src: '~/plugins/vuejs-loadmore.js'}
+    {src: '~/plugins/vue-credit-card-validation.js', mode: 'client', ssr: false},
+    {src: '~/plugins/vuejs-loadmore.js'}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -143,9 +156,10 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxt/image',
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
-    ['@nuxtjs/date-fns', { defaultLocale: 'es' }],
+    ['@nuxtjs/date-fns', {defaultLocale: 'es'}],
     '@nuxtjs/auth-next',
     '@nuxtjs/recaptcha',
     // https://go.nuxtjs.dev/axios

@@ -37,7 +37,7 @@ const routes = [
       {path: '/webapp/planes', name: 'index.plans', component: page('webapp/plans/IndexPlans.vue')},
       /* Rutas para los objetivos*/
       {path: '/webapp/objetivos', name: 'index.objectives', component: page('webapp/objectives/IndexObjectives.vue')},
-      {path: '/webapp/objetivo/:slug', name: 'show.objective', component: page('webapp/objectives/ShowObjective.vue')},
+      {path: '/webapp/objetivos/:slug', name: 'show.objective', component: page('webapp/objectives/ShowObjective.vue')},
       /* Rutas para las suscripciones*/
       {
         path: '/webapp/perfil/suscripciones',
@@ -50,6 +50,14 @@ const routes = [
         name: 'index.payment.history',
         component: page('webapp/paymentHistory/IndexPaymentHistory.vue')
       },
+
+
+      /*=============================================
+      RUTAS PARA LOS DOCTORES
+    =============================================*/
+      /* Rutas para los pacientes del doctor*/
+      {path: '/webapp/pacientes', name: 'index.doctor.patients', component: page('webapp/patients/doctor/IndexDoctorPatients.vue')},
+      {path: '/webapp/objetivos-doctor', name: 'index.doctor.objectives', component: page('webapp/objectives/doctor/IndexObjectDoctor')},
     ]
   },
 

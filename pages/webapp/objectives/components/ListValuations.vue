@@ -10,7 +10,7 @@
       @refresh="onRefresh"
       @loadmore="onLoad">
       <div class="card mb-3 single-card" v-for="(valuation, index) in valuations" :key="valuation.id">
-        <nuxt-link :to="`/webapp/objetivo/${valuation.slug}`" class="card-body" >
+        <nuxt-link :to="`/webapp/objetivos/${valuation.slug}`" class="card-body" >
           <!-- Content-->
           <div class="d-flex align-items-center">
             <div class="d-flex">
@@ -46,19 +46,15 @@ export default {
   data(){
     return{
       timezoneUser: null,
-
-      notObjectives: false,
       pageIndex: 1,
       pageSize: 10,
-      openRefresh: true,
       totalCount: 0,
-
-      valuations: [],
       totalSubs: null,
 
       loadingRefreshData: false,
     }
   },
+  props: ['valuations', 'notObjectives', 'openRefresh'],
   methods:{
 
     stateTitle(state) {
@@ -145,7 +141,7 @@ export default {
     }
   },
   mounted() {
-    this.getValuations()
+    // this.getValuations()
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.timezoneUser = timeZone
   }

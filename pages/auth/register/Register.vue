@@ -33,14 +33,15 @@
       </div>
     </div>
     <!-- Login Wrapper Area -->
-    <div style="background-color: #ffffff">
-      <div class="container p-4">
+    <div>
+
+      <div class="container p-4" style="background-color: #ffffff" v-if="!confirmRegister">
         <div class="text-center px-4 mt-5" v-if="!confirmRegister">
           <img class="login-intro-img" src="@/assets/img/saludwom/logo_saludwom.png"
-                                           width="400" alt="">
+               width="400" alt="">
         </div>
         <!-- Register Form -->
-        <div class="register-form mt-4" v-if="!confirmRegister">
+        <div class="register-form mt-4">
           <h6 class="mb-3 text-center mb-4">Que alegría que estés aquí... Estaremos más cerca!</h6>
           <div class="form-group text-start mb-3">
             <label class="form-label" :class="{ 'text-danger': $v.form.name.$error }">Nombres <span
@@ -51,7 +52,7 @@
               v-model.trim="form.name"
               :class="{ 'is-invalid': $v.form.name.$error }"
               placeholder="">
-            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.name.$error">El nombre es requerido</p>
+            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.name.$error">El nombre es requerido.</p>
           </div>
           <div class="form-group text-start mb-3">
             <label class="form-label" :class="{ 'text-danger': $v.form.lastName.$error }">Apellidos <span
@@ -62,7 +63,7 @@
               v-model.trim="form.lastName"
               :class="{ 'is-invalid': $v.form.lastName.$error }"
               placeholder="">
-            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.lastName.$error">El apellido es requerido</p>
+            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.lastName.$error">El apellido es requerido.</p>
           </div>
           <div class="form-group text-start mb-3">
             <label class="form-label" :class="{ 'text-danger': $v.form.email.$error }">Correo electrónico <span
@@ -75,11 +76,11 @@
             >
             <p class="text-danger mt-1 font-weight-bold" v-if="validateEmailInput">El correo electrónico ya ha sido
               registrado,
-              por favor ingrese otro</p>
+              por favor ingrese otro.</p>
             <p class="text-danger mt-1 font-weight-bold" v-if="!$v.form.email.email">Ingrese un correo electrónico
-              válido</p>
+              válido.</p>
             <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.email.$error && $v.form.email.email">El correo
-              electrónico es requerido</p>
+              electrónico es requerido.</p>
           </div>
           <div class="form-group text-start mb-3">
             <label class="form-label" :class="{ 'text-danger': $v.form.phone.$error }">Teléfono <span
@@ -96,11 +97,12 @@
   example: 'Ejemplo :'
 }"
             />
-            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.phone.$error">El teléfono es requerido</p>
+            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.phone.$error">El teléfono es requerido.</p>
           </div>
           <!--  SELECCIONAR GENEROS -->
           <div class="mb-4">
-            <label class="form-label" :class="{ 'text-danger': $v.form.gender.$error }">Género <span class="text-danger">*</span></label>
+            <label class="form-label" :class="{ 'text-danger': $v.form.gender.$error }">Género <span
+              class="text-danger">*</span></label>
             <multiselect
               :class="{ 'is-invalid': $v.form.gender.$error }"
               v-model="form.gender"
@@ -114,7 +116,23 @@
               selectLabel="Selecciona"
               :show-labels="true"
               placeholder="Buscar género..."></multiselect>
-            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.gender.$error">El género es requerido</p>
+            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.gender.$error">El género es requerido.</p>
+          </div>
+          <!--  SELECCIONAR FECHA -->
+          <div class="my-4">
+            <label class="form-label" :class="{ 'text-danger': $v.form.birthday.$error }">Fecha de Nacimiento <span
+              class="text-danger">*</span></label>
+            <vuejs-datepicker
+              placeholder="Selecciona una fecha"
+              :input-class="{ 'is-invalid': $v.form.birthday.$error }"
+              :typeable="true"
+              v-model="form.birthday"
+              :full-month-name="true"
+              :language="es"
+              format="yyyy-MM-dd"
+              :bootstrap-styling="true"
+            ></vuejs-datepicker>
+            <p class="text-danger mt-1 font-weight-bold" v-if="$v.form.birthday.$error">La fecha de nacimiento es requerida.</p>
           </div>
           <!--  SELECCIONAR PAÍS Y CIUDAD DE RESIDENCIA -->
           <CountriesCities @selectCountry="selectedCountry" @selectedCity="selectedCity"/>
@@ -171,17 +189,7 @@
               la
               contraseña es requerida</p>
           </div>
-          <!--          <hr>-->
-          <!--=====================================
-            PLANES
-          ======================================-->
-          <!--  Activar planes-->
-<!--          <div>-->
-<!--            <h6 class="mb-3">¿Deseas adquirir tu plan ahora mismo?</h6>-->
-<!--            <div class="d-flex">-->
-<!--              <vs-checkbox color="#792151" v-model="plans">Si quiero</vs-checkbox>-->
-<!--            </div>-->
-<!--          </div>-->
+
           <!--  Lista de planes-->
           <div v-show="plans">
             <IndexPlans class="mt-5"/>
@@ -216,9 +224,11 @@
             </p>
           </div>
         </div>
-        <ConfirmRegister v-if="confirmRegister"/>
-      </div>
 
+      </div>
+      <div class="container p-4" v-if="confirmRegister">
+        <ConfirmRegister />
+      </div>
     </div>
     <ChatFloat/>
   </div>
@@ -228,6 +238,7 @@
 import {required, email, minLength, sameAs} from "vuelidate/lib/validators";
 import {bus} from "../../../plugins/bus";
 import IndexPlans from "../../webapp/plans/IndexPlans";
+import {en, es} from "vuejs-datepicker/dist/locale";
 
 export default {
   components: {IndexPlans},
@@ -235,6 +246,9 @@ export default {
   name: "Register",
   data() {
     return {
+      es: es,
+      en: en,
+
       confirmRegister: false,
       validateEmailInput: false,
       validatePassword: false,
@@ -244,6 +258,7 @@ export default {
       showPassword: false,
       showPasswordConfirm: false,
       form: {
+        birthday: null,
         gender: null,
         name: String(),
         lastName: String(),
@@ -264,6 +279,7 @@ export default {
       name: {required},
       lastName: {required},
       gender: {required},
+      birthday: {required},
       email: {required, email},
       phone: {required},
       password: {required, minLength: minLength(8)},
@@ -408,7 +424,7 @@ export default {
             text: 'Validando correo electrónico...'
           })
           this.validateEmail(val)
-        }, 2000);
+        }, 1000);
 
       }
     },
@@ -420,7 +436,7 @@ export default {
 </script>
 
 <style scoped>
-.header-area{
+.header-area {
   background-color: transparent !important;
   border-bottom: none !important;
 }

@@ -10041,7 +10041,7 @@ a:hover{
 }
 
 .single-card:hover{
-  box-shadow: 0 0 10px rgba(216, 92, 114, 0.52) !important;
+  box-shadow: 0 0 3px rgba(216, 92, 114, 0.52) !important;
   transform: translateY(-5px) !important;
 }
 .order-success-wrapper{

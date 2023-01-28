@@ -1,48 +1,55 @@
 <template>
-    <div class="container">
-      <vs-tabs color="#D85C72" alignment="fixed">
-        <vs-tab label="Información">
-          <div class="pt-2">
-            <Information :valuation="valuation"/>
-          </div>
-        </vs-tab>
-        <vs-tab label="Terapeuta">
-          <div>
-
-          </div>
-        </vs-tab>
-        <vs-tab label="Tratamiento">
-          <div>
-
-          </div>
-        </vs-tab>
-      </vs-tabs>
-    </div>
+  <div class="container">
+    <vs-tabs color="#D85C72" alignment="fixed">
+      <vs-tab label="Información">
+        <div class="pt-2">
+          <vs-tooltip text="Mientras tu objetivo este pendiente de recibir cursos, puedes editar tu información.">
+            <span class="badge bg-danger text-white w-100" v-if="valuation.state === '1'">Puedes actualizar tu información (Clic para más info)</span>
+          </vs-tooltip>
+          <Information :valuation="valuation" @getValuation="getValuation"/>
+        </div>
+      </vs-tab>
+      <vs-tab label="Terapeuta">
+        <div>
+          <h2>Terapeuta</h2>
+        </div>
+      </vs-tab>
+      <vs-tab label="Tratamiento">
+        <div>
+          <h2>Tratamiento</h2>
+        </div>
+      </vs-tab>
+    </vs-tabs>
+  </div>
 </template>
 
 <script>
-import Information from "./components/showComponents/Information";
+
+import {defineAsyncComponent} from "vue";
+import {bus} from "../../../plugins/bus";
+
 export default {
   name: "ShowObjective",
-  components: {Information},
-  data(){
-    return{
+  components: {
+    Information: defineAsyncComponent(() => import('./components/showComponents/Information'))
+  },
+  data() {
+    return {
       valuation: {
-        treatment:{treatment: null},
-        subscription:{ plan: {name: null, description:null}}
+        treatment: {treatment: null},
+        subscription: {plan: {name: null, description: null}}
       }
     }
   },
-  methods:{
-    async getValuation(){
+  methods: {
+    getValuation() {
       this.$vs.loading({
         color: process.env.COLOR_BASE,
         text: 'Espere por favor...'
       })
       const params = this.$route.params
-
-      await this.$axios.get(`/api/v1/get-valuation/${params.slug}`).then(resp => {
-       this.valuation = resp.data.data
+      this.$axios.get(`/api/v1/get-valuation/${params.slug}`).then(resp => {
+        this.valuation = resp.data.data
         this.$vs.loading.close()
       }).catch((e) => {
         console.log('ERROR', e);
@@ -56,8 +63,10 @@ export default {
       })
     }
   },
-  created() {
-    this.getValuation()
+  mounted() {
+    bus.$on('updateDataValuation', () => {
+      this.getValuation()
+    })
   }
 }
 </script>

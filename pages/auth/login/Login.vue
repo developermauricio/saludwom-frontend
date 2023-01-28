@@ -36,7 +36,7 @@
               <label class="form-label" :class="{ 'text-danger': $v.form.email.$error }">Correo electrónico <span
                 class="text-danger">*</span></label>
               <input
-                v-model="form.email"
+                v-model.trim="form.email"
                 class="form-control"
                 type="email"
                 :class="[{ 'is-invalid': $v.form.email.$error }]"
@@ -101,8 +101,8 @@ export default {
       form: {
         // email: String(),
         // password: String(),
-        email: 'aicode2310@gmail.com',
-        password: 'cantare.de.2310'
+        email: '',
+        password: ''
       }
     }
   },
@@ -146,6 +146,8 @@ export default {
       const loginSuccess = await this.$auth.loginWith('local', {
         data: this.form
       }).then(res => {
+        console.log(res.data.roles)
+        this.$laravel.setRoles(res.data.roles);
         // this.$auth.setUser(res.data.user)
         this.$router.push({name: 'index.home'});
         this.$vs.loading.close()

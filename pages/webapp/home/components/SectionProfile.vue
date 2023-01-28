@@ -1,7 +1,10 @@
 <template>
   <div>
     <CardProfile/>
-    <div class="content-services-section-profile">
+    <!--=====================================
+           TARJETAS INFORMATIVAS SOLO PARA LOS PACIENTES
+       ======================================-->
+    <div class="content-services-section-profile" v-role="'Paciente'">
       <splide :slides="items" :options="options">
         <splide-slide v-for="item in items" :key="item.id">
           <a v-if="item.typeLink" :href="item.link" :target="item.typeLink">

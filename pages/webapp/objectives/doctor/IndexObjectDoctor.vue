@@ -1,13 +1,16 @@
 <template>
   <div>
+    <!--    <ListObjectDoctor/>-->
     <ListValuations :valuations="valuations" :notObjectives="notObjectives"/>
   </div>
 </template>
 
 <script>
-import ListValuations from "./components/ListValuations";
+import ListValuations from "../components/ListValuations";
+
 export default {
-  name: "IndexObjectives",
+  middleware: ['doctor'],
+  name: "IndexObjectDoctor",
   components: {ListValuations},
   data() {
     return {
@@ -16,13 +19,13 @@ export default {
       notObjectives: false,
     }
   },
-  methods:{
-    async getValuations(){
+  methods: {
+    async getValuations() {
       this.$vs.loading({
         color: process.env.COLOR_BASE,
         text: 'Espere por favor...'
       })
-      await this.$axios.get(`/api/v1/get-valuations/?page=${this.page}`).then(({data}) => {
+      await this.$axios.get(`/api/v1/get-valuations-doctor/?page=${this.page}`).then(({data}) => {
         this.openRefresh = true
         if (data.data.data.length < 0) {
           return this.showMessage = false

@@ -5,7 +5,7 @@
   <div v-else class="container">
     <CardWelcome/>
     <vue-confirm-dialog></vue-confirm-dialog>
-    <div class="card">
+    <div class="card mb-4" >
       <div class="card-body">
 
         <!--  NOMBRE DEL TRATAMIENTO -->
@@ -13,7 +13,7 @@
           <div class="form-group">
             <label class="form-label" :class="{ 'text-danger': $v.valuation.name.$error }" for="">Agrega un nombre a tu
               objetivo<span class="text-danger">*</span></label>
-            <p class="m-0 text-light">Ejemplo: Mejoré mi postura, quiero mi abdomen plano, etc.</p>
+            <p class="m-0 text-light">Ejemplo: Mejoraré mi postura, quiero mi abdomen plano, etc.</p>
             <input
               class="form-control mt-2"
               type="text"
@@ -234,7 +234,7 @@ export default {
 
       this.$confirm(
         {
-          message: '¿Esta seguro de crear tu objetivo?',
+          message: '¿Esta segur@ de crear tu objetivo?',
           button: {
             no: 'No',
             yes: 'Si'
@@ -263,6 +263,9 @@ export default {
                     showDuration: 1000,
                     hideDuration: 5000,
                   })
+                  setTimeout(() =>{
+                    this.$router.push({name: 'index.objectives'});
+                  }, 3000)
                 }
               } catch (e) {
                 this.$vs.loading.close()
