@@ -17,7 +17,7 @@
 
               <!-- Info-->
               <div class="ml-2">
-                <h4 class="sb-title">{{ valuation.name }}</h4>
+                <h5 class="sb-title">{{ valuation.name }}</h5>
                 <p style="font-size: 0.9rem;" class="m-0"><span class="font-weight-bold">Tratamiento: </span>{{valuation.treatment.treatment}}</p>
                 <p style="font-size: 0.9rem;" class="m-0"><span class="font-weight-bold">Creado: </span>{{$moment(valuation.created_at).tz(timezoneUser).format('LL')}}</p>
                 <p style="font-size: 0.9rem;"><span class="font-weight-bold">Estado: </span><span :class="`badge bg-${ stateColor(valuation.state)} ms-2 text-white`">{{

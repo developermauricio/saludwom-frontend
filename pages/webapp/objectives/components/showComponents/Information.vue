@@ -4,7 +4,7 @@
           INFO DEL OBJETIVO
       ======================================-->
 <!--    <vue-confirm-dialog></vue-confirm-dialog>-->
-    <div class="card mb-3">
+    <div class="card">
       <div class="card-body">
         <!-- Título y Estado -->
         <div class="d-flex justify-content-between">
@@ -12,11 +12,9 @@
           <div>
             <h5>Tu Objetivo.</h5>
           </div>
-          <!-- Estado del Plan -->
-          <div>
-            <span :class="`badge bg-${ stateColorObjec(valuation.state)} ms-2 text-white`">{{
-                stateTitleObjec(valuation.state)
-              }}</span>
+          <!-- Editar -->
+          <div class="float-right" v-if="valuation.state === '1'">
+            <a @click="openEditObjective"  style="cursor: pointer">Editar</a>
           </div>
         </div>
         <!-- Información -->
@@ -27,10 +25,16 @@
             <p>Tratamiento de <span class="text-primary">{{ valuation.treatment.treatment }}.</span></p>
           </div>
         </div>
-        <!-- Editar -->
-        <div class="float-right" v-if="valuation.state === '1'">
-          <a @click="openEditObjective"  style="cursor: pointer">Editar</a>
+
+        <div class="d-flex justify-content-between">
+          <!-- Estado del Plan -->
+          <div>
+            <span :class="`badge bg-${ stateColorObjec(valuation.state)} ms-2 text-white`">{{
+                stateTitleObjec(valuation.state)
+              }}</span>
+          </div>
         </div>
+
       </div>
     </div>
     <!--=====================================

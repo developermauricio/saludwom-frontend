@@ -2,8 +2,8 @@
   <div class="card user-info-card mb-3">
     <nuxt-link to="/webapp/perfil/info">
       <div class="card-body d-flex align-items-center">
-        <div class="user-avatar align-content-start mr-3">
-          <img class="avatar-profile" :src="`${$config.urlBack}/${user.picture}`" alt="Salud WoM">
+        <div class=" align-content-start mr-3">
+          <img class="avatar-global" :src="`${$config.urlBack}/${user.picture}`" alt="Salud WoM">
         </div>
         <div class="user-info">
           <div class="d-flex align-items-center">

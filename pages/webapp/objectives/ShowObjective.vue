@@ -3,8 +3,8 @@
     <vs-tabs color="#D85C72" alignment="fixed">
       <vs-tab label="Información">
         <div class="pt-2">
-          <vs-tooltip text="Mientras tu objetivo este pendiente de recibir cursos, puedes editar tu información.">
-            <span class="badge bg-danger text-white w-100" v-if="valuation.state === '1'">Puedes actualizar tu información (Clic para más info)</span>
+          <vs-tooltip text="Mientras tu objetivo este pendiente de recibir recursos, puedes editar tu información.">
+            <span class="badge bg-danger text-white w-100" v-if="valuation.state === '1'">Disponible para editar (Clic para más info)</span>
           </vs-tooltip>
           <Information :valuation="valuation" @getValuation="getValuation"/>
         </div>

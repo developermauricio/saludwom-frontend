@@ -1,4 +1,5 @@
 export default {
+  ssr: true,
   image: {
     // baseURL: 'https://that-test.site'
     provider: 'twicpics',
@@ -177,8 +178,8 @@ export default {
       author: 'Salud WoM'
     },
     manifest: {
-      name: 'Salud WoM',
-      short_name: 'Salud WoM',
+      name: 'SaludWoM',
+      short_name: 'SaludWoM',
       lang: 'es',
       display: 'standalone',
       start_url: '/login',

@@ -10053,3 +10053,12 @@ a:hover{
 .btn-zoom:hover{
   color: #ffffff !important;
 }
+.avatar-global{
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+.button-floating :hover{
+  color: #ececec !important;
+}

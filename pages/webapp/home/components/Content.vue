@@ -5,7 +5,7 @@
     </client-only>
     <div class="container content-home" >
       <div class="add-new-contact-wrap">
-        <a class="shadow" href="#" data-bs-toggle="modal" data-bs-target="#addnewcontact">
+        <a class="shadow mb-3 button-floating" href="#" data-bs-toggle="modal" data-bs-target="#addnewcontact">
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
                  class="bi bi-calendar-week-fill text-white m-0" viewBox="0 0 16 16">
@@ -30,7 +30,7 @@
            SECTION MENSAJE SOLO PARA EL PACIENTE
        ======================================-->
       <div class="row" v-role="'Paciente'">
-        <div class="col-12 pr-5 pl-5">
+        <div class="col-12 pr-5 pl-5 py-3">
           <p class="text-center text-primary font-italic">Junt@s seremos un equipo, tú y yo construiremos tu cambio, tú
             ganas y yo te acompaño para que lo consigas.</p>
         </div>
@@ -48,7 +48,7 @@
             <div class="card-body p-3">
               <div class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/valoracion.png" class="text-center" alt="" width="80">
-                <a class="product-title d-block  text-title-card-home">Crea ahora tu nuevo objetivo</a>
+                <a class="product-title d-block  text-title-card-home py-2">Crea ahora tu nuevo objetivo</a>
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@
             <div class="card-body p-3">
               <a class="product-thumbnail d-block text-center" href="page-shop-details.html">
                 <img src="@/assets/img/saludwom/valoraciones.png" alt="" width="80">
-                <a class="product-title d-block text-title-card-home" href="page-shop-details.html">Guía de
+                <a class="product-title d-block text-title-card-home py-2" href="page-shop-details.html">Guía de
                   Recuperación</a>
               </a>
             </div>
@@ -75,7 +75,7 @@
             <div class="card-body p-3">
               <nuxt-link to="/webapp/plans" class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/comprar.png" alt="" width="80">
-                <nuxt-link to="/webapp/citas" class="product-title d-block text-truncate text-title-card-home">Comprar
+                <nuxt-link to="/webapp/citas" class="product-title d-block text-truncate text-title-card-home py-2">Comprar
                   planes
                 </nuxt-link>
               </nuxt-link>
@@ -91,7 +91,7 @@
               <nuxt-link to="/webapp/doctors" class="product-thumbnail d-block text-center"
                          href="page-shop-details.html">
                 <img src="@/assets/img/saludwom/certificate.png" alt="" width="80">
-                <a class="product-title d-block text-truncate text-title-card-home"
+                <a class="product-title d-block text-truncate text-title-card-home py-2"
                    href="page-shop-details.html">Exítos</a>
               </nuxt-link>
             </div>

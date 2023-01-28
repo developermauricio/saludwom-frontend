@@ -50,7 +50,7 @@
               <div class="d-flex">
                 <!-- Icon-->
                 <div
-                  :class="`card w-25 d-flex justify-content-end align-items-end p-2 bg-icon-${iconColor(subscription.plan.name)}`">
+                  :class="`card w-25 d-flex justify-content-center align-items-end p-1 bg-icon-${iconColor(subscription.plan.name)}`">
                   <img :src="require(`~/assets/img/icons/${iconPlan(subscription.plan.name)}`)" width="60"
                        alt="Salud WoM">
                 </div>

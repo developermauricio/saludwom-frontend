@@ -18,7 +18,7 @@
         <button class="btn btn-success btn-block" @click="uploadFiles">Subir Archivos</button>
       </div>
       <div>
-        <a class="btn btn-secondary btn-block" @click="cancelClose">Cancelar</a>
+        <button class="btn btn-secondary btn-block" @click="cancelClose">Cancelar</button>
       </div>
     </div>
   </div>

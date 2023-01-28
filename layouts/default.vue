@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="mb-5">
     <!-- Preloader -->
     <div id="preloader">
       <div class="spinner-grow text-primary" role="status"></div>

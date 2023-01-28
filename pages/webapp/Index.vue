@@ -3,7 +3,7 @@
 <!--    <vue-confirm-dialog></vue-confirm-dialog>-->
     <HeaderLogo :title="title" :show-logo="showLogo" :back-button="backButton" :url-back="urlBack"/>
     <div id="webappStatus">  <!-- Con este identificador mostramos todos los componentes si hay o no internet-->
-      <div class="page-content-wrapper py-3">
+      <div class="page-content-wrapper pb-5 pt-3">
         <router-view/> <!-- Componentes del sistema-->
       </div>
       <NavigationButton @header="dataHeader" v-role="'Paciente'"/> <!-- Navegación menu inferior-->

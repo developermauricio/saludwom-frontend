@@ -54,7 +54,7 @@
     <!-- Footer-->
     <div class="float-right py-3 d-none d-md-block d-lg-block mt-3">
       <div class="d-flex ">
-        <button class="btn btn-secondary" @click="cancelClose">Cancelar</button>
+        <button class="btn-secondary btn" @click="cancelClose">Cancelar</button>
         <button class="btn btn-success ml-2" @click="updateObjective">Guardar</button>
       </div>
     </div>
@@ -63,7 +63,7 @@
         <button class="btn btn-success btn-block" @click="updateObjective">Guardar</button>
       </div>
       <div>
-        <a class="btn btn-secondary btn-block" @click="cancelClose">Cancelar</a>
+        <button class="btn-secondary btn btn-block" @click="cancelClose">Cancelar</button>
       </div>
     </div>
   </div>

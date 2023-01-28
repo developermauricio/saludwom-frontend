@@ -23,13 +23,13 @@
               <span>Citas</span>
             </router-link>
           </li>
-          <!--  Menu Mis Objetivos  -->
-          <li @click="menuSelected('Mis Objetivos', true, false)">
+          <!--  Menu Objetivos  -->
+          <li @click="menuSelected('Objetivos', true, false)">
             <router-link to="/webapp/objetivos">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
               </svg>
-              <span>Mis Objetivos</span>
+              <span>Objetivos</span>
             </router-link>
           </li>
           <!--  Menu Comprar Planes  -->
@@ -133,14 +133,14 @@ export default {
         break;
       /* Rutas o componentes de los objetivos*/
       case 'index.objectives':
-        this.title = 'Mis Objetivos'
+        this.title = 'Objetivos'
         this.$emit('header', this.title, true, false)
         localStorage.removeItem('currentRoute')
         localStorage.setItem('currentRoute', route.path)
         // localStorage.setItem('currentRoute', route.path)
         break;
       case 'show.objective':
-        this.title = 'Mi Objetivo'
+        this.title = 'Objetivo'
         this.$emit('header', this.title, false, true, localStorage.getItem('currentRoute'))
         localStorage.setItem('currentRoute', route.path)
         // localStorage.setItem('currentRoute', route.path)
@@ -155,7 +155,7 @@ export default {
   watch: {
     /* Nos permite saber si estamos en el componente InfoProfile para activar el icono del perfil*/
     '$route'(to, from) {
-      // console.log(to)
+      console.log(to)
       /* Nos permite saber si estamos en el componente InfoProfile para activar el icono del perfil*/
       if (to.name === 'profile.info'){
         this.iconActiveProfileInfo(true)
@@ -182,13 +182,13 @@ export default {
       }
       /* Nos permite saber si estamos en el componente IndexObjectives */
       if (to.name === 'index.objectives'){
-        bus.$emit('index.objectives', 'Mis Objetivos', true, false, '');
-        // bus.$emit('index.objectives', 'Mis Objetivos', false, true, localStorage.getItem('currentRoute'));
+        bus.$emit('index.objectives', 'Objetivos', true, false, '');
+        // bus.$emit('index.objectives', 'Objetivos', false, true, localStorage.getItem('currentRoute'));
         this.iconActiveProfileInfo(false)
       }
-      if (to.name === 'show.objective'){
+      if (to.path === '/webapp/objetivos/*'){
         this.iconActiveProfileInfo(true)
-        bus.$emit('show.objective', 'Mi Objetivo', false, true, localStorage.getItem('currentRoute'));
+        bus.$emit('show.objective', 'Objetivo', false, true, localStorage.getItem('currentRoute'));
       }
       /* Nos permite saber si estamos en el componente IndexHome */
       if (to.name === 'index.home'){
