@@ -1,7 +1,7 @@
 <template>
   <div>
     <CardProfile/>
-    <button  @click="clickCallback"> Instalar</button>
+    <button @click="install"> Instalar</button>
     <!--=====================================
            TARJETAS INFORMATIVAS SOLO PARA LOS PACIENTES
        ======================================-->
@@ -74,30 +74,25 @@ export default {
       ]
     }
   },
-  methods:{
-    captureEvent() {
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault()
-        // Stash the event so it can be triggered later.
-        this.deferredPrompt = e
-      })
-    },
-    clickCallback() {
-      // Show the prompt
-      this.deferredPrompt.prompt()
-      // Wait for the user to respond to the prompt
-      this.deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          // Add analyticcs event
-          this.$gtag.event('add_to_home_screen')
-        }
-        this.deferredPrompt = null
-      })
+  created() {
+    if (process.client) {
+    window.addEventListener("beforeinstallprompt", e => {
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      this.deferredPrompt = e;
+    });
+    window.addEventListener("appinstalled", () => {
+      this.deferredPrompt = null;
+    });
     }
   },
-  mounted() {
-    this.captureEvent()
+  methods: {
+    async dismiss() {
+      this.deferredPrompt = null;
+    },
+    async install() {
+      this.deferredPrompt.prompt();
+    }
   },
   watch: {
     /* Nos permite validar controlar cuando estamos en el componente del perfil y luego emitimos un evento que permite agregar o quitar la flecha que indica más información*/
