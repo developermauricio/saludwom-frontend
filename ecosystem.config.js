@@ -10,8 +10,8 @@ module.exports = {
     },
     {
       name: 'saludwom-app.socket-aicode.art',
-      script: 'npm run clear && npm run build && npm run start',
-      // script: './start.js',
+      script: './node_modules/nuxt/bin/nuxt.js',
+      args: 'start',
       env:{
         HOST: 'localhost',
         PORT: 3000
