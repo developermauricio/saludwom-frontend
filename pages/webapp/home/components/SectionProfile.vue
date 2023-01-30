@@ -1,7 +1,6 @@
 <template>
   <div>
     <CardProfile/>
-    <button @click="install"> Instalar</button>
     <!--=====================================
            TARJETAS INFORMATIVAS SOLO PARA LOS PACIENTES
        ======================================-->
@@ -40,7 +39,6 @@ export default {
   },
   data() {
     return {
-      deferredPrompt: null,
       options: {
         type: 'loop',
         drag: true,
@@ -72,26 +70,6 @@ export default {
         {id: 3, title: 'Salud WoM', link: '#',  typeLink:'', color: 'info'},
         {id: 4, title: 'Equipo Médico', link: '/webapp/doctors',  typeLink:'', color: 'warning'},
       ]
-    }
-  },
-  created() {
-    if (process.client) {
-    window.addEventListener("beforeinstallprompt", e => {
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      this.deferredPrompt = e;
-    });
-    window.addEventListener("appinstalled", () => {
-      this.deferredPrompt = null;
-    });
-    }
-  },
-  methods: {
-    async dismiss() {
-      this.deferredPrompt = null;
-    },
-    async install() {
-      this.deferredPrompt.prompt();
     }
   },
   watch: {
