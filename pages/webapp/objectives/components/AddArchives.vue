@@ -4,7 +4,7 @@
     <label class="form-label" for="">Subir fotos o documentos necesarios.</label>
     <p class="text-light">Opcionalmente, puedes enviar hasta <strong class="text-danger">10</strong> archivos por objetivo y actualmente {{ countArchives === 0 ? 'no has subido archivos' : 'ya has subido'}} <strong class="text-danger" v-if="countArchives > 0">{{countArchives}}.</strong><br> Envianos documentos o fotos
       que creas necesarias para comprender más tu
-      objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. </p>
+      objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. <strong>(si grabas un video, por favor que no dure más de un minuto).</strong> </p>
     <UploadFilesValuation ref="uploadFilesValuation" :valuationId="valorationId"/>
     <!-- Footer-->
     <div class="float-right py-3 d-none d-md-block d-lg-block mt-3">

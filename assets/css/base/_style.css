@@ -10062,3 +10062,6 @@ a:hover{
 .button-floating :hover{
   color: #ececec !important;
 }
+a.btn:hover{
+  color: #cccccc !important;
+}

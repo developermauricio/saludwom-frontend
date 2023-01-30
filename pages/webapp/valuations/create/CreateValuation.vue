@@ -52,7 +52,7 @@
         <div class="mt-4">
           <label class="form-label" for="">Subir fotos o documentos necesarios (Opcional)</label>
           <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o fotos que creas necesarias para comprender más tu
-            objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. </p>
+            objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc.  <strong>(si grabas un video, por favor que no dure más de un minuto).</strong></p>
           <UploadFilesValuation/>
         </div>
         <!--  CALENDARIO CON LA AGENDA -->

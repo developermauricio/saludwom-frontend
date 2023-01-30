@@ -155,7 +155,6 @@ export default {
   watch: {
     /* Nos permite saber si estamos en el componente InfoProfile para activar el icono del perfil*/
     '$route'(to, from) {
-      console.log(to)
       /* Nos permite saber si estamos en el componente InfoProfile para activar el icono del perfil*/
       if (to.name === 'profile.info'){
         this.iconActiveProfileInfo(true)
@@ -186,7 +185,7 @@ export default {
         // bus.$emit('index.objectives', 'Objetivos', false, true, localStorage.getItem('currentRoute'));
         this.iconActiveProfileInfo(false)
       }
-      if (to.path === '/webapp/objetivos/*'){
+      if (to.name === 'show.objective'){
         this.iconActiveProfileInfo(true)
         bus.$emit('show.objective', 'Objetivo', false, true, localStorage.getItem('currentRoute'));
       }

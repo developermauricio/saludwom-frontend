@@ -57,8 +57,15 @@
                 <!-- Info-->
                 <div class="ml-2">
                   <h5 class="sb-title m-0">{{ subscription.plan.name }}</h5>
-                  <p class="m-0"><strong class="sb-price">€{{ subscription.plan.price }}</strong> / Vence
-                    {{ $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') }}</p>
+                  <div class="m-0 d-flex">
+                    <div class="mr-1">
+                      <strong class="sb-price">€{{ subscription.plan.price }}</strong>
+                    </div>
+
+                    <div v-if="subscription.expiration_date">
+                       / Vence {{subscription.expiration_date ? $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') : 'Validando' }}
+                    </div>
+                  </div>
                   <span :class="`badge bg-${ stateColor(subscription.state)} ms-2 text-white`">{{
                       stateTitle(subscription.state)
                     }}</span>

@@ -162,6 +162,7 @@ export default {
               showDuration: 1000,
               hideDuration: 8000,
             })
+            this.$vs.loading.close()
           } else {
 
             if (this.messageDiscount.discount === null && this.messageDiscount.plan !== this.plan.id) {
@@ -173,6 +174,7 @@ export default {
                 showDuration: 1000,
                 hideDuration: 5000,
               })
+              this.$vs.loading.close()
             }else{
               this.$toast.success({
                 title: 'Confirmación',
@@ -180,6 +182,7 @@ export default {
                 showDuration: 1000,
                 hideDuration: 5000,
               })
+              this.$vs.loading.close()
             }
 
           }

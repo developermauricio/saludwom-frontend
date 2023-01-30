@@ -4,7 +4,7 @@
           INFO DEL OBJETIVO
       ======================================-->
 <!--    <vue-confirm-dialog></vue-confirm-dialog>-->
-    <div class="card">
+    <div class="card mb-3">
       <div class="card-body">
         <!-- Título y Estado -->
         <div class="d-flex justify-content-between">
@@ -34,7 +34,6 @@
               }}</span>
           </div>
         </div>
-
       </div>
     </div>
     <!--=====================================

@@ -1,6 +1,7 @@
 <template>
   <div>
     <CardProfile/>
+    <button  @click="clickCallback"> Instalar</button>
     <!--=====================================
            TARJETAS INFORMATIVAS SOLO PARA LOS PACIENTES
        ======================================-->
@@ -39,9 +40,11 @@ export default {
   },
   data() {
     return {
+      deferredPrompt: null,
       options: {
-        // type   : 'slide',
+        type: 'loop',
         drag: true,
+        rewind: true,
         padding: '0.5rem',
         gap: '0.2rem',
         focus: 0,
@@ -57,7 +60,7 @@ export default {
             autoplay: true,
             autoWidth: false,
             drag: true,
-            // type   : 'loop',
+            type   : 'loop',
             perPage: 2,
             gap: '0.2rem',
           },
@@ -70,6 +73,31 @@ export default {
         {id: 4, title: 'Equipo Médico', link: '/webapp/doctors',  typeLink:'', color: 'warning'},
       ]
     }
+  },
+  methods:{
+    captureEvent() {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault()
+        // Stash the event so it can be triggered later.
+        this.deferredPrompt = e
+      })
+    },
+    clickCallback() {
+      // Show the prompt
+      this.deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      this.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          // Add analyticcs event
+          this.$gtag.event('add_to_home_screen')
+        }
+        this.deferredPrompt = null
+      })
+    }
+  },
+  mounted() {
+    this.captureEvent()
   },
   watch: {
     /* Nos permite validar controlar cuando estamos en el componente del perfil y luego emitimos un evento que permite agregar o quitar la flecha que indica más información*/

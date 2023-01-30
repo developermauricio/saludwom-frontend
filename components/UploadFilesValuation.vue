@@ -8,12 +8,12 @@
       :deletable="true"
       :meta="true"
       :accept="'image/*,video/*,.pdf,.doc,.docx,.ods'"
-      :maxSize="'20MB'"
+      :maxSize="'50MB'"
       :maxFiles="numberArchives"
       :helpText="'Clic o arrastra aquí imágenes, o documentos.'"
       :errorText="{
       type: 'Tipo de archivo incorrecto, agrega fotos, videos, word, pdf',
-      size: 'Este archivo no se enviará. Los archivos no deben superar los 20 MB de tamaño',
+      size: 'Este archivo no se enviará. Los archivos no deben superar los 50 MB de tamaño',
     }"
       v-model="fileRecords"
       @select="filesSelected($event)"
