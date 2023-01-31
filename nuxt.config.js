@@ -182,7 +182,7 @@ export default {
       short_name: 'SaludWoM',
       lang: 'es',
       display: 'standalone',
-      start_url: '/login',
+      start_url: '/',
       workbox: {
         dev: true // or use a global variable to track the current NODE_ENV, etc to determine dev mode
       }
