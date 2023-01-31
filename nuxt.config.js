@@ -167,15 +167,19 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     'vue-scrollto/nuxt',
-    '@nuxtjs/pwa',
+    '@nuxtjs/pwa'
 
   ],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     meta: {
-      title: 'Salud WoM',
-      author: 'Salud WoM'
+      title: 'SaludWoM',
+      author: 'SaludWoM'
+    },
+    icons: {
+      /* icon options */
+      iconFileName: 'icon.png'
     },
     manifest: {
       name: 'SaludWoM',
