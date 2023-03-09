@@ -3698,8 +3698,8 @@ form .btn.btn-sm {
 }
 
 .custom-alert-1.alert-danger {
-  color: #ea4c62;
-  background-color: transparent;
+  color: #FFFFFF !important;
+  background-color: #ea4c62 !important;
 }
 
 .custom-alert-1.alert-danger::after {

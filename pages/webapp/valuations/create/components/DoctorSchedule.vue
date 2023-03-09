@@ -2,7 +2,8 @@
   <div class="p-4 schedule-doctor">
     <div class="d-flex justify-content-center">
       <div class="d-flex justify-content-end align-items-end">
-        <img class="avatar-profile" width="60" :src="`${$config.urlBack}/${data.user.picture}`" alt="">
+        <img class="avatar-profile" width="60" :src="`${$config.urlBack}${data.user.picture}`" v-if="data.user.picture" alt="SaludWoM">
+        <img class="avatar-profile" width="60" src="@/assets/img/user-profile.png" alt="SaludWoM" v-else>
       </div>
       <div class="ml-2 mt-2">
         <div class="d-flex">
@@ -11,14 +12,14 @@
         <p class="mb-0 text-primary">Profesional Especialista</p>
       </div>
     </div>
-    <div class="mt-4">
+    <div class="mt-4" v-if="subscription">
       <p>Recuerda que actualmente tienes activo el <strong class="text-primary">{{ subscription.plan.name }}</strong>
         que permite agendar <strong class="text-primary">{{ subscription.plan.number_appointments }} citas.</strong>
         Después de agendar tu primera cita, la siguiente tendrá que ser en los próximos <strong
           class="text-primary">{{ subscription.plan.time_interval_appointments }}
           días.</strong></p>
       <p class="text-danger font-italic fw-500">Tenga en cuenta que el calendario mostrará los horarios disponibles en
-        zona horaria Europa Madrid, agenda tu cita y verás la fecha en tu zona horaria.</p>
+        zona horaria Europa Madrid, agenda tu cita y podrás ver la fecha en tu zona horaria.</p>
     </div>
     <hr>
     <!-- Calendario de disponibilidad    -->
@@ -87,12 +88,14 @@
         </vs-collapse-item>
       </vs-collapse>
       <hr>
-      <button class="btn btn-success" @click="addAppointment(index + 1)"
-              v-if="appointments.length < subscription.plan.number_appointments"> Agendar la siguiente cita
-      </button>
+      <div v-if="subscription">
+        <button class="btn btn-success" @click="addAppointment(index + 1)"
+                v-if="appointments.length < subscription.plan.number_appointments"> Agendar la siguiente cita
+        </button>
+      </div>
     </div>
     <!-- Boton para agendar la segunda cita -->
-    <div class="mt-4 d-flex">
+    <div class="mt-4 d-flex" v-if="subscription">
       <button class="btn-secondary btn mr-2" @click="cancelAppointment"> Cancelar</button>
 
       <button class="btn btn-success" @click="saveAppointment()"
@@ -122,6 +125,7 @@ export default {
       index: null,
       appointments: [
         {
+          doctor_schedule_id: null,
           // numberAppointment: 1,
           doctor: {
             id: this.data.id,
@@ -178,13 +182,6 @@ export default {
   props: ['data'],
   methods: {
     transformTimezone(date) {
-      // const defaultTimezone = new Date(date)
-      // const dateStr = defaultTimezone.toLocaleString('es-Es', {
-      //   timeZone: 'Europe/Madrid',
-      //   day:'numeric', month:'long', year:"numeric", hour: "numeric", minute: "numeric", second:"numeric", hour12: false
-      // })
-      // return dateStr
-      console.log(this.$moment)
       return this.$moment(date).tz(this.timezoneUser).format('LLL')
     },
 
@@ -229,7 +226,12 @@ export default {
         });
         this.eventSelectScroll('#appointment-' + index)
       } else {
-        alert('NO PUEDES AGENDAR MAS CITAS')
+        this.$toast.error({
+          title: 'Sr@ paciente',
+          message: 'No puede agendar más citas.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
       }
     },
     removedAppointment(index) {
@@ -265,7 +267,7 @@ export default {
       setTimeout(() => {
         if (hour.state === 'SELECTED') {
           this.$toast.error({
-            title: 'Sr@ paciente',
+            title: 'Sr@ Paciente',
             message: 'La hora no esta disponible',
             showDuration: 1000,
             hideDuration: 8000,
@@ -275,7 +277,7 @@ export default {
 
         if (hour.state === 'PATIENT') {
           this.$toast.error({
-            title: 'Sr@ paciente',
+            title: 'Sr@ Paciente',
             message: 'Ya has agendado este horario',
             showDuration: 1000,
             hideDuration: 8000,
@@ -290,6 +292,7 @@ export default {
         }
 
         /*CAMBIAR ESTADO A LA HORA TOMADA*/
+        this.appointments[index].doctor_schedule_id = hour.doctor_schedule_id
         this.appointments[index].hour = hour.hour + ':' + hour.minute + ':00'
         this.appointments[index].onlyHour = hour.hour
         this.appointments[index].onlyMinute = hour.minute
@@ -320,7 +323,7 @@ export default {
           let formatCurrentDate = this.$dateFns.format(date[0], 'yyyy-MM-dd')
           if (formatDateNext > formatCurrentDate) {
             this.$toast.error({
-              title: 'Sr@ paciente',
+              title: 'Sr@ Paciente',
               message: `Recuerde agendar tu próxima cita después de cada ${this.subscription.plan.time_interval_appointments} días`,
               showDuration: 1000,
               hideDuration: 8000,
@@ -328,16 +331,16 @@ export default {
             setTimeout(() => {
               this.appointments.forEach((item, index) => {
                 if (index === this.index) {
+                  item.doctor_schedule_id = null
                   item.date = null
                   item.hour = null
-                  item.timezone = null,
+                  item.timezone = null
                     item.onlyHour = null
                   item.onlyMinute = null
                   item.times = null
                 }
               })
             }, 50)
-
             return
           }
         }
@@ -347,8 +350,9 @@ export default {
         let currentDate = this.checkSchedule.find(item => this.$dateFns.format(item.date, 'yyyy-MM-dd') === dateSelected)
         this.appointments.forEach((item, index) => {
           if (index === this.index) {
+            item.doctor_schedule_id = null
             item.hour = null
-            item.timezone = null,
+            item.timezone = null
               item.onlyHour = null
             item.onlyMinute = null
           }
@@ -359,7 +363,6 @@ export default {
     },
     indexAppointment(index) {
       this.index = parseInt(index)
-
     },
     async checkScheduleAvailable() {
       this.$vs.loading({
@@ -394,12 +397,18 @@ export default {
     },
   },
   created() {
-    this.subscription = JSON.parse(localStorage.getItem('subscription'))
+    setTimeout(() =>{
+      bus.$emit('verifySubscription');
+    }, 100)
+    // this.subscription = JSON.parse(localStorage.getItem('subscription'))
   },
   mounted() {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.timezoneUser = timeZone
     this.checkScheduleAvailable()
+    bus.$on('sendSubscription', (data) =>{
+      this.subscription = data
+    })
   }
 }
 </script>

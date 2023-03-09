@@ -6,7 +6,11 @@
           <vs-tooltip text="Mientras tu objetivo este pendiente de recibir recursos, puedes editar tu información.">
             <span class="badge bg-danger text-white w-100" v-if="valuation.state === '1'">Disponible para editar (Clic para más info)</span>
           </vs-tooltip>
-          <Information :valuation="valuation" @getValuation="getValuation"/>
+          <Information
+            :valuation="valuation"
+            :missingAppointments="missingAppointments"
+            :messageMissingAppointments="messageMissingAppointments"
+            @getValuation="getValuation"/>
         </div>
       </vs-tab>
       <vs-tab label="Terapeuta">
@@ -35,6 +39,8 @@ export default {
   },
   data() {
     return {
+      messageMissingAppointments: '',
+      missingAppointments:false,
       valuation: {
         treatment: {treatment: null},
         subscription: {plan: {name: null, description: null}}
@@ -42,6 +48,23 @@ export default {
     }
   },
   methods: {
+    // Válidamos si tiene completas el número de citas según el plan
+    validateAppointment(valuation){
+      if (valuation){
+        let appointments = valuation.appointments
+        let planNumberAppoint = valuation.subscription.plan.number_appointments
+        let totalAppointPending = 0
+        appointments.map(app =>{
+            if (app.state === '1' || app.state === '3' || app.state === '5'){
+              totalAppointPending ++
+            }
+        })
+        if (totalAppointPending !== planNumberAppoint){
+            this.missingAppointments = true
+            this.messageMissingAppointments = `Para tu plan actual "${valuation.subscription.plan.name}", no has completado el número de citas (${planNumberAppoint}) que puedes agendar, por favor completa tu agenda.`
+        }
+      }
+    },
     getValuation() {
       this.$vs.loading({
         color: process.env.COLOR_BASE,
@@ -51,6 +74,7 @@ export default {
       this.$axios.get(`/api/v1/get-valuation/${params.slug}`).then(resp => {
         this.valuation = resp.data.data
         this.$vs.loading.close()
+        this.validateAppointment(this.valuation)
       }).catch((e) => {
         console.log('ERROR', e);
         this.$toast.error({

@@ -62,9 +62,9 @@
                       <strong class="sb-price">€{{ subscription.plan.price }}</strong>
                     </div>
 
-                    <div v-if="subscription.expiration_date">
-                       / Vence {{subscription.expiration_date ? $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') : 'Validando' }}
-                    </div>
+<!--                    <div v-if="subscription.expiration_date">-->
+<!--                       / Vence {{subscription.expiration_date ? $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') : 'Validando' }}-->
+<!--                    </div>-->
                   </div>
                   <span :class="`badge bg-${ stateColor(subscription.state)} ms-2 text-white`">{{
                       stateTitle(subscription.state)

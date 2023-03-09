@@ -3,7 +3,7 @@
     <client-only>
       <vue-confirm-dialog></vue-confirm-dialog>
     </client-only>
-    <div class="container content-home" >
+    <div class="container content-home">
       <div class="add-new-contact-wrap">
         <a class="shadow mb-3 button-floating" href="#" data-bs-toggle="modal" data-bs-target="#addnewcontact">
           <div>
@@ -23,9 +23,9 @@
        ======================================-->
       <div class="row">
         <div class="col-12">
-        <client-only>
-          <SectionProfile />
-        </client-only>
+          <client-only>
+            <SectionProfile/>
+          </client-only>
         </div>
       </div>
       <!--=====================================
@@ -77,7 +77,8 @@
             <div class="card-body p-3">
               <nuxt-link to="/webapp/plans" class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/comprar.png" alt="" width="80">
-                <nuxt-link to="/webapp/citas" class="product-title d-block text-truncate text-title-card-home py-2">Comprar
+                <nuxt-link to="/webapp/citas" class="product-title d-block text-truncate text-title-card-home py-2">
+                  Comprar
                   planes
                 </nuxt-link>
               </nuxt-link>
@@ -121,10 +122,9 @@ export default {
 
   methods: {
     verifySubscription() {
-      setTimeout(() =>{
+      setTimeout(() => {
         bus.$emit('verifySubscription');
-      }, 500)
-
+      }, 300)
     },
     async openValuation() {
       // this.$vs.loading({
@@ -151,14 +151,15 @@ export default {
              */
             callback: async confirm => {
               if (confirm) {
-                this.$router.push({name: 'index.plans'});
+                await this.$router.push({name: 'index.plans'});
               }
             }
           })
         this.$vs.loading.close()
       } else {
         this.$vs.loading.close()
-        this.$router.push({name: 'valuation.create'});
+        await this.$router.push({name: 'valuation.create'},
+        );
       }
     },
   },
@@ -167,7 +168,7 @@ export default {
     setTimeout(() => {
       bus.$on('sendSubscription', (data) => {
         this.subscription = data
-          this.openValuation()
+        this.openValuation()
       })
     }, 500)
   }

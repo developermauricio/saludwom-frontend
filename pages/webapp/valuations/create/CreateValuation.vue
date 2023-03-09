@@ -3,7 +3,7 @@
     <h2 class="text-center">No tienes suscripción</h2>
   </div>
   <div v-else class="container">
-    <CardWelcome/>
+    <CardWelcome :subscription="subscription"/>
     <vue-confirm-dialog></vue-confirm-dialog>
     <div class="card mb-4" >
       <div class="card-body">
@@ -49,7 +49,7 @@
           </div>
         </div>
         <!--  CARGAR ARCHIVOS -->
-        <div class="mt-4">
+        <div class="mt-4 text-justify">
           <label class="form-label" for="">Subir fotos o documentos necesarios (Opcional)</label>
           <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o fotos que creas necesarias para comprender más tu
             objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc.  <strong>(si grabas un video, por favor que no dure más de un minuto).</strong></p>
@@ -57,8 +57,24 @@
         </div>
         <!--  CALENDARIO CON LA AGENDA -->
         <div v-if="subscription.plan.number_appointments > 0">
-          <div class="mt-4" v-if="doctors.length > 0">
-            <label class="form-label" for="">Selecciona el especialista para <strong>agendar tu cita:</strong></label>
+          <div class="mt-4" v-if="doctors && doctors.length > 0">
+            <label class="form-label" for="">Selecciona el especialista para <strong class="text-danger">agendar tu cita:</strong></label>
+          </div>
+          <div class="text-justify" v-if="doctors && doctors.length > 0">
+            <p style="font-size: 0.7rem"><span class="text-danger font-weight-bold">IMPORTANTE: </span>
+              El pago del programa se realizará en nuestro portal online, tienes que registrarte y acceder al pago.
+              Tendrás el calendario para agendar las citas, puedes anular o pedir cambio de tu cita con <span
+                class="text-danger font-italic">7 días de antelación</span> sin ningún problema.
+              En caso de que nos avises con menos tiempo, no te garantizamos el reintegro de tu pago (o que lo
+              mantengamos
+              para la nueva hora),
+              ya que dependerá de si podemos llenar tu espacio con otra persona.
+            </p>
+            <p style="font-size: 0.7rem">
+              Si no puedes agendar tu cita, escríbenos a nuestra atención al cliente por whatsapp (640 847 411)
+              responderemos
+              cuanto antes a tu sugerencia.
+            </p>
           </div>
           <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
             <div class="card border select-doctor-schedule">
@@ -72,6 +88,8 @@
                       <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
                     </div>
                     <p class="mb-0 text-primary">Profesional Especialista</p>
+                    <span class="badge bg-warning ms-2 text-white" v-if="doctor.doctor_schedule.length === 0">Agenda no disponible</span>
+                    <span class="badge bg-success ms-2 text-white" v-if="doctor.doctor_schedule.length > 0">Agenda disponible</span>
                   </div>
                 </div>
               </div>
@@ -129,6 +147,7 @@ export default {
     VueDropzone,
     ConsentForms
   },
+  // props: ['subscription'],
   data() {
     return {
       timezoneUser: null,
@@ -231,7 +250,6 @@ export default {
       this.valuation.appointments.forEach((item) => {
         this.valuation.doctorId = item.doctor.id
       })
-
       this.$confirm(
         {
           message: '¿Esta segur@ de crear tu objetivo?',
@@ -265,7 +283,7 @@ export default {
                   })
                   setTimeout(() =>{
                     this.$router.push({name: 'index.objectives'});
-                  }, 3000)
+                  }, 1000)
                 }
               } catch (e) {
                 this.$vs.loading.close()
@@ -285,6 +303,15 @@ export default {
       return `${treatment}`
     },
     openDoctorSchedule(doctor) {
+      if (doctor.doctor_schedule && doctor.doctor_schedule.length === 0) {
+        this.$toast.error({
+          title: 'Atención',
+          message: 'El especialista no tiene agenda disponible.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        return
+      }
       this.$FModal.show(
         {
           component: DoctorSchedule,
@@ -296,6 +323,21 @@ export default {
           data: doctor,
         }
       )
+    },
+    async currentSubscription() {
+      await this.$axios.get(`/api/v1/get-current-subscription`).then(async resp => {
+        this.subscription = resp.data.data
+        this.$vs.loading.close()
+      }).catch((e) => {
+        console.log('ERROR', e);
+        this.$toast.error({
+          title: 'Error',
+          message: 'Error al validar la suscripción. Consulte con el administrador.',
+          showDuration: 1000,
+          hideDuration: 8000,
+        })
+        this.$vs.loading.close()
+      })
     },
     async checkSignature() {
       await this.$axios.get('/api/v1/check-signature').then(resp => {
@@ -350,12 +392,19 @@ export default {
       console.log("Backdrop clicked");
     },
   },
+
   mounted() {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    this.timezoneUser = timeZone
+    this.timezoneUser = Intl.DateTimeFormat().resolvedOptions().timeZone
+    this.currentSubscription()
     this.getTreatments()
     this.checkSignature()
-    this.subscription = JSON.parse(localStorage.getItem('subscription'))
+
+    setTimeout(() => {
+      bus.$on('sendSubscription', (data) => {
+        this.subscription = data
+      })
+    }, 500)
+    // this.subscription = JSON.parse(localStorage.getItem('subscription'))
     setTimeout(() => {
       bus.$on('appointments', (appointment) => {
         this.valuation.appointments = appointment

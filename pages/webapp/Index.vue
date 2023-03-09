@@ -42,8 +42,8 @@ export default {
     async currentSubscription() {
       this.loading()
       await this.$axios.get(`/api/v1/get-current-subscription`).then(async resp => {
-        await localStorage.removeItem('subscription')
-        await localStorage.setItem('subscription', JSON.stringify(resp.data.data))
+        // await localStorage.removeItem('subscription')
+        // await localStorage.setItem('subscription', JSON.stringify(resp.data.data))
         bus.$emit('sendSubscription', resp.data.data)
         this.$vs.loading.close()
       }).catch((e) => {

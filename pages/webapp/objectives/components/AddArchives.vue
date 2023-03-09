@@ -1,10 +1,13 @@
 <template>
   <div class="p-4">
-        <vue-confirm-dialog></vue-confirm-dialog>
+    <vue-confirm-dialog></vue-confirm-dialog>
     <label class="form-label" for="">Subir fotos o documentos necesarios.</label>
-    <p class="text-light">Opcionalmente, puedes enviar hasta <strong class="text-danger">10</strong> archivos por objetivo y actualmente {{ countArchives === 0 ? 'no has subido archivos' : 'ya has subido'}} <strong class="text-danger" v-if="countArchives > 0">{{countArchives}}.</strong><br> Envianos documentos o fotos
+    <p class="text-light">Opcionalmente, puedes enviar hasta <strong class="text-danger">10</strong> archivos por
+      objetivo y actualmente {{ countArchives === 0 ? 'no has subido archivos' : 'ya has subido' }} <strong
+        class="text-danger" v-if="countArchives > 0">{{ countArchives }}.</strong><br> Envianos documentos o fotos
       que creas necesarias para comprender más tu
-      objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. <strong>(si grabas un video, por favor que no dure más de un minuto).</strong> </p>
+      objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. <strong>(si grabas un
+        video, por favor que no dure más de un minuto).</strong></p>
     <UploadFilesValuation ref="uploadFilesValuation" :valuationId="valorationId"/>
     <!-- Footer-->
     <div class="float-right py-3 d-none d-md-block d-lg-block mt-3">
@@ -31,12 +34,12 @@ export default {
   name: "AddArchives",
   props: ['valorationId', 'countArchives'],
   methods: {
-    cancelClose(){
+    cancelClose() {
       this.$FModal.hide()
     },
     uploadFiles() {
       this.$refs.uploadFilesValuation.validateUpload(this.countArchives)
-     // bus.$emit('confirmUploadArchives', this.countArchives)
+      // bus.$emit('confirmUploadArchives', this.countArchives)
     }
   }
 }

@@ -26,6 +26,7 @@
         <label class="form-label" :class="{ 'text-danger': $v.valuation.valuationTreatment.$error }">Tipo
           de tratamiento<span class="text-danger">*</span></label>
         <multiselect
+          disabled
           :class="{ 'is-invalid': $v.valuation.valuationTreatment.$error }"
           v-model="valuation.valuationTreatment"
           :options="treatments" :custom-label="nameSelect" :searchable="true" :close-on-select="true"

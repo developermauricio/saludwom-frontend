@@ -3,7 +3,7 @@
       <div class="container">
         <h2>Citas</h2>
       </div>
-<!--    <HumanBody/>-->
+    <HumanBody/>
   </div>
 </template>
 
