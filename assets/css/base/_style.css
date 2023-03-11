@@ -2151,7 +2151,7 @@ form .btn.btn-sm {
 }
 
 .header-content .setting-trigger-btn span {
-  width: 6px;
+  /*width: 6px;*/
   height: 6px;
   display: inline-block;
   background-color: #D85C72;
@@ -10064,4 +10064,7 @@ a:hover{
 }
 a.btn:hover{
   color: #cccccc !important;
+}
+.vs-sidebar{
+  max-width: 324px !important;
 }

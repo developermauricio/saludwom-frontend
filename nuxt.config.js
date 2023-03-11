@@ -98,6 +98,7 @@ export default {
     {src: '~/plugins/vue-timepicker', ssr: false},
     {src: '~/plugins/vue2-dropzone', ssr: false},
     {src: '~/plugins/vue-social-chat', ssr: false},
+    {src: '~/plugins/mqtt', mode: 'client', ssr: false},
     // { src: '~/plugins/vue-body-part-selector' , ssr: false },
     {src: '~/assets/js/dark-rtl.js', mode: 'client'},
     {src: '~plugins/vue-full-calendar', ssr: false},

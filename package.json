@@ -29,6 +29,7 @@
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",
     "boxicons": "^2.1.2",
+    "mqtt": "^4.3.5",
     "core-js": "^3.19.3",
     "cxlt-vue2-toastr": "^1.1.1",
     "jquery": "^3.5.1",

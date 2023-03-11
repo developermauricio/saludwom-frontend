@@ -5,7 +5,7 @@
   <div v-else class="container">
     <CardWelcome :subscription="subscription"/>
     <vue-confirm-dialog></vue-confirm-dialog>
-    <div class="card mb-4" >
+    <div class="card mb-4">
       <div class="card-body">
 
         <!--  NOMBRE DEL TRATAMIENTO -->
@@ -51,14 +51,17 @@
         <!--  CARGAR ARCHIVOS -->
         <div class="mt-4 text-justify">
           <label class="form-label" for="">Subir fotos o documentos necesarios (Opcional)</label>
-          <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o fotos que creas necesarias para comprender más tu
-            objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc.  <strong>(si grabas un video, por favor que no dure más de un minuto).</strong></p>
+          <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o
+            fotos que creas necesarias para comprender más tu
+            objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. <strong>(si grabas
+              un video, por favor que no dure más de un minuto).</strong></p>
           <UploadFilesValuation/>
         </div>
         <!--  CALENDARIO CON LA AGENDA -->
         <div v-if="subscription.plan.number_appointments > 0">
           <div class="mt-4" v-if="doctors && doctors.length > 0">
-            <label class="form-label" for="">Selecciona el especialista para <strong class="text-danger">agendar tu cita:</strong></label>
+            <label class="form-label" for="">Selecciona el especialista para <strong class="text-danger">agendar tu
+              cita:</strong></label>
           </div>
           <div class="text-justify" v-if="doctors && doctors.length > 0">
             <p style="font-size: 0.7rem"><span class="text-danger font-weight-bold">IMPORTANTE: </span>
@@ -103,12 +106,15 @@
             <li v-for="(appointment, index) in this.valuation.appointments" :key="'appoint-'+appointment.date"
                 class="font-weight-bold">
               <i class="bx bx-check-circle check-appointment ml-1 text-success mr-1"></i>
-              Cita {{ index + 1  }}
+              Cita {{ index + 1 }}
               <br>
-<!--              {{ $dateFns.format(appointment.date, 'PPPP') }}-->
-<!--              {{ appointment.hour }}-->
-              <span class="badge bg-success ms-2 text-white">{{ transformTimezone(appointment.date+' '+ appointment.hour)+' '+timezoneUser }}</span><br>
-              <span class="badge bg-light ms-2 text-light">{{ $moment(appointment.date+' '+appointment.hour).format('LLL') + ' '+$config.timezone}}</span>
+              <!--              {{ $dateFns.format(appointment.date, 'PPPP') }}-->
+              <!--              {{ appointment.hour }}-->
+              <span class="badge bg-success ms-2 text-white">{{
+                  transformTimezone(appointment.date + ' ' + appointment.hour) + ' ' + timezoneUser
+                }}</span><br>
+              <span
+                class="badge bg-light ms-2 text-light">{{ $moment(appointment.date + ' ' + appointment.hour).format('LLL') + ' ' + $config.timezone }}</span>
               <p style="margin-top: 5px">Esp. {{ appointment.doctor.name }} {{ appointment.doctor.last_name }}</p>
             </li>
           </ul>
@@ -138,6 +144,7 @@ import PatientSchedule from "../../../../components/calendar/PatientSchedule";
 import DoctorSchedule from "./components/DoctorSchedule";
 import {bus} from "../../../../plugins/bus";
 import {required} from "vuelidate/lib/validators";
+import {publishMQTT} from "../../../../plugins/mqtt";
 
 export default {
   name: "CreateValuation",
@@ -191,14 +198,14 @@ export default {
     }
   },
   methods: {
-    changeSelectedTreatment(treatment){
-      if (treatment){
+    changeSelectedTreatment(treatment) {
+      if (treatment) {
         this.doctors = treatment.doctors
-      }else{
+      } else {
         this.doctors = []
       }
     },
-    transformTimezone(date){
+    transformTimezone(date) {
       // const defaultTimezone = new Date(date)
       // const dateStr = defaultTimezone.toLocaleString('es-Es', {
       //   timeZone: 'Europe/Madrid',
@@ -281,7 +288,7 @@ export default {
                     showDuration: 1000,
                     hideDuration: 5000,
                   })
-                  setTimeout(() =>{
+                  setTimeout(() => {
                     this.$router.push({name: 'index.objectives'});
                   }, 1000)
                 }
