@@ -63,7 +63,7 @@ export default {
           console.log(e)
           this.$toast.error({
             title: 'Error',
-            message: 'Error al subir archivos. Consulte con el administrador.',
+            message: 'Error al subir archivos. Consulte a soporte SaludWom.',
             showDuration: 1000,
             hideDuration: 8000,
           })

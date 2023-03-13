@@ -190,9 +190,9 @@ export default {
           console.log(e.response.data)
           this.$toast.error({
             title: 'Error',
-            message: 'Error al realizar el proceso de pago. Por favor contacte al administrador',
+            message: 'Error, verifíque la fecha de expiración, veríque si tiene fondos o contacte al soporte SaludWom',
             showDuration: 1000,
-            hideDuration: 10000,
+            hideDuration: 12000,
           })
           console.log('ERROR PAYMENT ', e.response.data)
           this.$vs.loading.close()
@@ -200,9 +200,9 @@ export default {
       }).catch(e => {
         this.$toast.error({
           title: 'Error',
-          message: 'Error al realizar el intento de pago. Por favor contacte al administrador',
+          message: 'Error, verífque la fecha de expiración, veríque si tiene fondos o contacte al soporte SaludWom',
           showDuration: 1000,
-          hideDuration: 8000,
+          hideDuration: 12000,
         })
         this.$vs.loading.close()
         console.log('ERROR INTENT ', e.response)

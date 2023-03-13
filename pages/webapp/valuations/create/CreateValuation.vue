@@ -1,136 +1,145 @@
 <template>
-  <div v-if="!subscription" class="container">
-    <h2 class="text-center">No tienes suscripción</h2>
-  </div>
-  <div v-else class="container">
-    <CardWelcome :subscription="subscription"/>
-    <vue-confirm-dialog></vue-confirm-dialog>
-    <div class="card mb-4">
-      <div class="card-body">
+  <div>
+<!--    <div v-if="!subscription" class="container">-->
+<!--      <h2 class="text-center">No tienes suscripción</h2>-->
+<!--    </div>-->
+    <NotSubscription v-if="notSubscription"/>
+    <div v-if="subscription && !notSubscription" class="container">
+      <CardWelcome :subscription="subscription"/>
+      <vue-confirm-dialog></vue-confirm-dialog>
+      <div class="card mb-4">
+        <div class="card-body">
 
-        <!--  NOMBRE DEL TRATAMIENTO -->
-        <div class="mt-4">
-          <div class="form-group">
-            <label class="form-label" :class="{ 'text-danger': $v.valuation.name.$error }" for="">Agrega un nombre a tu
-              objetivo<span class="text-danger">*</span></label>
-            <p class="m-0 text-light">Ejemplo: Mejoraré mi postura, quiero mi abdomen plano, etc.</p>
-            <input
-              class="form-control mt-2"
-              type="text"
-              v-model.trim="valuation.name"
-              :class="{ 'is-invalid': $v.valuation.name.$error }"
-              placeholder="">
+          <!--  NOMBRE DEL TRATAMIENTO -->
+          <div class="mt-4">
+            <div class="form-group">
+              <label class="form-label" :class="{ 'text-danger': $v.valuation.name.$error }" for="">Agrega un nombre a
+                tu
+                objetivo<span class="text-danger">*</span></label>
+              <p class="m-0 text-light">Ejemplo: Mejoraré mi postura, quiero mi abdomen plano, etc.</p>
+              <input
+                class="form-control mt-2"
+                type="text"
+                v-model.trim="valuation.name"
+                :class="{ 'is-invalid': $v.valuation.name.$error }"
+                placeholder="">
+            </div>
           </div>
-        </div>
-        <!--  SELECCIONAR EL TIPO DE TRATAMIENTO -->
-        <div>
-          <label class="form-label" :class="{ 'text-danger': $v.valuation.selectedTreatment.$error }">Seleccione el tipo
-            de tratamiento<span class="text-danger">*</span></label>
-          <multiselect
-            :class="{ 'is-invalid': $v.valuation.selectedTreatment.$error }"
-            v-model="valuation.selectedTreatment"
-            @input="changeSelectedTreatment"
-            :options="treatments" :custom-label="nameSelect" :searchable="true" :close-on-select="true"
-            selectedLabel="Seleccionado"
-            deselectLabel="" selectLabel="Seleccionar" :show-labels="true"
-            placeholder="Buscar tratamiento..."></multiselect>
-        </div>
-        <!--  DESCRIPCIÓN DE LOS OBJETIVOS -->
-        <div class="mt-4">
-          <div class="form-group">
-            <label class="form-label"
-                   :class="{ 'text-danger': $v.valuation.objectives.$error }"
-                   for="">Dinos los objetivos a los que quiere llegar con el tratamiento<span
-              class="text-danger">*</span></label>
-            <textarea class="form-control"
-                      v-model="valuation.objectives"
-                      :class="{ 'is-invalid': $v.valuation.objectives.$error }"
-                      name="textarea" cols="7" rows="7"></textarea>
+          <!--  SELECCIONAR EL TIPO DE TRATAMIENTO -->
+          <div>
+            <label class="form-label" :class="{ 'text-danger': $v.valuation.selectedTreatment.$error }">Seleccione el
+              tipo
+              de tratamiento<span class="text-danger">*</span></label>
+            <multiselect
+              :class="{ 'is-invalid': $v.valuation.selectedTreatment.$error }"
+              v-model="valuation.selectedTreatment"
+              @input="changeSelectedTreatment"
+              :options="treatments" :custom-label="nameSelect" :searchable="true" :close-on-select="true"
+              selectedLabel="Seleccionado"
+              deselectLabel="" selectLabel="Seleccionar" :show-labels="true"
+              placeholder="Buscar tratamiento..."></multiselect>
           </div>
-        </div>
-        <!--  CARGAR ARCHIVOS -->
-        <div class="mt-4 text-justify">
-          <label class="form-label" for="">Subir fotos o documentos necesarios (Opcional)</label>
-          <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o
-            fotos que creas necesarias para comprender más tu
-            objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. <strong>(si grabas
-              un video, por favor que no dure más de un minuto).</strong></p>
-          <UploadFilesValuation/>
-        </div>
-        <!--  CALENDARIO CON LA AGENDA -->
-        <div v-if="subscription.plan.number_appointments > 0">
-          <div class="mt-4" v-if="doctors && doctors.length > 0">
-            <label class="form-label" for="">Selecciona el especialista para <strong class="text-danger">agendar tu
-              cita:</strong></label>
+          <!--  DESCRIPCIÓN DE LOS OBJETIVOS -->
+          <div class="mt-4">
+            <div class="form-group">
+              <label class="form-label"
+                     :class="{ 'text-danger': $v.valuation.objectives.$error }"
+                     for="">Dinos los objetivos a los que quiere llegar con el tratamiento<span
+                class="text-danger">*</span></label>
+              <textarea class="form-control"
+                        v-model="valuation.objectives"
+                        :class="{ 'is-invalid': $v.valuation.objectives.$error }"
+                        name="textarea" cols="7" rows="7"></textarea>
+            </div>
           </div>
-          <div class="text-justify" v-if="doctors && doctors.length > 0">
-            <p style="font-size: 0.7rem"><span class="text-danger font-weight-bold">IMPORTANTE: </span>
-              El pago del programa se realizará en nuestro portal online, tienes que registrarte y acceder al pago.
-              Tendrás el calendario para agendar las citas, puedes anular o pedir cambio de tu cita con <span
-                class="text-danger font-italic">7 días de antelación</span> sin ningún problema.
-              En caso de que nos avises con menos tiempo, no te garantizamos el reintegro de tu pago (o que lo
-              mantengamos
-              para la nueva hora),
-              ya que dependerá de si podemos llenar tu espacio con otra persona.
-            </p>
-            <p style="font-size: 0.7rem">
-              Si no puedes agendar tu cita, escríbenos a nuestra atención al cliente por whatsapp (640 847 411)
-              responderemos
-              cuanto antes a tu sugerencia.
-            </p>
+          <!--  CARGAR ARCHIVOS -->
+          <div class="mt-4 text-justify">
+            <label class="form-label" for="">Subir fotos o documentos necesarios (Opcional)</label>
+            <p class="text-light">Opcionalmente, puedes enviar hasta <strong>10</strong> archivos. Envianos documentos o
+              fotos que creas necesarias para comprender más tu
+              objetivo. Como historias clínicas, fotos de ecografías, de alguna zona de tu cuerpo. Etc. <strong>(si
+                grabas
+                un video, por favor que no dure más de un minuto).</strong></p>
+            <UploadFilesValuation/>
           </div>
-          <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
-            <div class="card border select-doctor-schedule">
-              <div class="card-body">
-                <div class="d-flex" @click="openDoctorSchedule(doctor)">
-                  <div class="d-flex justify-content-end align-items-end">
-                    <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
-                  </div>
-                  <div class="ml-2 mt-2">
-                    <div class="d-flex">
-                      <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+          <!--  CALENDARIO CON LA AGENDA -->
+          <div v-if="subscription.plan.number_appointments > 0">
+            <div class="mt-4" v-if="doctors && doctors.length > 0">
+              <label class="form-label" for="">Selecciona el especialista para <strong class="text-danger">agendar tu
+                cita:</strong></label>
+            </div>
+            <div class="text-justify" v-if="doctors && doctors.length > 0">
+              <p style="font-size: 0.7rem"><span class="text-danger font-weight-bold">IMPORTANTE: </span>
+                El pago del programa se realizará en nuestro portal online, tienes que registrarte y acceder al pago.
+                Tendrás el calendario para agendar las citas, puedes anular o pedir cambio de tu cita con <span
+                  class="text-danger font-italic">7 días de antelación</span> sin ningún problema.
+                En caso de que nos avises con menos tiempo, no te garantizamos el reintegro de tu pago (o que lo
+                mantengamos
+                para la nueva hora),
+                ya que dependerá de si podemos llenar tu espacio con otra persona.
+              </p>
+              <p style="font-size: 0.7rem">
+                Si no puedes agendar tu cita, escríbenos a nuestra atención al cliente por whatsapp (640 847 411)
+                responderemos
+                cuanto antes a tu sugerencia.
+              </p>
+            </div>
+            <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
+              <div class="card border select-doctor-schedule">
+                <div class="card-body">
+                  <div class="d-flex" @click="openDoctorSchedule(doctor)">
+                    <div class="d-flex justify-content-end align-items-end">
+                      <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
                     </div>
-                    <p class="mb-0 text-primary">Profesional Especialista</p>
-                    <span class="badge bg-warning ms-2 text-white" v-if="doctor.doctor_schedule.length === 0">Agenda no disponible</span>
-                    <span class="badge bg-success ms-2 text-white" v-if="doctor.doctor_schedule.length > 0">Agenda disponible</span>
+                    <div class="ml-2 mt-2">
+                      <div class="d-flex">
+                        <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                      </div>
+                      <p class="mb-0 text-primary">Profesional Especialista</p>
+                      <span class="badge bg-warning ms-2 text-white" v-if="doctor.doctor_schedule.length === 0">Agenda no disponible</span>
+                      <span class="badge bg-success ms-2 text-white" v-if="doctor.doctor_schedule.length > 0">Agenda disponible</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="mt-4" v-if="valuation.appointments.length > 0">
-          <label class="form-label" for="">Tu cita{{ this.valuation.appointments.length >= 1 ? 's' : '' }} son:</label>
-          <ul>
-            <li v-for="(appointment, index) in this.valuation.appointments" :key="'appoint-'+appointment.date"
-                class="font-weight-bold">
-              <i class="bx bx-check-circle check-appointment ml-1 text-success mr-1"></i>
-              Cita {{ index + 1 }}
-              <br>
-              <!--              {{ $dateFns.format(appointment.date, 'PPPP') }}-->
-              <!--              {{ appointment.hour }}-->
-              <span class="badge bg-success ms-2 text-white">{{
-                  transformTimezone(appointment.date + ' ' + appointment.hour) + ' ' + timezoneUser
-                }}</span><br>
-              <span
-                class="badge bg-light ms-2 text-light">{{ $moment(appointment.date + ' ' + appointment.hour).format('LLL') + ' ' + $config.timezone }}</span>
-              <p style="margin-top: 5px">Esp. {{ appointment.doctor.name }} {{ appointment.doctor.last_name }}</p>
-            </li>
-          </ul>
-        </div>
-        <!--  ACEPTAR CONSENTIMIENTOS -->
-        <div class="mt-4" v-if="!checkVerifySignature">
-          <hr>
-          <ConsentForms @consent="consent"/>
-        </div>
-        <!--  GUARDAR Y AGENDAR -->
-        <div class="mt-4">
-          <button class="btn btn-primary btn-block mt-2" @click="saveValuation">Crear y enviar al especialista</button>
+          <div class="mt-4" v-if="valuation.appointments.length > 0">
+            <label class="form-label" for="">Tu cita{{ this.valuation.appointments.length >= 1 ? 's' : '' }}
+              son:</label>
+            <ul>
+              <li v-for="(appointment, index) in this.valuation.appointments" :key="'appoint-'+appointment.date"
+                  class="font-weight-bold">
+                <i class="bx bx-check-circle check-appointment ml-1 text-success mr-1"></i>
+                Cita {{ index + 1 }}
+                <br>
+                <!--              {{ $dateFns.format(appointment.date, 'PPPP') }}-->
+                <!--              {{ appointment.hour }}-->
+                <span class="badge bg-success ms-2 text-white">{{
+                    transformTimezone(appointment.date + ' ' + appointment.hour) + ' ' + timezoneUser
+                  }}</span><br>
+                <span
+                  class="badge bg-light ms-2 text-light">{{
+                    $moment(appointment.date + ' ' + appointment.hour).format('LLL') + ' ' + $config.timezone
+                  }}</span>
+                <p style="margin-top: 5px">Esp. {{ appointment.doctor.name }} {{ appointment.doctor.last_name }}</p>
+              </li>
+            </ul>
+          </div>
+          <!--  ACEPTAR CONSENTIMIENTOS -->
+          <div class="mt-4" v-if="!checkVerifySignature">
+            <hr>
+            <ConsentForms @consent="consent"/>
+          </div>
+          <!--  GUARDAR Y AGENDAR -->
+          <div class="mt-4">
+            <button class="btn btn-primary btn-block mt-2" @click="saveValuation">Crear y enviar al especialista
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -145,10 +154,12 @@ import DoctorSchedule from "./components/DoctorSchedule";
 import {bus} from "../../../../plugins/bus";
 import {required} from "vuelidate/lib/validators";
 import {publishMQTT} from "../../../../plugins/mqtt";
+import NotSubscription from "../../../../components/NotSubscription";
 
 export default {
   name: "CreateValuation",
   components: {
+    NotSubscription,
     PatientSchedule,
     CardWelcome,
     VueDropzone,
@@ -157,6 +168,7 @@ export default {
   // props: ['subscription'],
   data() {
     return {
+      notSubscription: false,
       timezoneUser: null,
       checkVerifySignature: false,
       signature: null,
@@ -226,7 +238,7 @@ export default {
       if (this.$v.$invalid) {
         this.$toast.error({
           title: 'Error',
-          message: 'Verifique que todos los campos requeridos esten llenos.',
+          message: 'Verifíque que todos los campos requeridos esten llenos.',
           showDuration: 1000,
           hideDuration: 8000,
         })
@@ -296,7 +308,7 @@ export default {
                 this.$vs.loading.close()
                 this.$toast.error({
                   title: 'Error',
-                  message: 'Error al crear tu objetivo. Consulte con el administrador.',
+                  message: 'Error al crear tu objetivo. Consulte a soporte SaludWom.',
                   showDuration: 1000,
                   hideDuration: 8000,
                 })
@@ -334,12 +346,16 @@ export default {
     async currentSubscription() {
       await this.$axios.get(`/api/v1/get-current-subscription`).then(async resp => {
         this.subscription = resp.data.data
+        if (!this.subscription){
+          this.notSubscription = true
+        }
         this.$vs.loading.close()
       }).catch((e) => {
         console.log('ERROR', e);
+        // this.stateSubscription = true
         this.$toast.error({
           title: 'Error',
-          message: 'Error al validar la suscripción. Consulte con el administrador.',
+          message: 'Error al validar la suscripción. Consulte a soporte SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })
@@ -356,7 +372,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al verificar firma del paciente. Consulte con el administrador.',
+          message: 'Error al verificar firma del paciente. Consulte a soporte SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })
@@ -375,7 +391,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al obtener los tratamientos. Consulte con el administrador.',
+          message: 'Error al obtener los tratamientos. Consulte a soporte SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })

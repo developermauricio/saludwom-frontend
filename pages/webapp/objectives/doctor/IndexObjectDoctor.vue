@@ -45,7 +45,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al obtener lista de objetivos. Consulte con el administrador.',
+          message: 'Error al obtener lista de objetivos. Consulte a soporte SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })

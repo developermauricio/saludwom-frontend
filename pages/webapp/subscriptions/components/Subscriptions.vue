@@ -3,11 +3,10 @@
     <client-only>
       <vue-confirm-dialog></vue-confirm-dialog>
     </client-only>
-
     <div class=" mb-4 d-flex justify-content-center align-self-center" v-if="!subscriptions.length > 0 && showMessage">
       <h5 class="">No hay suscripciones disponibles</h5>
     </div>
-    <div class="container" v-else>
+    <div class="" v-else>
       <div class="d-flex justify-content-between mb-2">
         <div>
           <h6>Total de suscripciones: {{ totalSubs }} </h6>
@@ -17,6 +16,7 @@
           <!--          <div class="d-flex justify-content-center align-items-center">-->
           <!--            <p class="m-0 text-filer">Filtrar</p>-->
           <!--          </div>-->
+
 
           <vs-dropdown-menu>
             <div class="p-2">
@@ -36,64 +36,71 @@
           </vs-dropdown-menu>
         </vs-dropdown>
       </div>
-      <load-more
-        :pageIndex="pageIndex"
-        :pageSize="pageSize"
-        :totalCount="totalCount"
-        :openRefresh="openRefresh"
-        @refresh="onRefresh"
-        @loadmore="onLoad">
-        <div class="card mb-3" v-for="(subscription, index) in subscriptions" :key="subscription.id">
-          <div class="card-body">
-            <!-- Content-->
-            <div class="d-flex justify-content-between">
-              <div class="d-flex">
-                <!-- Icon-->
-                <div
-                  :class="`card w-25 d-flex justify-content-center align-items-end p-1 bg-icon-${iconColor(subscription.plan.name)}`">
-                  <img :src="require(`~/assets/img/icons/${iconPlan(subscription.plan.name)}`)" width="60"
-                       alt="Salud WoM">
-                </div>
-                <!-- Info-->
-                <div class="ml-2">
-                  <h5 class="sb-title m-0">{{ subscription.plan.name }}</h5>
-                  <div class="m-0 d-flex">
-                    <div class="mr-1">
-                      <strong class="sb-price">€{{ subscription.plan.price }}</strong>
-                    </div>
-
-<!--                    <div v-if="subscription.expiration_date">-->
-<!--                       / Vence {{subscription.expiration_date ? $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') : 'Validando' }}-->
-<!--                    </div>-->
+      <vue-loadmore
+        :loadOffset="80"
+        :finishedText="'No hay más suscripciones'"
+        :loadingText="'Cargando'"
+        :successText="'Actualizado'"
+        :loosingText="'Soltar para actualizar'"
+        :refreshText="'Actualizando'"
+        :pullingText="'Desplegar para actualizar'"
+        ref="loadmoreRef"
+        :finished="finished"
+        :on-refresh="onRefresh"
+        :on-loadmore="onLoad">
+        <ul class="list-ul">
+          <li class="card mb-3" v-for="(subscription, index) in subscriptions" :key="subscription.id+'-'+index">
+            <div class="card-body">
+              <!-- Content-->
+              <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                  <!-- Icon-->
+                  <div
+                    :class="`card w-25 d-flex justify-content-center align-items-end p-1 bg-icon-${iconColor(subscription.plan.name)}`">
+                    <img :src="require(`~/assets/img/icons/${iconPlan(subscription.plan.name)}`)" width="60"
+                         alt="Salud WoM">
                   </div>
-                  <span :class="`badge bg-${ stateColor(subscription.state)} ms-2 text-white`">{{
-                      stateTitle(subscription.state)
-                    }}</span>
+                  <!-- Info-->
+                  <div class="ml-2">
+                    <h5 class="sb-title m-0">{{ subscription.plan.name }} {{ subscription.id }}</h5>
+                    <div class="m-0 d-flex">
+                      <div class="mr-1">
+                        <strong class="sb-price">€{{ subscription.plan.price }}</strong>
+                      </div>
+
+                      <!--                    <div v-if="subscription.expiration_date">-->
+                      <!--                       / Vence {{subscription.expiration_date ? $dateFns.format(subscription.expiration_date, 'MMM dd yyyy') : 'Validando' }}-->
+                      <!--                    </div>-->
+                    </div>
+                    <span :class="`badge bg-${ stateColor(subscription.state)} ms-2 text-white`">{{
+                        stateTitle(subscription.state)
+                      }}</span>
+                  </div>
                 </div>
+                <!-- Opciones-->
+                <vs-dropdown vs-custom-content vs-trigger-click>
+                  <i class="bx bx-dots-vertical"></i>
+                  <vs-dropdown-menu>
+                    <vs-dropdown-item @click="openInfoSubs(subscription.plan, subscription)">
+                      <p class="m-0">Más Info</p>
+                    </vs-dropdown-item>
+                    <vs-dropdown-item
+                      v-if="subscription.state !== '2' && subscription.state !== '5' && subscription.state !== '1'"
+                      :class="`${subscription.state !== '2' ? 'item-dropdown' || subscription.state !== '5' : ''}`"
+                      @click="cancelSubscription(subscription.id)">
+                      <p class="m-0">Cancelar Suscripción</p>
+                    </vs-dropdown-item>
+                    <vs-dropdown-item v-if=" subscription.state !== '4' && subscription.state !== '1'"
+                                      :class="`${subscription.state !== '4' ? 'item-dropdown' :'' }`">
+                      <nuxt-link to="/webapp/planes"><p class="m-0">Renovar o comprar</p></nuxt-link>
+                    </vs-dropdown-item>
+                  </vs-dropdown-menu>
+                </vs-dropdown>
               </div>
-              <!-- Opciones-->
-              <vs-dropdown vs-custom-content vs-trigger-click>
-                <i class="bx bx-dots-vertical"></i>
-                <vs-dropdown-menu>
-                  <vs-dropdown-item @click="openInfoSubs(subscription.plan, subscription)">
-                    <p class="m-0">Más Info</p>
-                  </vs-dropdown-item>
-                  <vs-dropdown-item
-                    v-if="subscription.state !== '2' && subscription.state !== '5' && subscription.state !== '1'"
-                    :class="`${subscription.state !== '2' ? 'item-dropdown' || subscription.state !== '5' : ''}`"
-                    @click="cancelSubscription(subscription.id)">
-                    <p class="m-0">Cancelar Suscripción</p>
-                  </vs-dropdown-item>
-                  <vs-dropdown-item v-if=" subscription.state !== '4' && subscription.state !== '1'"
-                                    :class="`${subscription.state !== '4' ? 'item-dropdown' :'' }`">
-                    <nuxt-link to="/webapp/planes"><p class="m-0">Renovar o comprar</p></nuxt-link>
-                  </vs-dropdown-item>
-                </vs-dropdown-menu>
-              </vs-dropdown>
             </div>
-          </div>
-        </div>
-      </load-more>
+          </li>
+        </ul>
+      </vue-loadmore>
     </div>
   </div>
   <!--  </div>-->
@@ -108,8 +115,9 @@ export default {
   data() {
     return {
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 0,
       openRefresh: true,
+      finished: false,
       totalCount: 0,
 
       subscriptions: [],
@@ -153,7 +161,7 @@ export default {
           console.log('ERROR', e);
           this.$toast.error({
             title: 'Error',
-            message: 'Error al obtener las suscripciones. Consulte con el administrador.',
+            message: 'Error al obtener las suscripciones. Consulte a soporte SaludWom.',
             showDuration: 1000,
             hideDuration: 8000,
           })
@@ -166,43 +174,37 @@ export default {
     },
     initData() {
       this.showMessage = false
-      this.openRefresh = false
       this.subscriptions = []
-      this.page = 1
-      this.loadingRefreshData = false
+      this.finished = false
+      this.pageIndex = 1
     },
-    onRefresh() {
+    onRefresh(done) {
       setTimeout(() => {
         this.initData()
         this.getSubscriptions()
-        // done();
+        done();
       }, 50)
 
     },
-    onLoad(pageIndex) {
-      // console.log(pageIndex)
-      // this.page = pageIndex
-      this.pageIndex = pageIndex
+    onLoad(done) {
       if (this.pageIndex <= this.pageSize) {
+        this.pageIndex++;
         this.getSubscriptions()
       } else {
-        this.loadingRefreshData = true
+        this.finished = true
       }
-      // done();
+      done();
     },
     /*Obtener todas las suscripciones*/
     async getSubscriptions() {
 
-      await this.$axios.get(`/api/v1/get-subscriptions/?page=${this.page}`).then(({data}) => {
-        this.openRefresh = true
-        if (data.data.data.length < 0) {
+      await this.$axios.get(`/api/v1/get-subscriptions/?page=${this.pageIndex}`).then(({data}) => {
+        if (data.data.data.length === 0) {
           return this.showMessage = false
         }
         data.data.data.forEach((item) => {
           this.subscriptions.push(item)
-          // this.openRefresh = true
         })
-        // this.page++;
         this.pageSize = data.lastPage
         this.totalSubs = data.total
         this.$vs.loading.close()
@@ -223,7 +225,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al obtener las suscripciones. Consulte con el administrador.',
+          message: 'Error al obtener las suscripciones. Consulte a soporte SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })

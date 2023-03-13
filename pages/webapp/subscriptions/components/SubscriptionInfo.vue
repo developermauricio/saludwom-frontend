@@ -8,9 +8,10 @@
     <!-- Info-->
     <div class="ml-2 text-center py-2">
       <h5 class="sb-title m-0">{{ dataPlan.name }}</h5>
-      <p class="m-0"><strong class="sb-price">€{{ dataPlan.price }}</strong> / Vence
-        {{ $dateFns.format(dataSubscription.expiration_date, 'MMM dd yyyy') }}</p>
-      <p class="mb-1"> Suscrit@ el {{ $dateFns.format(dataSubscription.created_at, 'MMM dd yyyy') }}</p>
+      <p class="m-0"><strong class="sb-price">€{{ dataPlan.price }}</strong></p>
+<!--      <p class="m-0"><strong class="sb-price">€{{ dataPlan.price }}</strong> / Vence-->
+<!--        {{ $dateFns.format(dataSubscription.expiration_date, 'MMM dd yyyy') }}</p>-->
+      <p class="mb-1"> Suscrit@ el {{ $dateFns.format(dataSubscription.created_at, 'dd MMM yyyy') }}</p>
       <p class="m-0">{{ dataPlan.description }}</p>
 
       <span :class="`badge bg-${ stateColor(dataSubscription.state)} ms-2 text-white`">{{

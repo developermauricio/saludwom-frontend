@@ -10,17 +10,30 @@
           </div>
         </div>
         <!--    Contenido Notificación    -->
-        <div :class="notification.read_at ?'': 'bg-notification'" v-for="notification in notifications"
-             :key="notification.id">
-          <a style="cursor: pointer" @click="readAtNotification(JSON.parse(notification.data).link, notification)">
-            <div class="p-3 mt-2">
-              <p class="m-0" v-html="JSON.parse(notification.data).title"></p>
-              <p class="text-light" v-html="JSON.parse(notification.data).description"></p>
-              <p class="text-light m-0">{{ formatDate(notification.created_at) }}</p>
-            </div>
-            <hr class="m-0">
-          </a>
-        </div>
+        <vue-loadmore
+          :loadOffset="80"
+          :finishedText="'No hay más notificaciones'"
+          :loadingText="'Cargando'"
+          :successText="'Actualizado'"
+          :loosingText="'Soltar para actualizar'"
+          :refreshText="'Actualizando'"
+          :pullingText="'Desplegar para actualizar'"
+          ref="loadmoreRef"
+          :finished="finished"
+          :on-refresh="onRefresh"
+          :on-loadmore="onLoad">
+          <div :class="notification.read_at ?'': 'bg-notification'" v-for="(notification, index) in notifications"
+               :key="notification.id+'-'+index">
+            <a style="cursor: pointer" @click="readAtNotification(JSON.parse(notification.data).link, notification)">
+              <div class="p-3 mt-2">
+                <p class="m-0" v-html="JSON.parse(notification.data).title"></p>
+                <p class="text-light" v-html="JSON.parse(notification.data).description"></p>
+                <p class="text-light m-0">{{ formatDate(notification.created_at) }}</p>
+              </div>
+              <hr class="m-0">
+            </a>
+          </div>
+        </vue-loadmore>
         <div class="text-center mt-5" v-if="notifications && notifications.length === 0">
           <p class="text-light" style="font-size: 1.2rem !important;">Sin notificaciones</p>
         </div>
@@ -59,23 +72,54 @@ export default {
       notifications: [],
       timezoneUser: null,
       totalNews: 0,
+      finished: false,
+      page: 1,
+      pageSize: 0,
+    }
+  },
+  computed: {
+    url() {
+      return `/api/v1/get-notification-users/${this.$auth.user.id}/?page=${this.page}`;
     }
   },
   methods: {
+    initData() {
+      this.showMessage = false
+      this.notifications = []
+      this.finished = false
+      this.page = 1
+    },
+    onRefresh(done) {
+      setTimeout(() => {
+        this.initData()
+        this.getNotifications()
+        done();
+      }, 50)
+
+    },
+    onLoad(done) {
+      if (this.page <= this.pageSize) {
+        this.page++;
+        this.getNotifications()
+      } else {
+        this.finished = true
+      }
+      done();
+    },
     readAtNotification(link, notification) {
-      if(notification.read_at === null){
+      if (notification.read_at === null) {
         this.$axios.post(`api/v1/read-at-notification/${notification.id}`).then(resp => {
-          this.notifications.forEach(item =>{
-            if (item.id === notification.id){
+          this.notifications.forEach(item => {
+            if (item.id === notification.id) {
               item.read_at = 'Leida'
               this.totalNews--
             }
           })
-        }).catch(e =>{
+        }).catch(e => {
           console.log('Error al leer la notificación')
         })
       }
-      if (link){
+      if (link) {
         setTimeout(() => {
           this.$router.push(link)
         }, 200)
@@ -87,21 +131,23 @@ export default {
       let publishedDate = this.$moment(date).tz(this.timezoneUser)
       return this.$moment.duration(publishedDate.diff(now)).humanize(true)
     },
-    newNotification() {
-      subscriberMQTT('notification-0001', 'notification', (data) => {
-        this.getNotifications()
+    async newNotification() {
+      await subscriberMQTT('notification-0001', 'notification', (data) => {
+        if (parseInt(data) === this.$auth.user.id) {
+          setTimeout(() => {
+            this.notifications = []
+            this.getNotifications()
+          }, 500)
+        }
       })
     },
     getNotifications() {
-      this.$axios.get(`api/v1/get-notification-users/${this.$auth.user.id}`).then(resp => {
-        this.notifications = []
-        this.totalNews = 0
-        resp.data.data.map(item => {
-          if (item.read_at === null) {
-            this.totalNews++
-          }
+      this.$axios.get(this.url).then(resp => {
+        this.totalNews = resp.data.not_read_at
+        resp.data.data.data.map(item => {
           this.notifications.push(item);
         })
+        this.pageSize = resp.data.lastPage
       }).catch(err => {
         console.log('Error al cargar las notificaciones', err)
       })

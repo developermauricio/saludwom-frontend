@@ -279,7 +279,7 @@ export default {
                   this.$vs.loading.close()
                   this.$toast.error({
                     title: 'Error',
-                    message: 'Error al cancelar tu cita. Consulte con el administrador.',
+                    message: 'Error al cancelar tu cita. Consulte a soporte SaludWom.',
                     showDuration: 1000,
                     hideDuration: 8000,
                   })
