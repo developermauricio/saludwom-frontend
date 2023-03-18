@@ -93,6 +93,7 @@ export default {
     '~/plugins/laravel-permissions',
     {src: '~/plugins/vue-easytable', ssr: false},
     {src: '~/plugins/vuex-persist', ssr: false, mode: 'client'},
+    {src: '~/plugins/idle-vue', ssr: false, mode: 'client'},
     {src: '~/assets/js/active.js', mode: 'client'},
     {src: '~/plugins/vue-datepicker', ssr: false},
     {src: '~/plugins/vue-timepicker', ssr: false},
@@ -169,8 +170,11 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     'vue-scrollto/nuxt',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    'vue-scrollto/nuxt',
 
+    // Or if you have custom options...
+    ['vue-scrollto/nuxt', { duration: 300 }]
   ],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

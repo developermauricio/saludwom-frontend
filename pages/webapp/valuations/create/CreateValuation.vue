@@ -105,6 +105,30 @@
             </div>
           </div>
 
+        <!--  Si no tiene para agendar citas el plan, seleccione un doctor  -->
+          <div v-else>
+            <div class="mt-4" v-if="doctors && doctors.length > 0">
+              <label class="form-label" for="">Selecciona el especialista<span class="text-danger">*</span></label>
+            </div>
+            <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
+              <div :class="doctor.id === (valuation ? valuation.doctorId : 0) ? 'selected' : '' " class="card border select-doctor-schedule" @click="selectDoctor(doctor.id)">
+                <div class="card-body">
+                  <div class="d-flex">
+                    <div class="d-flex justify-content-end align-items-end">
+                      <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
+                    </div>
+                    <div class="ml-2 mt-2">
+                      <div class="d-flex">
+                        <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                      </div>
+                      <p class="mb-0 text-primary">Profesional Especialista</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-4" v-if="valuation.appointments.length > 0">
             <label class="form-label" for="">Tu cita{{ this.valuation.appointments.length >= 1 ? 's' : '' }}
               son:</label>
@@ -210,6 +234,10 @@ export default {
     }
   },
   methods: {
+    //Seleccionar el tipo de post
+    selectDoctor(doctorId) {
+      this.valuation.doctorId = doctorId
+    },
     changeSelectedTreatment(treatment) {
       if (treatment) {
         this.doctors = treatment.doctors

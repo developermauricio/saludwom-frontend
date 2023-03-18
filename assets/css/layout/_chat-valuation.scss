@@ -1,0 +1,69 @@
+.sidebar-chat-valuation{
+  .vs-sidebar{
+    max-width: 430px !important;
+  }
+  .vs-spacer{
+    background-color: #F4F4F4 !important;
+  }
+
+  .vs-sidebar{
+    background: #F4F4F4 !important;;
+  }
+  .vs-sidebar--items{
+    padding: 0px 0 !important;
+  }
+  .chat-footer{
+    position: unset !important;
+  }
+  .header-content{
+    width: 100% !important;
+    position: fixed !important;
+  }
+  .single-chat-item .user-avatar{
+    z-index: 0 !important;
+  }
+  .not-messages{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+  .not-messages .feather{
+    height: 3rem;
+    width: 3rem;
+  }
+  .active-status-chat{
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    bottom: 1px;
+    left: 70px;
+    top: 29px;
+    border: 2px solid #ffffff;
+    background-color: #2ecc4a;
+  }
+  .suspend-status-chat{
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    bottom: 1px;
+    left: 70px;
+    top: 29px;
+    border: 2px solid #ffffff;
+    background-color: #e6c907;
+  }
+  .inactive-status-chat{
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    bottom: 1px;
+    left: 70px;
+    top: 29px;
+    border: 2px solid #ffffff;
+    background-color: transparent;
+  }
+}

@@ -37,7 +37,7 @@
         </vs-dropdown>
       </div>
       <vue-loadmore
-        :loadOffset="80"
+        :loadOffset="100"
         :finishedText="'No hay más suscripciones'"
         :loadingText="'Cargando'"
         :successText="'Actualizado'"
@@ -62,7 +62,7 @@
                   </div>
                   <!-- Info-->
                   <div class="ml-2">
-                    <h5 class="sb-title m-0">{{ subscription.plan.name }} {{ subscription.id }}</h5>
+                    <h5 class="sb-title m-0">{{ subscription.plan.name }}</h5>
                     <div class="m-0 d-flex">
                       <div class="mr-1">
                         <strong class="sb-price">€{{ subscription.plan.price }}</strong>
@@ -200,6 +200,7 @@ export default {
 
       await this.$axios.get(`/api/v1/get-subscriptions/?page=${this.pageIndex}`).then(({data}) => {
         if (data.data.data.length === 0) {
+          this.$vs.loading.close()
           return this.showMessage = false
         }
         data.data.data.forEach((item) => {

@@ -34,7 +34,7 @@
             </a>
           </div>
         </vue-loadmore>
-        <div class="text-center mt-5" v-if="notifications && notifications.length === 0">
+        <div class="text-center mt-5" v-if="notNotifications && notifications.length === 0">
           <p class="text-light" style="font-size: 1.2rem !important;">Sin notificaciones</p>
         </div>
       </div>
@@ -42,7 +42,7 @@
 
     <!-- Icon notifications-->
     <div class="setting-wrapper">
-      <div class="setting-trigger-btn settingTriggerBtn" @click="show=true">
+      <div class="setting-trigger-btn settingTriggerBtn" @click="openNotification">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell"
              viewBox="0 0 16 16">
           <defs>
@@ -75,6 +75,7 @@ export default {
       finished: false,
       page: 1,
       pageSize: 0,
+      notNotifications: false
     }
   },
   computed: {
@@ -83,6 +84,11 @@ export default {
     }
   },
   methods: {
+    openNotification(){
+      setTimeout(() =>{
+        this.show = true
+      }, 200)
+    },
     initData() {
       this.showMessage = false
       this.notifications = []
@@ -137,7 +143,7 @@ export default {
           setTimeout(() => {
             this.notifications = []
             this.getNotifications()
-          }, 500)
+          }, 800)
         }
       })
     },
@@ -147,6 +153,10 @@ export default {
         resp.data.data.data.map(item => {
           this.notifications.push(item);
         })
+        if (this.notifications.length === 0) {
+          this.$vs.loading.close()
+          return this.notNotifications = true
+        }
         this.pageSize = resp.data.lastPage
       }).catch(err => {
         console.log('Error al cargar las notificaciones', err)

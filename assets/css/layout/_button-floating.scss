@@ -1,0 +1,22 @@
+.float{
+  position:fixed;
+  width:55px;
+  height:55px;
+  bottom:110px;
+  right:25px;
+  background-color:#D85C72;
+  color:#FFF;
+  border-radius:50px;
+  text-align:center;
+  box-shadow: 2px 2px 3px #999;
+}
+.float:hover{
+  background-color: rgba(216, 92, 114, 0.51);
+  .icon-btn-floating{
+      color: #FFFFFF !important;
+  }
+}
+
+.icon-btn-floating{
+  margin-top:17px;
+}

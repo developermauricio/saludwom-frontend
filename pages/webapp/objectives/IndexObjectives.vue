@@ -113,6 +113,7 @@ export default {
           this.valuations.push(item)
         })
         if (this.valuations.length === 0) {
+          this.$vs.loading.close()
           return this.notObjectives = true
         }
         this.pageSize = data.lastPage
@@ -153,7 +154,7 @@ export default {
         case '3':
           return 'danger'
         case '4':
-          return 'info'
+          return 'primary'
         case '5':
           return 'success'
       }

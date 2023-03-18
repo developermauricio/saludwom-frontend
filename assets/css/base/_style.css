@@ -9906,7 +9906,7 @@ input[type=color].form-control.is-valid, input[type=color].form-control:valid {
 }
 
 .bg-info {
-  background-color: #817450 !important;
+  background-color: #00cfe8 !important;
 }
 
 .multiselect__option--highlight {
@@ -10068,3 +10068,4 @@ a.btn:hover{
 .vs-sidebar{
   max-width: 324px !important;
 }
+

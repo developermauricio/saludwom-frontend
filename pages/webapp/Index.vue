@@ -15,10 +15,10 @@
 
 <script>
 import {bus} from "../../plugins/bus";
+import Welcome from "../../components/Welcome";
 import HeaderLogo from "./partials/HeaderLogo";
 import NavigationButton from "./partials/NavigationButton";
 import NoInternetConnection from "./partials/NoInternetConnection";
-import Welcome from "../../components/Welcome";
 import NavigationButtonDoctor from "./partials/NavigationButtonDoctor";
 
 export default {
@@ -35,7 +35,8 @@ export default {
       title: '',
       showLogo: true,
       backButton: false,
-      urlBack: ''
+      urlBack: '',
+      // stateUse: useIdle(5 * 60 * 1000) // 5 min
     }
   },
   methods: {
@@ -87,6 +88,12 @@ export default {
       }
     }
   },
+  // onIdle() {
+  //   console.log('DESCONECTADO')
+  // },
+  // onActive() {
+  //   console.log('ACTIVO')
+  // },
   mounted() {
     // this.currentSubscription()
     this.modalWelcome()
@@ -209,6 +216,11 @@ export default {
       })
     }, 500)
 
+  },
+  watch:{
+    'stateUse': function (v){
+
+    }
   }
 }
 </script>

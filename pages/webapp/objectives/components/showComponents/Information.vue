@@ -10,7 +10,7 @@
         <div class="d-flex justify-content-between">
           <!-- Titulo -->
           <div>
-            <h5>Tu Objetivo.</h5>
+            <h6>Tu Objetivo.</h6>
           </div>
           <!-- Editar -->
           <div class="float-right" v-if="valuation.state === '1'">
@@ -45,7 +45,7 @@
         <div class="d-flex justify-content-between">
           <!-- Titulo -->
           <div>
-            <h5>Documentos o archivos adjuntados.</h5>
+            <h6>Documentos o archivos adjuntados.</h6>
           </div>
         </div>
         <!-- Lista de archivos -->
@@ -57,13 +57,13 @@
     <!--=====================================
           INFO CITAS
       ======================================-->
-    <div class="card mb-3">
+    <div class="card mb-3" v-if="valuation.appointments && valuation.appointments.length > 0">
       <div class="card-body">
         <!-- Título y Estado -->
         <div class="d-flex justify-content-between mb-3">
           <!-- Titulo -->
           <div>
-            <h5>Cita{{ valuation.appointments && valuation.appointments.length >= 1 ? 's' : '' }}.</h5>
+            <h6>Cita{{ valuation.appointments && valuation.appointments.length >= 1 ? 's' : '' }}.</h6>
           </div>
           <div v-if="missingAppointments">
             <button @click="appointSchedule(valuation)" class="btn btn-success">Agendar Citas
@@ -79,9 +79,11 @@
                 class="text-danger font-italic">7 días de antelación</span>.
               En caso de reprogramar la cita, debes primero cancelar la cita.
             </p>
-            <p class="font-weight-bold" style="font-size: 0.8rem" v-if="missingAppointments">
+            <div v-if="missingAppointments" class="alert custom-alert-2 alert-danger alert-dismissible fade show"
+                 role="alert">
               {{ messageMissingAppointments }}
-            </p>
+
+            </div>
           </div>
           <hr>
           <div v-for="(appointment, index) in valuation.appointments" :key="'appoint-'+appointment.date+index"
@@ -146,7 +148,7 @@
         <div class="d-flex justify-content-between">
           <!-- Titulo -->
           <div>
-            <h5>Tu suscripción para este objetivo.</h5>
+            <h6>Tu suscripción para este objetivo.</h6>
           </div>
           <!-- Estado del Plan -->
           <div>
@@ -195,7 +197,7 @@ export default {
   methods: {
     validateAddAppointment() {
       this.pendingAppointments = []
-      setTimeout(() =>{
+      setTimeout(() => {
         this.valuation.appointments.map(appo => {
           if (appo.state === '1' || appo.state === '3' || appo.state === '5') {
             this.pendingAppointments.push(appo)
@@ -203,7 +205,7 @@ export default {
         })
         let numberAppointmentPlan = this.valuation.subscription.plan.number_appointments
         let numberAppointmentCurrent = this.pendingAppointments.length
-        if (numberAppointmentPlan === numberAppointmentCurrent){
+        if (numberAppointmentPlan === numberAppointmentCurrent) {
           this.missingAppointments = false
           this.messageMissingAppointments = false
         }
@@ -230,7 +232,7 @@ export default {
       let dateAppoi = new Date(appointment.date); //Tomamos la ultima fecha agendada y la guardamos en una varibale para sacar la diferencia de cuando va sacar la proxima cita (puede ser en 10 dias o 15 dias, depende del plan)
       dateAppoi.setDate(dateAppoi.getDate() - 6);
       console.log(dateAppoi)
-      if (dateNow > dateAppoi){
+      if (dateNow > dateAppoi) {
         this.$toast.error({
           title: 'Atención',
           message: 'Solo puedes cancelar tu cita con 7 días de anticipación.',
@@ -239,7 +241,7 @@ export default {
         })
         return
       }
-      setTimeout(() =>{
+      setTimeout(() => {
         this.showAlertConfirm = true
         this.$confirm(
           {

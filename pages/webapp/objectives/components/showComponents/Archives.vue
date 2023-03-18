@@ -17,7 +17,7 @@
       </div>
     </div>
     <div v-else class="py-3">
-      <h6 class="text-center">No hay archivos</h6>
+      <h6 class="text-center text-light">No hay archivos</h6>
     </div>
     <!--   Botón agregar archivos  -->
     <div class="mt-4" v-if="valuationState === '1' || archives && archives.length === 0 ">
