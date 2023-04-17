@@ -25,9 +25,9 @@ export default {
     ]
   },
   generate: {
-    routes: [
-      ...require('./router')
-    ]
+    // routes: [
+    //   ...require('./router')
+    // ]
   },
   publicRuntimeConfig: {
     timezone: process.env.TIME_ZONE,
