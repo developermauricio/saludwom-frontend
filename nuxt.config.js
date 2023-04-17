@@ -24,9 +24,9 @@ export default {
       {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
     ]
   },
-  generate: {
-    routes: require('./router.js')
-  },
+  // generate: {
+  //   routes: require('./router.js')
+  // },
   publicRuntimeConfig: {
     timezone: process.env.TIME_ZONE,
     logo: process.env.LOGO_PRIMARY,
