@@ -25,7 +25,7 @@ export default {
     ]
   },
   generate: {
-    routes: require('./router')
+    routes: require('./router.js')
   },
   publicRuntimeConfig: {
     timezone: process.env.TIME_ZONE,
