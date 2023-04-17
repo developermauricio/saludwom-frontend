@@ -5,10 +5,22 @@
       <div class="">
         <!--    Header Notificación    -->
         <div class="p-3">
-          <div>
-            <h5>Notificaciones <span class="ms-1 badge bg-danger text-white">{{ this.totalNews }}</span></h5>
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5>Notificaciones</h5>
+              <a class="position-relative" style="font-size: 0.8rem; cursor: pointer; z-index: 100" @click="markNotificationsAsRead">Marcar todas como leídas</a>
+            </div>
+            <div class="">
+              <div>
+                <span class="ms-1 badge bg-danger text-white mr-2">{{ this.totalNews }} sin leer</span>
+              </div>
+             <div>
+               <span class="ms-1 badge bg-primary text-white">{{ this.totalNotif }} todas</span>
+             </div>
+            </div>
           </div>
         </div>
+        <hr class="m-0">
         <!--    Contenido Notificación    -->
         <vue-loadmore
           :loadOffset="80"
@@ -72,6 +84,7 @@ export default {
       notifications: [],
       timezoneUser: null,
       totalNews: 0,
+      totalNotif: 0,
       finished: false,
       page: 1,
       pageSize: 0,
@@ -84,8 +97,25 @@ export default {
     }
   },
   methods: {
-    openNotification(){
-      setTimeout(() =>{
+    markNotificationsAsRead(){
+      if (this.totalNews === 0){
+        return
+      }
+      this.$vs.loading({
+        color: process.env.COLOR_BASE,
+        text: 'Espere por favor...'
+      })
+      this.$axios.post(`api/v1/mark-notifications-as-read`).then(resp => {
+        this.notifications = []
+        this.getNotifications()
+        this.$vs.loading.close()
+      }).catch(e =>{
+        console.log(e)
+        this.$vs.loading.close()
+      })
+    },
+    openNotification() {
+      setTimeout(() => {
         this.show = true
       }, 200)
     },
@@ -150,6 +180,7 @@ export default {
     getNotifications() {
       this.$axios.get(this.url).then(resp => {
         this.totalNews = resp.data.not_read_at
+        this.totalNotif = resp.data.total
         resp.data.data.data.map(item => {
           this.notifications.push(item);
         })

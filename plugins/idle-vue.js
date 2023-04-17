@@ -4,5 +4,5 @@ const eventsHub = new Vue()
 
 Vue.use(IdleVue, {
   eventEmitter: eventsHub,
-  idleTime: 10000
+  idleTime: 500000
 })

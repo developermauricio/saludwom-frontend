@@ -10068,4 +10068,11 @@ a.btn:hover{
 .vs-sidebar{
   max-width: 324px !important;
 }
-
+.btn-info-zoom{
+  background-color: #0b5cff !important;
+  color: #fff !important;
+}
+.btn-info-zoom:hover{
+  background-color: #053494 !important;
+  color: #fff !important;
+}

@@ -9,6 +9,13 @@
             d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
         </svg>
       </a>
+      <div class="tooltip-chat-button">
+        <div class="text-center p-2" style="font-size: 0.85rem">
+          Seguimiento Online
+          <span v-if="unreadMessages > 0" class="badge rounded-pill bg-danger text-white"
+                style="font-size: 13px; height: 21px;right: -8px;top: -8px;">{{ unreadMessages }}</span>
+        </div>
+      </div>
     </div>
     <!--  Sidebar Contenido Chat  -->
     <vs-sidebar position-right parent="body" default-index="1" color="primary" class="sidebarx sidebar-chat-valuation"
@@ -21,7 +28,7 @@
         <div class="chat-user--info d-flex align-items-center">
           <!-- Back Button -->
           <div class="back-button">
-            <a @click="openChat=false" class="cursor-pointer">
+            <a @click="openChat=false" class="cursor-pointer" style="cursor: pointer">
               <svg class="bi bi-arrow-left-short" width="32" height="32" viewBox="0 0 16 16" fill="currentColor"
                    xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
@@ -47,7 +54,11 @@
       <div class="page-content-wrapper pt-4" id="chat-wrapper">
         <div class="container">
           <div class="chat-content-wrap" v-if="messages && messages.length > 0">
-
+            <div v-if="finished" class="text-center p-1">
+              <Transition name="modal">
+                <p class="text-primary">No hay más mensajes</p>
+              </Transition>
+            </div>
             <div :class="`single-chat-item ${$auth.user.id === message.send_user_id ? 'outgoing':''}`"
                  v-for="(message, index) in messages" :key="index">
               <!-- User Avatar -->
@@ -122,12 +133,21 @@ export default {
     return {
       onlineActive: false,
       message: '',
+      unreadMessages: 0,
       openChat: false,
       messages: [],
-      timezoneUser: null
+      timezoneUser: null,
+      page: 1,
+      pageSize: 1,
+      finished: false,
     }
   },
   props: ['valuation', 'chatChannel'],
+  computed: {
+    url() {
+      return `api/v1/get-messages-valoration/${this.valuation.chat.id}/?page=${this.page}`
+    }
+  },
   onIdle() {
     console.log('CHAT DESCONECTADO')
     setTimeout(() => {
@@ -171,7 +191,33 @@ export default {
       this.messages.push(message);
       this.toBottom();
     },
-
+    getUnreadMessages() {
+      if (this.openChat === true) {
+        return
+      }
+      this.$axios.get(`api/v1/get-unread-message/${this.valuation.chat.id}`).then(resp => {
+        this.unreadMessages = resp.data.data
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+    toTop() {
+      const element = document.querySelector(".vs-sidebar--items");
+      let resp = this
+      element.addEventListener('scroll', function () {
+        if (element.scrollTop === 0) {
+          setTimeout(() => {
+            console.log(resp.page)
+            if (resp.page <= resp.pageSize) {
+              resp.page++;
+              resp.getMessages()
+            } else {
+              resp.finished = true
+            }
+          }, 200)
+        }
+      });
+    },
     toBottom(transition = true) {
       const element = document.querySelector(".vs-sidebar--items");
       setTimeout(() => {
@@ -194,8 +240,14 @@ export default {
         return this.valuation.doctor.user.name
       }
     },
+    messageReadAt() {
+      this.$axios.post(`api/v1/message-read-at/${this.valuation.chat.id}`).then(resp => {
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     getMessages() {
-      this.$axios.get(`api/v1/get-messages-valoration/${this.valuation.chat.id}`).then(resp => {
+      this.$axios.get(this.url).then(resp => {
         resp.data.data.data.forEach((message) => {
           this.messages.unshift({
             message: message.message,
@@ -206,6 +258,7 @@ export default {
             date: message.created_at,
           });
         });
+        this.pageSize = resp.data.lastPage
         // this.messages.unshift(resp.data.data.data)
       }).catch(e => {
         console.log('ERROR', e);
@@ -214,18 +267,24 @@ export default {
       })
     },
     funcOpenChat() {
-      this.messages = []
+      // this.messages = []
       this.onlineActive = true
-      setTimeout(() => {
-        this.openChat = true
-        this.toBottom();
-      }, 100)
-      this.getMessages()
+      this.unreadMessages = 0
+      this.toBottom();
+      this.openChat = true
+      if (this.messages && this.messages.length === 0) {
+        this.getMessages()
+      }
     },
     async subscribeMqttMessage() {
       await subscriberMQTT("chat", this.chatChannel.chat_key, (message) => {
         if (message) {
-          this.addMessageBottom(JSON.parse(message));
+          if (this.openChat === false) {
+            this.unreadMessages++
+          } else if (this.openChat === true) {
+            this.messageReadAt()
+            this.addMessageBottom(JSON.parse(message));
+          }
         }
       });
     },
@@ -238,14 +297,21 @@ export default {
   },
   created() {
     this.closeOnlineChat()
+    this.getUnreadMessages()
     this.timezoneUser = Intl.DateTimeFormat().resolvedOptions().timeZone
   },
   mounted() {
+    this.toTop()
     this.subscribeMqttMessage()
   },
   watch: {
     'openChat': function (val) {
       if (!val) {
+        if (this.pageSize === 1) {
+          this.pageSize = 1
+        }
+        this.page = 1
+        this.finished = false
         this.closeOnlineChat()
       }
     }

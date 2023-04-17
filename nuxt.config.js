@@ -94,6 +94,7 @@ export default {
     {src: '~/plugins/vue-easytable', ssr: false},
     {src: '~/plugins/vuex-persist', ssr: false, mode: 'client'},
     {src: '~/plugins/idle-vue', ssr: false, mode: 'client'},
+    // {src: '~/plugins/k-pop', ssr: false},
     {src: '~/assets/js/active.js', mode: 'client'},
     {src: '~/plugins/vue-datepicker', ssr: false},
     {src: '~/plugins/vue-timepicker', ssr: false},

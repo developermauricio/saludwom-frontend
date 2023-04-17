@@ -196,7 +196,7 @@ export default {
         })
         return
       }
-      bus.$emit('appointments', this.appointments)
+      bus.$emit('appointments', this.appointments, this.appointments[0].doctor.id)
       this.$FModal.hide()
     },
     cancelAppointment() {

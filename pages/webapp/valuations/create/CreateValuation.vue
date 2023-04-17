@@ -1,8 +1,8 @@
 <template>
   <div>
-<!--    <div v-if="!subscription" class="container">-->
-<!--      <h2 class="text-center">No tienes suscripción</h2>-->
-<!--    </div>-->
+    <!--    <div v-if="!subscription" class="container">-->
+    <!--      <h2 class="text-center">No tienes suscripción</h2>-->
+    <!--    </div>-->
     <NotSubscription v-if="notSubscription"/>
     <div v-if="subscription && !notSubscription" class="container">
       <CardWelcome :subscription="subscription"/>
@@ -87,17 +87,22 @@
             <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
               <div class="card border select-doctor-schedule">
                 <div class="card-body">
-                  <div class="d-flex" @click="openDoctorSchedule(doctor)">
-                    <div class="d-flex justify-content-end align-items-end">
-                      <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
-                    </div>
-                    <div class="ml-2 mt-2">
-                      <div class="d-flex">
-                        <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                  <div class="d-flex justify-content-between">
+                    <div class="d-flex" @click="openDoctorSchedule(doctor)">
+                      <div class="d-flex justify-content-end align-items-end">
+                        <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
                       </div>
-                      <p class="mb-0 text-primary">Profesional Especialista</p>
-                      <span class="badge bg-warning ms-2 text-white" v-if="doctor.doctor_schedule.length === 0">Agenda no disponible</span>
-                      <span class="badge bg-success ms-2 text-white" v-if="doctor.doctor_schedule.length > 0">Agenda disponible</span>
+                      <div class="ml-2 mt-2">
+                        <div class="d-flex">
+                          <h5 class="mb-1">Esp. {{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                        </div>
+                        <p class="mb-0 text-primary">Profesional Especialista</p>
+                        <span class="badge bg-warning ms-2 text-white" v-if="doctor.doctor_schedule.length === 0">Agenda no disponible</span>
+                        <span class="badge bg-success ms-2 text-white" v-if="doctor.doctor_schedule.length > 0">Agenda disponible</span>
+                      </div>
+                    </div>
+                    <div v-if="doctor.id === (valuation ? valuation.doctorId : 0)">
+                      <span class="badge bg-success ms-2 text-white">Seleccionado</span>
                     </div>
                   </div>
                 </div>
@@ -105,23 +110,30 @@
             </div>
           </div>
 
-        <!--  Si no tiene para agendar citas el plan, seleccione un doctor  -->
+          <!--  Si no tiene para agendar citas el plan, seleccione un doctor  -->
           <div v-else>
             <div class="mt-4" v-if="doctors && doctors.length > 0">
-              <label class="form-label" for="">Selecciona el especialista<span class="text-danger">*</span></label>
+              <label class="form-label" :class="{ 'text-danger': $v.valuation.doctorId.$error }" for="">Selecciona el especialista<span class="text-danger">*</span></label>
+              <p class="text-danger font-weight-bold" v-if="$v.valuation.doctorId.$error">Selecciona el doctor</p>
             </div>
             <div class="mt-2" v-for="doctor in doctors" :key="doctor.id">
-              <div :class="doctor.id === (valuation ? valuation.doctorId : 0) ? 'selected' : '' " class="card border select-doctor-schedule" @click="selectDoctor(doctor.id)">
+              <div :class="doctor.id === (valuation ? valuation.doctorId : 0) ? 'selected' : '' "
+                   class="card border select-doctor-schedule" @click="selectDoctor(doctor.id)">
                 <div class="card-body">
-                  <div class="d-flex">
-                    <div class="d-flex justify-content-end align-items-end">
-                      <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
-                    </div>
-                    <div class="ml-2 mt-2">
-                      <div class="d-flex">
-                        <h5 class="mb-1">{{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                  <div class="d-flex justify-content-between">
+                    <div class="d-flex">
+                      <div class="d-flex justify-content-end align-items-end">
+                        <img class="avatar-profile" width="60" :src="`${$config.urlBack}${doctor.user.picture}`" alt="">
                       </div>
-                      <p class="mb-0 text-primary">Profesional Especialista</p>
+                      <div class="ml-2 mt-2">
+                        <div class="">
+                          <h5 class="mb-1">Esp. {{ doctor.user.name }} {{ doctor.user.last_name }}</h5>
+                        </div>
+                        <p class="mb-0 text-primary">Profesional Especialista</p>
+                      </div>
+                    </div>
+                    <div v-if="doctor.id === (valuation ? valuation.doctorId : 0)">
+                      <span class="badge bg-success ms-2 text-white">Seleccionado</span>
                     </div>
                   </div>
                 </div>
@@ -229,6 +241,7 @@ export default {
   validations: {
     valuation: {
       name: {required},
+      doctorId: {required},
       objectives: {required},
       selectedTreatment: {required},
     }
@@ -374,7 +387,7 @@ export default {
     async currentSubscription() {
       await this.$axios.get(`/api/v1/get-current-subscription`).then(async resp => {
         this.subscription = resp.data.data
-        if (!this.subscription){
+        if (!this.subscription) {
           this.notSubscription = true
         }
         this.$vs.loading.close()
@@ -457,8 +470,10 @@ export default {
     }, 500)
     // this.subscription = JSON.parse(localStorage.getItem('subscription'))
     setTimeout(() => {
-      bus.$on('appointments', (appointment) => {
+      bus.$on('appointments', (appointment, doctor) => {
         this.valuation.appointments = appointment
+        console.log(appointment[0])
+        this.valuation.doctorId = doctor
       })
     }, 200)
     setTimeout(() => {

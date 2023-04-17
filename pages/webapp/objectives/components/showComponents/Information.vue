@@ -103,7 +103,7 @@
                 </div>
                 <!-- Boton Zoom -->
                 <div v-if="appointment.state === '1' || appointment.state === '5'">
-                  <a class="btn m-1 btn-sm btn-info" :href="appointment.link_meeting_zoom" target="_blank">
+                  <a class="btn m-1 btn-sm btn-info-zoom" :href="appointment.link_meeting_zoom" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-camera-video" viewBox="0 0 16 16">
                       <path fill-rule="evenodd"

@@ -25,7 +25,7 @@
       </div>
 
       <vs-tabs color="#D85C72" alignment="fixed" class="tabs-objective">
-        <vs-tab label="Información">
+        <vs-tab label="Objetivo">
           <div class="pt-2">
             <vs-tooltip text="Mientras tu objetivo este pendiente de recibir recursos, puedes editar tu información.">
               <span class="badge bg-danger text-white w-100" v-if="valuation.state === '1'">Disponible para editar (Clic para más info)</span>
@@ -37,7 +37,7 @@
               @getValuation="getValuation"/>
           </div>
         </vs-tab>
-        <vs-tab label="Terapeuta">
+        <vs-tab label="Recursos">
           <div>
             <h2 class="text-light">Terapeuta</h2>
           </div>
