@@ -49,7 +49,7 @@
         </vs-tab>
       </vs-tabs>
     </vue-loadmore>
-    <ChatValoration :valuation="valuation" :chatChannel="valuation.chat" v-if="valuation.subscription.plan_id === 1"/>
+    <ChatValoration :valuation="valuation" :chatChannel="valuation.chat" v-if="valuation.subscription.plan_id === 1 || valuation.subscription.plan_id === 2"/>
   </div>
 </template>
 
