@@ -36,7 +36,7 @@ export default {
       numberArchives: 10,
       fileRecords: [],
       uploadHeaders: '',
-      uploadUrl: `${process.env.BASE_URL_API_MONITOR_BACK}/api/v1/upload-files-valuation/${this.$auth.user.id}/${this.valuationId ? this.valuationId : 0}`,
+      uploadUrl: `${this.$config.urlBack}/api/v1/upload-files-valuation/${this.$auth.user.id}/${this.valuationId ? this.valuationId : 0}`,
       fileRecordsForUpload: []
     }
   },
