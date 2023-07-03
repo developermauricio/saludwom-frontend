@@ -94,6 +94,7 @@ export default {
     '~/plugins/is-subscription',
     '~/plugins/vue-multiselect',
     '~/plugins/laravel-permissions',
+    { src: '~/plugins/truncate.js' },
     {src: '~/plugins/vue-easytable', ssr: false},
     {src: '~/plugins/vuex-persist', ssr: false, mode: 'client'},
     {src: '~/plugins/idle-vue', ssr: false, mode: 'client'},

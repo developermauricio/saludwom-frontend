@@ -2,8 +2,7 @@
   <div class="content-consent-forms">
     <div class="d-flex">
       <vs-checkbox color="#792151" v-model="accept"></vs-checkbox>
-      <a target="_blank" class="text-accept-terms" href="#">Antes de agendar tu cita, acepta y firma los
-        consentimientos</a>
+      <a target="_blank" class="text-accept-terms" href="#">{{ subscription.plan_id == 1 ? 'Acepta y firma los consentimientos' : 'Antes de agendar tu cita, acepta y firma los consentimientos' }}</a>
     </div>
     <div class="mt-4" v-if="accept">
       <Signature/>
@@ -19,6 +18,7 @@ export default {
   components: {
     Signature
   },
+  props:['subscription'],
   data() {
     return {
       accept: false,

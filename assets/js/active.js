@@ -421,7 +421,7 @@ if (countdown3) {
     });
 }
 
-// 2.6 => Counter Up (This code is dependent on [index.js] plugin).
+// 2.6 => Counter Up (This code is dependent on [index-2.js] plugin).
 
 if (document.querySelectorAll('.counter').length > 0) {
     const counterUp = window.counterUp.default;

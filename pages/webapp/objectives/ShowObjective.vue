@@ -39,7 +39,7 @@
         </vs-tab>
         <vs-tab label="Recursos">
           <div>
-            <h2 class="text-light">Terapeuta</h2>
+            <Resource :valuation="valuation"/>
           </div>
         </vs-tab>
         <vs-tab label="Tratamiento">
@@ -59,10 +59,12 @@ import {defineAsyncComponent} from "vue";
 import {bus} from "../../../plugins/bus";
 import EditObjective from "./components/showComponents/editInformation/EditObjective";
 import ChatValoration from "../../../components/ChatValoration";
+import Resource from "./resource/Resource";
 
 export default {
   name: "ShowObjective",
   components: {
+    Resource,
     ChatValoration,
     Information: defineAsyncComponent(() => import('./components/showComponents/Information'))
   },

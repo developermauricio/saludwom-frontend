@@ -73,6 +73,8 @@
 </template>
 
 <script>
+import {bus} from "../plugins/bus";
+
 export default {
   name: "HumanBody",
   data() {
@@ -84,10 +86,30 @@ export default {
       selectionColour: "#792141"
     };
   },
+  props:['dataBody'],
+  beforeMount() {
+    this.selection = this.dataBody
+    console.log('DATA BODY ',this.dataBody.length)
+    if (this.dataBody.length > 0){
+      this.disabled = true
+    }
+  },
   methods: {
     handleClick(bodyPartClicked) {
       console.log(bodyPartClicked)
     }
+  },
+  watch:{
+    selection: {
+      handler(val) {
+        setTimeout(() => {
+          if (val) {
+            bus.$emit('selectedHumanBody', val);
+          }
+        }, 200)
+      },
+      deep: true
+    },
   }
 }
 </script>

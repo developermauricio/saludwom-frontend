@@ -10076,3 +10076,34 @@ a.btn:hover{
   background-color: #053494 !important;
   color: #fff !important;
 }
+.border-1 {
+  border: solid #dedede 1px !important;
+}
+.form-select{
+  color: #949494 !important;
+}
+.form-check-input:checked {
+  background-color: rgba(216, 92, 114, 0.82) !important;
+  border-color: rgba(121, 33, 65, 0.5) !important;
+}
+
+.vs-checkbox-primary input:checked+.vs-checkbox{
+  background: #D85C72 !important;
+  border: 2px solid #D85C72 !important;
+}
+.con-vs-checkbox{
+  justify-content: normal !important;
+}
+.iframe-container{
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 56.25%; /* Proporción de aspecto 16:9 */
+}
+.iframe-container iframe{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

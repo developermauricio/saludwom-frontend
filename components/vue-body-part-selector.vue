@@ -358,10 +358,14 @@ export default /*#__PURE__*/{
   name: 'VueBodyPartSelector', // vue component name
   data() {
     return {
-      selection: []
+      // selection: []
     };
   },
   props: {
+    selection:{
+      type: Array,
+      default: []
+    },
     disabled: {
       type: Boolean,
       default: false

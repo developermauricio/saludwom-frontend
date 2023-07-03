@@ -166,7 +166,7 @@
           <!--  ACEPTAR CONSENTIMIENTOS -->
           <div class="mt-4" v-if="!checkVerifySignature">
             <hr>
-            <ConsentForms @consent="consent"/>
+            <ConsentForms :subscription="subscription"  @consent="consent"/>
           </div>
           <!--  GUARDAR Y AGENDAR -->
           <div class="mt-4">
