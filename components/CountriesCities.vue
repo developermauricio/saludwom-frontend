@@ -2,7 +2,8 @@
   <div>
     <!--  SELECCIONAR PAIS -->
     <div class="mb-4">
-      <label class="form-label" :class="{ 'text-danger': $v.country.$error }">Seleccione país de residencia <span class="text-danger">*</span></label>
+      <label class="form-label" :class="{ 'text-danger': $v.country.$error }">Seleccione país de residencia <span
+        class="text-danger">*</span></label>
       <multiselect
         :class="{ 'is-invalid': $v.country.$error }"
         v-model="country"
@@ -54,6 +55,7 @@ export default {
       cities: [],
     }
   },
+  props: ['countryData', 'cityData'],
   validations: {
     country: {required}
   },
@@ -77,26 +79,30 @@ export default {
         this.$vs.loading.close()
       })
     },
-    selectedCity(city){
+    selectedCity(city) {
       this.$emit('selectedCity', city)
     },
     /*Obtener todos los pais*/
     async getCitiesFromCountry(country) {
-      this.loading()
+      this.city = null
       this.$emit('selectCountry', this.country)
-      await this.$axios.get(`/api/v1/get-cities-from-country/${country.alpha2Code}`).then(resp => {
-        this.cities = resp.data.data
-        this.$vs.loading.close()
-      }).catch((e) => {
-        console.log('ERROR', e);
-        this.$toast.error({
-          title: 'Error',
-          message: 'Error al obtener las ciudades. Consulte con el administrador.<',
-          showDuration: 1000,
-          hideDuration: 8000,
+      if (this.country){
+        this.loading()
+        await this.$axios.get(`/api/v1/get-cities-from-country/${country.alpha2Code}`).then(resp => {
+          this.cities = resp.data.data
+          this.$vs.loading.close()
+        }).catch((e) => {
+          console.log('ERROR', e);
+          this.$toast.error({
+            title: 'Error',
+            message: 'Error al obtener las ciudades. Consulte con el administrador.<',
+            showDuration: 1000,
+            hideDuration: 8000,
+          })
+          this.$vs.loading.close()
         })
-        this.$vs.loading.close()
-      })
+      }
+
     },
     loading() {
       this.$vs.loading({
@@ -110,10 +116,20 @@ export default {
         return
       }
     },
+    countryDataValue() {
+      this.country = this.countryData
+      this.city = this.cityData
+    }
   },
-  watch:{
+  created() {
+    setTimeout(() =>{
+      this.country = this.countryData
+      this.city = this.cityData
+    }, 500)
+  },
+  watch: {
     'city': function (val) {
-      if (val){
+      if (val) {
         bus.$emit('selectedCity', val);
       }
     }
@@ -121,6 +137,7 @@ export default {
   mounted() {
     this.loading()
     this.getCountries()
+
     bus.$on('validateCountry', () => {
       this.validateData()
     })

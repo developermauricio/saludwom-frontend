@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <vue-confirm-dialog></vue-confirm-dialog>
+<!--      <vue-confirm-dialog></vue-confirm-dialog>-->
     </client-only>
     <div class="container content-home">
       <div class="add-new-contact-wrap">
@@ -75,12 +75,12 @@
         <div class="col-6 col-sm-6 col-lg-6">
           <div class="card single-card">
             <div class="card-body p-3">
-              <nuxt-link to="/webapp/plans" class="product-thumbnail d-block text-center">
+              <nuxt-link to="/webapp/planes" class="product-thumbnail d-block text-center">
                 <img src="@/assets/img/saludwom/comprar.png" alt="" width="80">
-                <nuxt-link to="/webapp/citas" class="product-title d-block text-truncate text-title-card-home py-2">
+                <div class="product-title d-block text-truncate text-title-card-home py-2">
                   Comprar
                   planes
-                </nuxt-link>
+                </div>
               </nuxt-link>
             </div>
           </div>

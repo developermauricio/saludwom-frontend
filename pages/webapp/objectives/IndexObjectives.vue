@@ -94,7 +94,6 @@ export default {
         this.getValuations()
         done();
       }, 50)
-
     },
     onLoad(done) {
       if (this.page <= this.pageSize) {

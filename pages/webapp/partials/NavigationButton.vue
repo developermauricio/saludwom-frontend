@@ -24,7 +24,7 @@
             </router-link>
           </li>
           <!--  Menu Objetivos  -->
-          <li @click="menuSelected('Objetivos', true, false)">
+          <li @click="menuSelected('Objetivos', true, false)" :class="classActiveIconButtonObjective ? 'router-link-exact-active' : ''">
             <router-link to="/webapp/objetivos">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
@@ -65,6 +65,7 @@ export default {
     return {
       title: '',
       classActiveIconButtonProfile: false, //Permite agregar icono del perfil activo cuando estemos en el componente info perfil
+      classActiveIconButtonObjective: false
     }
   },
   methods: {
@@ -76,6 +77,9 @@ export default {
     },
     iconActiveProfileInfo(value){
       this.classActiveIconButtonProfile = value
+    },
+    iconActiveShowObjective(value){
+      this.classActiveIconButtonObjective = value
     }
   },
 
@@ -169,6 +173,7 @@ export default {
         bus.$emit('index.payment.history', 'Historial de Pagos', false, true, localStorage.getItem('currentRoute'));
       }
       if (to.name === 'index.profile'){
+        this.iconActiveShowObjective(false)
         bus.$emit('index.profile', 'Perfil', true, false, '');
       }
       /* Nos permite saber si estamos en el componente IndexDoctors */
@@ -177,25 +182,30 @@ export default {
       }
       /* Nos permite saber si estamos en el componente IndexPlans */
       if (to.name === 'index.plans'){
+        this.iconActiveShowObjective(false)
         bus.$emit('index.plans', 'Comprar', true, false, '');
       }
       /* Nos permite saber si estamos en el componente IndexObjectives */
       if (to.name === 'index.objectives'){
         bus.$emit('index.objectives', 'Objetivos', true, false, '');
         // bus.$emit('index.objectives', 'Objetivos', false, true, localStorage.getItem('currentRoute'));
-        this.iconActiveProfileInfo(false)
+      }
+      if (to.name === 'index.quotes'){
+        bus.$emit('index.quotes', 'Citas', true, false, '');
       }
       if (to.name === 'show.objective'){
-        this.iconActiveProfileInfo(true)
+        this.iconActiveShowObjective(true)
         bus.$emit('show.objective', 'Objetivo', false, true, localStorage.getItem('currentRoute'));
       }
       /* Nos permite saber si estamos en el componente IndexHome */
       if (to.name === 'index.home'){
         bus.$emit('index.home', 'Inicio', true, false, '');
         this.iconActiveProfileInfo(false)
+        this.iconActiveShowObjective(false)
       }
       /* Nos permite saber si estamos en el componente IndexHome */
       if (to.name === 'index.quotes'){
+        this.iconActiveShowObjective(false)
         bus.$emit('index.quotes', 'Citas', true, false, '');
       }
 

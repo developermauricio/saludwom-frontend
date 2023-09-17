@@ -68,7 +68,7 @@ export default {
         {id: 1, title: 'Descargar app', link: '#',  typeLink:'', color: 'secondary'},
         {id: 2, title: 'Servicios', link: 'https://vuejsexamples.com/tag/drag/', typeLink:'_blank'},
         {id: 3, title: 'Salud WoM', link: '#',  typeLink:'', color: 'info'},
-        {id: 4, title: 'Equipo Médico', link: '/webapp/doctors',  typeLink:'', color: 'warning'},
+        {id: 4, title: 'Equipo Médico', link: '/webapp/especialistas',  typeLink:'', color: 'warning'},
       ]
     }
   },

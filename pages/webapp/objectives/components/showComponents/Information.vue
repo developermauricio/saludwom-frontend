@@ -94,10 +94,18 @@
                   <p style="color: gray !important; font-size: 12px" class="mb-0">Fecha de cita.</p>
                   <div class="d-flex align-items-center">
                     <i
+                      :class="`bx bx-calendar mr-1 ${appointment.state === '2' || appointment.state === '3' ? 'text-light' : ''}`"></i>
+                    <p :class="`m-0 ${appointment.state === '2' || appointment.state === '3' ? 'text-light' : ''}`">
+                      {{
+                        appointment.date ? $moment(appointment.date).tz(timezoneUser).format('LL') : 'No hay fecha'
+                      }}</p>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i
                       :class="`bx bx-time-five mr-1 ${appointment.state === '2' || appointment.state === '3' ? 'text-light' : ''}`"></i>
                     <p :class="`m-0 ${appointment.state === '2' || appointment.state === '3' ? 'text-light' : ''}`">
                       {{
-                        appointment.date ? $moment(appointment.date).tz(timezoneUser).format('LLLL') : 'No hay fecha'
+                        appointment.date ? $moment(appointment.date).tz(timezoneUser).format('HH:mm') : 'No hay fecha'
                       }}</p>
                   </div>
                 </div>

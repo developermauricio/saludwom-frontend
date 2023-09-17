@@ -118,8 +118,6 @@ export default {
     {src: '~/assets/js/internet-status.js', mode: 'client'},
     {src: '~/assets/js/rangeslider.min.js', mode: 'client'},
     {src: '~/plugins/vue-phone-number-input.js', ssr: false},
-    { src: '~/plugins/infiniteloading.js', ssr: false },
-    // { src: '~/plugins/stripe-elements.js', mode: 'client', ssr: false},
     {src: '~/plugins/v-money.js', mode: 'client', ssr: false},
     {src: '~/plugins/vuejs-smart-table.js', mode: 'client', ssr: false},
     {src: '~/plugins/vue-functional-calendar.js', mode: 'client', ssr: false},

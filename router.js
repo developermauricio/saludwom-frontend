@@ -23,7 +23,7 @@ const routes = [
       {path: '/webapp/inicio', name: 'index.home', component: page('webapp/home/IndexHome.vue')},
       {path: '/webapp/citas', name: 'index.quotes', component: page('webapp/quotes/IndexQuotes.vue')},
       /* Rutas para los doctores*/
-      {path: '/webapp/doctores', name: 'index.doctors', component: page('webapp/doctors/IndexDoctors.vue')},
+      {path: '/webapp/especialistas', name: 'index.doctors', component: page('webapp/doctors/IndexDoctors.vue')},
       /* Rutas del perfil del usuario*/
       {path: '/webapp/perfil', name: 'index.profile', component: page('webapp/profile/IndexProfile.vue')},
       {path: '/webapp/perfil/info', name: 'profile.info', component: page('webapp/profile/InfoProfile.vue')},

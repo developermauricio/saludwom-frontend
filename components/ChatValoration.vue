@@ -38,9 +38,8 @@
           </div>
           <!-- User Thumbnail & Name -->
           <div class="user-thumbnail-name">
-            <img v-if="valuation.patient.user.picture" :src="`${$config.urlBack}${valuation.patient.user.picture}`"
+            <img :src="userPicture(valuation.doctor.user.picture)"
                  alt="SaludWom">
-            <img v-else src="@/assets/img/user-profile.png" alt="SaludWom"/>
             <div class="info ms-1 ml-2">
               <p class="text-dark">Esp. {{ valuation.doctor.user.name }} {{ valuation.doctor.user.last_name }}</p>
               <p class="m-0 text-light">{{ valuation.name }}</p>
@@ -166,6 +165,13 @@ export default {
     console.log('CONECTADO ACTIVO')
   },
   methods: {
+    userPicture(image) {
+      if (image.includes('user-profile.png') || image.includes('storage')) {
+        return `${this.$config.urlBack}${image}`
+      }
+      // Verifica si hay una imagen de usuario y devuelve la URL correspondiente
+      return image
+    },
     sendMessage() {
       if (!this.message.trim()) return;
       const data = {

@@ -402,7 +402,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al verificar el correo electrónico. Consulte con el administrador.',
+          message: 'Error al verificar el correo electrónico. Consulte a soporte de SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })
