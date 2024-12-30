@@ -8,17 +8,13 @@
       expectativas, experiencias y los objetivos a los que quieres llegar con nuestro programa Online, a continuación te
       presento nuestros <strong>programas online:</strong></h6>
     <splide :slides="plans" :options="options">
-      <splide-slide v-for="plan in plans" :key="plan.id">
-        <div class="single-price-content shadow-sm"
-             :class="plan.id === (planSelected ? planSelected.id : '') ? 'active' : '' "
-             v-bind:style="{
-      backgroundImage: `url(${$config.urlBack+plan.image_background})` ,
-    }" >
+      <splide-slide v-for="plan in plans" :key="plan.id" v-if="plan.state ==='1'">
+        <div class="single-price-content shadow-sm" :class="plan.id === (planSelected ? planSelected.id : '') ? 'active' : '' " v-bind:style="{backgroundImage: `url(${$config.urlBack+plan.image_background})` ,}" >
 <!--             :style="{backgroundImage: `url(` + require(`${$config.urlBack}${plan.image_background}`) + `)`}">-->
           <div class="price">
             <span class="text-white mb-2 title-plan">{{ plan.name }}</span>
-            <h2 class="display-4">{{ plan.price }}€</h2><span
-            class="badge bg-light text-dark rounded-pill">Oferta -29%</span>
+            <h2 class="display-4">{{ (plan.price).toFixed(2)  | currency }}€</h2>
+<!--            <span class="badge bg-light text-dark rounded-pill">Oferta -29%</span>-->
           </div>
           <!-- Pricing Desc -->
           <div class="pricing-desc">

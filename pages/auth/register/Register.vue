@@ -191,9 +191,9 @@
           </div>
 
           <!--  Lista de planes-->
-          <div v-show="plans">
-            <IndexPlans class="mt-5"/>
-          </div>
+<!--          <div v-show="plans">-->
+<!--            <IndexPlans class="mt-5"/>-->
+<!--          </div>-->
 
           <div v-if="!plans">
             <div class="mb-3" id="pswmeter"></div>

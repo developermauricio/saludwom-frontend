@@ -108,7 +108,7 @@
 
 <script>
 import {required} from "vuelidate/lib/validators";
-import {bus} from "../../../../../plugins/bus";
+import {bus} from "@/plugins/bus";
 // require("moment/min/locales.min");
 // require("moment-timezone")
 // import moment from 'moment-timezone';
@@ -380,7 +380,7 @@ export default {
         console.log('ERROR', e);
         this.$toast.error({
           title: 'Error',
-          message: 'Error al verificar la disponibilidad de agenda. Consulte con el administrador.',
+          message: 'Error al verificar la disponibilidad de agenda. Consulte ca soporte SaludWom.',
           showDuration: 1000,
           hideDuration: 8000,
         })

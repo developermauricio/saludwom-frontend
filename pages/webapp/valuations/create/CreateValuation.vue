@@ -346,6 +346,7 @@ export default {
                   }, 1000)
                 }
               } catch (e) {
+                console.log(e)
                 this.$vs.loading.close()
                 this.$toast.error({
                   title: 'Error',

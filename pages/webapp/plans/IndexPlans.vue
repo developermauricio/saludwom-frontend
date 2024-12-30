@@ -9,13 +9,14 @@
           <ListPlan @selectedPlan="selectedPlan" :plans="plans"/>
           <div class="apply-coupon mt-4">
             <h6 class="mb-0">¿Tienes un cupón?</h6>
-            <p class="mb-2">Introduce tu código de cupón aquí y obtén increíbles descuentos!</p>
+            <p class="mb-2">Selecciona un plan e introduce tu código de cupón aquí y obtén increíbles descuentos!</p>
             <div class="coupon-form">
               <div class="form-group mb-3">
                 <div class="input-group">
                   <input class="form-control"
-                         v-model.trim="coupon"
+                         v-model="coupon"
                          type="text"
+                         :disabled="plan == null"
                          placeholder="INGRESA AQUÍ TU CUPÓN">
 
                   <button @click="applyCoupon" class="btn btn-primary">Aplicar</button>
@@ -33,7 +34,7 @@
               </div>
               <div class="total d-flex align-items-center">
                 <h6 class="m-0">Valor Plan:</h6>
-                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{ plan ? plan.price + '€' : '0' + '€' }}</p>
+                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{ (plan.price).toFixed(2)  | currency }}€</p>
               </div>
               <div class="discount d-flex align-items-center">
                 <h6 class="m-0">Descuento: </h6>
@@ -42,7 +43,7 @@
               </div>
               <div class="total d-flex align-items-center">
                 <h6 class="m-0">Total a Pagar:</h6>
-                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{ plan ? totalPay + '€' : '0' + '€' }}</p>
+                <p class="text-dark m-0 ml-2" style="font-size: 1rem">{{ (totalPay).toFixed(2)  | currency }}€</p>
               </div>
             </div>
             <div class="mb-3 d-flex">
@@ -54,7 +55,7 @@
                 plan ? plan.title : ''
               }}
               <!--          <strong style="font-size: 1.2rem">{{ plan ? plan.price+'€' : '' }}</strong> & Registrar-->
-              <strong style="font-size: 1.2rem">{{ plan ? totalPay + '€' : '' }}</strong>
+              <strong style="font-size: 1.2rem">{{ plan ? (totalPay).toFixed(2)  + '€' : '' }}</strong>
             </button>
           </div>
 
@@ -96,7 +97,7 @@
 </template>
 
 <script>
-import {bus} from "../../../plugins/bus";
+import {bus} from "@/plugins/bus";
 
 export default {
   name: "IndexPlans",
@@ -152,9 +153,30 @@ export default {
         color: process.env.COLOR_BASE,
         text: 'Validando cupón. Espere por favor...'
       })
+
       setTimeout( async ()  =>{
         await this.$axios.post('/api/v1/apply-coupon', applyCoupon).then(res => {
           this.$vs.loading.close()
+
+          let exceptPlans = JSON.parse(res.data.plans)
+
+          if (res.data.plans){
+            let existPlan = exceptPlans.some(exceptPlan =>{
+
+              return exceptPlan.id === this.plan.id
+            })
+
+            if (existPlan){
+              return  this.$toast.error({
+                title: 'Atención',
+                message: `Lo sentimos, el cupón no puede ser aplicado al ${this.plan.name}.`,
+                showDuration: 1000,
+                hideDuration: 8000,
+              })
+            }
+          }
+
+
           if (res.status === 202) {
             this.$toast.error({
               title: 'Por favor',
@@ -166,8 +188,8 @@ export default {
           } else {
 
             if (this.messageDiscount.discount === null && this.messageDiscount.plan !== this.plan.id) {
-              this.totalPay = this.totalPay - ((this.totalPay * res.data.data.discount) / 100)
-              this.messageDiscount = {state: true, discount: res.data.data.discount, discountTotal:this.totalPay, plan: this.plan.id, coupon: res.data.data.id}
+              this.totalPay = this.totalPay - ((this.totalPay * res.data.coupon.discount) / 100)
+              this.messageDiscount = {state: true, discount: res.data.coupon.discount, discountTotal:this.totalPay, plan: this.plan.id, coupon: res.data.coupon.id}
               this.$toast.success({
                 title: 'Confirmación',
                 message: 'Cupón aplicado exitosamente!',
@@ -250,7 +272,7 @@ export default {
     },
     /*Obtener todos los planes*/
     async getPlans() {
-      await this.$axios.get('/api/v1/get-plans').then(resp => {
+      await this.$axios.get('/api/v1/get-plans-order').then(resp => {
         this.plans = resp.data.data
         this.$vs.loading.close()
         this.showPlans = true

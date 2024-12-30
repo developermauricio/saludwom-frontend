@@ -107,7 +107,7 @@
 
 <script>
 import SectionProfile from "./SectionProfile";
-import {bus} from "../../../../plugins/bus";
+import {bus} from "@/plugins/bus";
 
 export default {
   name: "Content",

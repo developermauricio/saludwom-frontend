@@ -23,7 +23,7 @@
                 <tr>
 <!--                  <th scope="row"><img src="img/bg-img/p1.jpg" alt=""></th>-->
                   <td>
-                    <h6 class="mb-1">{{ plan.name }}</h6><span>{{ plan.price }}€ <p class="text-success">{{couponApply.discount ? '-'+couponApply.discount+'%' : ''}}</p></span>
+                    <h6 class="mb-1">{{ plan.name }}</h6><span>{{ (plan.price).toFixed(2)  | currency }}€ <p class="text-success">{{couponApply.discount ? '-'+couponApply.discount+'%' : ''}}</p></span>
                   </td>
                   <td>
                     <p>{{ plan.description }}</p>

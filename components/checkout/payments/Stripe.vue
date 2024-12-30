@@ -65,7 +65,7 @@ CHECKOUT
           </div>
         </div>
       </div>
-      <button class="btn btn-primary btn-block" @click="paymentStripe">Pagar <strong>{{ totalPay }}€</strong>
+      <button class="btn btn-primary btn-block" @click="paymentStripe">Pagar <strong>{{ (totalPay).toFixed(2)  | currency }}€</strong>
       </button>
 
     </div>
@@ -156,6 +156,8 @@ export default {
       data.append('coupon', this.couponApply.coupon);
       data.append('email', this.user.email);
       data.append('plan', this.planData.id);
+      data.append('plan', this.planData.id);
+      data.append('plan_price_id', this.planData.stripe_plan_price_id);
       data.append('plan_name', this.planData.name);
       data.append('plan_period', this.planData.period);
       data.append('expiration_date_plan', this.planData.period);
